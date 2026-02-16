@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuando el vínculo duele - Acompañamiento tras una separación</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            font-size: 20px;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+            min-height: 100vh;
+            padding: 15px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+
+        /* PANTALLA INICIAL */
+        .welcome-screen {
+            padding: 50px 30px;
+            text-align: center;
+            display: none;
+        }
+
+        .welcome-screen.active {
+            display: block;
+        }
+
+        .welcome-screen img {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+
+        .welcome-screen h1 {
+            color: #e17055;
+            font-size: 2.2em;
+            margin-bottom: 15px;
+            line-height: 1.3;
+        }
+
+        .welcome-screen p {
+            font-size: 1.3em;
+            color: #2d3436;
+            margin: 20px 0;
+            line-height: 1.7;
+        }
+
+        .welcome-text {
+            background: #fff5f5;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 25px 0;
+            text-align: left;
+            border-left: 5px solid #e17055;
+        }
+
+        /* HEADER */
+        header {
+            background: linear-gradient(135deg, #e17055 0%, #d63031 100%);
+            color: white;
+            padding: 40px 25px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.3em;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.95;
+        }
+
+        /* SALUDO */
+        .greeting {
+            background: #fff5f5;
+            padding: 30px;
+            text-align: center;
+            border-bottom: 3px solid #e17055;
+        }
+
+        .greeting img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            margin: 0 auto 15px auto;
+        }
+
+        .greeting h2 {
+            font-size: 1.8em;
+            color: #e17055;
+            margin-bottom: 10px;
+        }
+
+        /* MENÚ PRINCIPAL */
+        .main-menu {
+            padding: 30px 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .menu-button {
+            background: linear-gradient(135deg, #e17055 0%, #d63031 100%);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 35px 25px;
+            font-size: 1.3em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(225, 112, 85, 0.3);
+            text-align: center;
+        }
+
+        .menu-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(225, 112, 85, 0.4);
+        }
+
+        .menu-button .icon {
+            font-size: 2.5em;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        /* SECCIONES */
+        .content-section {
+            padding: 35px 25px;
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .back-button {
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            cursor: pointer;
+            margin-bottom: 25px;
+            font-weight: bold;
+        }
+
+        h2 {
+            color: #e17055;
+            font-size: 2.2em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        h3 {
+            color: #2d3436;
+            font-size: 1.7em;
+            margin: 25px 0 15px 0;
+        }
+
+        p {
+            font-size: 1.3em;
+            color: #495057;
+            margin-bottom: 15px;
+            line-height: 1.7;
+        }
+
+        .card {
+            background: #fff5f5;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            border-left: 6px solid #e17055;
+        }
+
+        .primary-button {
+            background: linear-gradient(135deg, #e17055 0%, #d63031 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 18px 40px;
+            font-size: 1.4em;
+            font-weight: bold;
+            cursor: pointer;
+            display: block;
+            width: 100%;
+            margin: 15px 0;
+        }
+
+        /* SELECTOR DE OPCIONES */
+        .options-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .option-button {
+            background: white;
+            border: 3px solid #dfe6e9;
+            border-radius: 15px;
+            padding: 25px 20px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .option-button:hover {
+            border-color: #e17055;
+            background: #fff5f5;
+        }
+
+        .option-button.selected {
+            background: #e17055;
+            color: white;
+            border-color: #e17055;
+        }
+
+        /* TEXTO DE RESPUESTA */
+        .response-text {
+            background: #fff5f5;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+            font-size: 1.3em;
+            line-height: 1.7;
+            border-left: 5px solid #e17055;
+            display: none;
+        }
+
+        .response-text.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        /* ÁREA DE ESCRITURA */
+        .writing-area textarea {
+            width: 100%;
+            min-height: 200px;
+            font-size: 1.3em;
+            padding: 20px;
+            border: 2px solid #dfe6e9;
+            border-radius: 12px;
+            font-family: inherit;
+            line-height: 1.7;
+            resize: vertical;
+        }
+
+        .writing-area textarea:focus {
+            outline: none;
+            border-color: #e17055;
+        }
+
+        .saved-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-size: 1.3em;
+            text-align: center;
+            display: none;
+        }
+
+        .saved-message.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        /* QUOTE BOX */
+        .quote-box {
+            background: linear-gradient(135deg, #fab1a0 0%, #fdcb6e 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 25px 0;
+            text-align: center;
+            font-size: 1.4em;
+            font-style: italic;
+            color: #2d3436;
+            border: 3px solid #e17055;
+        }
+
+        footer {
+            background: #f8f9fa;
+            padding: 25px;
+            text-align: center;
+            color: #6c757d;
+            border-top: 3px solid #dfe6e9;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                font-size: 18px;
+            }
+
+            header h1 {
+                font-size: 2em;
+            }
+
+            .welcome-screen h1 {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- PANTALLA DE BIENVENIDA -->
+        <div id="welcome-screen" class="welcome-screen active">
+            <img src="clara-roja.jpg" alt="Clara">
+            
+            <h1>Cuando el vínculo duele</h1>
+            <p style="font-size: 1.2em; color: #636e72; margin-bottom: 30px;">
+                Acompañamiento emocional tras una separación
+            </p>
+
+            <div class="welcome-text">
+                <p>Hola.</p>
+                <p>Soy Clara.</p>
+                <p>Si llegaste hasta acá, probablemente estés atravesando una separación —o el final de algo que todavía duele—.</p>
+                <p style="margin-top: 20px;">No estoy acá para apurarte, ni para decirte cómo deberías sentirte.</p>
+                <p>Estoy para acompañarte, paso a paso, en el tiempo que necesites.</p>
+                <p style="margin-top: 20px;">Podés usar esta app todos los días o solo cuando el dolor aprieta.</p>
+            </div>
+
+            <button class="primary-button" onclick="startApp()">
+                Sí, necesito acompañamiento
+            </button>
+        </div>
+
+        <!-- APLICACIÓN PRINCIPAL -->
+        <div id="main-app" style="display: none;">
+            <header>
+                <h1>Cuando el vínculo duele</h1>
+                <p>Un espacio diario para atravesar una separación sin sentirte sola</p>
+            </header>
+
+            <div class="greeting">
+                <img src="clara-roja.jpg" alt="Clara">
+                <h2>Hola de nuevo</h2>
+                <p id="current-date" style="font-size: 1.1em; color: #636e72;"></p>
+            </div>
+
+            <!-- MENÚ PRINCIPAL -->
+            <div id="main-menu" class="main-menu">
+                <button class="menu-button" onclick="showSection('modulo1')">
+                    <span class="icon">📍</span>
+                    Dónde estás hoy
+                </button>
+
+                <button class="menu-button" onclick="showSection('modulo2')">
+                    <span class="icon">💔</span>
+                    Lo que se perdió
+                </button>
+
+                <button class="menu-button" onclick="showSection('modulo3')">
+                    <span class="icon">🤐</span>
+                    El duelo no validado
+                </button>
+
+                <button class="menu-button" onclick="showSection('modulo4')">
+                    <span class="icon">🫀</span>
+                    Contacto con el cuerpo
+                </button>
+
+                <button class="menu-button" onclick="showSection('modulo5')">
+                    <span class="icon">✍️</span>
+                    Lo que todavía duele
+                </button>
+
+                <button class="menu-button" onclick="showSection('modulo6')">
+                    <span class="icon">🔍</span>
+                    Separar amor de costumbre
+                </button>
+
+                <button class="menu-button" onclick="showSection('modulo7')">
+                    <span class="icon">🌙</span>
+                    Ritual de cierre
+                </button>
+            </div>
+
+            <!-- MÓDULO 1: DÓNDE ESTÁS HOY -->
+            <div id="modulo1" class="content-section">
+                <button class="back-button" onclick="goHome()">← Volver</button>
+                
+                <h2>Dónde estás hoy</h2>
+                
+                <div class="card">
+                    <p>Antes de seguir, tomemos un momento.</p>
+                    <p>No para analizar, solo para registrar.</p>
+                </div>
+
+                <h3>¿Cómo te sentís hoy?</h3>
+                <div class="options-selector">
+                    <button class="option-button" onclick="selectFeeling('triste')">Triste</button>
+                    <button class="option-button" onclick="selectFeeling('confundida')">Confundida/o</button>
+                    <button class="option-button" onclick="selectFeeling('aliviada')">Aliviada/o y culpable</button>
+                    <button class="option-button" onclick="selectFeeling('enojada')">Enojada/o</button>
+                    <button class="option-button" onclick="selectFeeling('vacia')">Vacía/o</button>
+                    <button class="option-button" onclick="selectFeeling('extranando')">Extrañando</button>
+                    <button class="option-button" onclick="selectFeeling('mezcla')">Mezcla de todo</button>
+                </div>
+
+                <div id="feeling-response" class="response-text"></div>
+            </div>
+
+            <!-- MÓDULO 2: LO QUE SE PERDIÓ -->
+            <div id="modulo2" class="content-section">
+                <button class="back-button" onclick="goHome()">← Volver</button>
+                
+                <h2>Lo que se perdió (aunque nadie lo vea)</h2>
+                
+                <div class="card">
+                    <p>En una separación no se pierde solo a una persona.</p>
+                    <p>Se pierden planes, roles, hábitos, versiones de una misma.</p>
+                </div>
+
+                <h3>¿Qué sentís que perdiste más?</h3>
+                <div class="options-selector">
+                    <button class="option-button" onclick="selectLoss('compania')">La compañía</button>
+                    <button class="option-button" onclick="selectLoss('rutina')">La rutina</button>
+                    <button class="option-button" onclick="selectLoss('identidad')">La identidad de "nosotros"</button>
+                    <button class="option-button" onclick="selectLoss('seguridad')">La seguridad</button>
+                    <button class="option-button" onclick="selectLoss('futuro')">El proyecto a futuro</button>
+                    <button class="option-button" onclick="selectLoss('otra')">Otra cosa</button>
+                </div>
+
+                <div id="loss-response" class="response-text"></div>
+            </div>
+
+            <!-- MÓDULO 3: EL DUELO NO VALIDADO -->
+            <div id="modulo3" class="content-section">
+                <button class="back-button" onclick="goHome()">← Volver</button>
+                
+                <h2>El duelo no validado</h2>
+                
+                <div class="quote-box">
+                    "Hay duelos que la sociedad acompaña. Y otros que se minimizan. Las separaciones suelen ser de estos últimos."
+                </div>
+
+                <h3>¿Sentís que tu dolor fue minimizado por otros?</h3>
+                <div class="options-selector">
+                    <button class="option-button" onclick="selectValidation('si')">Sí</button>
+                    <button class="option-button" onclick="selectValidation('aveces')">A veces</button>
+                    <button class="option-button" onclick="selectValidation('mucho')">Mucho</button>
+                    <button class="option-button" onclick="selectValidation('noselo')">No lo sé</button>
+                </div>
+
+                <div id="validation-response" class="response-text"></div>
+            </div>
+
+            <!-- MÓDULO 4: CONTACTO CON EL CUERPO -->
+            <div id="modulo4" class="content-section">
+                <button class="back-button" onclick="goHome()">← Volver</button>
+                
+                <h2>Contacto con el cuerpo</h2>
+                
+                <div class="card">
+                    <h3>Práctica breve de regulación</h3>
+                    <p style="margin-top: 20px;">Cerrá los ojos un momento.</p>
+                    <p>Llevá una mano al pecho.</p>
+                    <p>Respirá lento, sin corregirte.</p>
+                    <p style="margin-top: 20px; font-weight: bold;">No estamos sanando.</p>
+                    <p style="font-weight: bold;">Estamos sosteniendo.</p>
+                </div>
+
+                <div class="card" style="margin-top: 30px;">
+                    <h3>Respiración guiada (5 minutos)</h3>
+                    <p>1. Inhalá profundo contando hasta 4</p>
+                    <p>2. Sostené el aire contando hasta 4</p>
+                    <p>3. Exhalá lentamente contando hasta 6</p>
+                    <p>4. Pausa contando hasta 2</p>
+                    <p style="margin-top: 15px;">Repetí este ciclo 5 veces.</p>
+                    <p style="margin-top: 15px; font-style: italic; color: #636e72;">
+                        No hace falta que salga perfecto. Solo respirá.
+                    </p>
+                </div>
+            </div>
+
+            <!-- MÓDULO 5: LO QUE TODAVÍA DUELE -->
+            <div id="modulo5" class="content-section">
+                <button class="back-button" onclick="goHome()">← Volver</button>
+                
+                <h2>Lo que todavía duele</h2>
+                
+                <div class="card">
+                    <p>Si pudieras decirle algo a esa persona sin que responda, ¿qué dirías?</p>
+                    <p style="margin-top: 15px; font-style: italic; color: #636e72;">
+                        Este espacio es tuyo. Nadie más lo va a leer.
+                    </p>
+                </div>
+
+                <div class="writing-area">
+                    <textarea id="pain-text" placeholder="Escribí todo lo que necesites sacar...
+
+No lo guardes adentro.
+
+Esto es solo para vos."></textarea>
+                    <button class="primary-button" onclick="savePain()">No enviar, solo guardar</button>
+                    <div id="pain-saved" class="saved-message">
+                        No hace falta enviar esto. Hace falta sacarlo. ✓
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 30px;">
+                    <p style="font-weight: bold; color: #e17055;">Recordá:</p>
+                    <p>No hace falta que esto le llegue.</p>
+                    <p>Hace falta que salga de vos.</p>
+                </div>
+            </div>
+
+            <!-- MÓDULO 6: SEPARAR AMOR DE COSTUMBRE -->
+            <div id="modulo6" class="content-section">
+                <button class="back-button" onclick="goHome()">← Volver</button>
+                
+                <h2>Separar amor de costumbre</h2>
+                
+                <div class="card">
+                    <p>A veces no extrañamos a la persona, sino el lugar que ocupaba en nuestra vida.</p>
+                </div>
+
+                <h3>¿Qué creés que extrañás más hoy?</h3>
+                <div class="options-selector">
+                    <button class="option-button" onclick="selectMissing('persona')">A la persona</button>
+                    <button class="option-button" onclick="selectMissing('costumbre')">La costumbre</button>
+                    <button class="option-button" onclick="selectMissing('sosten')">El sostén emocional</button>
+                    <button class="option-button" onclick="selectMissing('soledad')">No estar sola/o</button>
+                    <button class="option-button" onclick="selectMissing('todo')">Todo junto</button>
+                </div>
+
+                <div id="missing-response" class="response-text"></div>
+            </div>
+
+            <!-- MÓDULO 7: RITUAL DE CIERRE -->
+            <div id="modulo7" class="content-section">
+                <button class="back-button" onclick="goHome()">← Volver</button>
+                
+                <h2>Ritual de cierre diario</h2>
+                
+                <div class="card">
+                    <p>Antes de irte, dejemos una intención suave.</p>
+                    <p>No una meta. Una intención.</p>
+                </div>
+
+                <h3>Elegí una para hoy:</h3>
+                <div class="options-selector">
+                    <button class="option-button" onclick="selectIntention('sentir')">Hoy me permito sentir</button>
+                    <button class="option-button" onclick="selectIntention('noapurar')">Hoy no me apuro</button>
+                    <button class="option-button" onclick="selectIntention('cuidar')">Hoy me cuido</button>
+                    <button class="option-button" onclick="selectIntention('respirar')">Hoy respiro</button>
+                </div>
+
+                <div id="intention-response" class="response-text"></div>
+
+                <div class="quote-box" style="margin-top: 30px;">
+                    "Volvé cuando lo necesites. No hay progreso que medir. Hay proceso que respetar."
+                </div>
+            </div>
+
+            <footer>
+                <p><strong>Cuando el vínculo duele</strong> - con Clara</p>
+                <p style="margin-top: 15px;">No es terapia. No es autoayuda vacía. Es presencia.</p>
+                <p style="margin-top: 15px; font-size: 0.95em;">© 2026 - Todos los derechos reservados</p>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        // Datos del usuario
+        let userData = {
+            visitCount: 0,
+            lastVisit: null,
+            entries: 0
+        };
+
+        // Inicialización
+        window.onload = function() {
+            const savedData = localStorage.getItem('vinculoDueleData');
+            if (savedData) {
+                userData = JSON.parse(savedData);
+            }
+            updateDate();
+        };
+
+        function updateDate() {
+            const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+            const today = new Date();
+            const dateString = today.toLocaleDateString('es-ES', options);
+            const dateEl = document.getElementById('current-date');
+            if (dateEl) {
+                dateEl.textContent = dateString;
+            }
+        }
+
+        function startApp() {
+            document.getElementById('welcome-screen').classList.remove('active');
+            document.getElementById('main-app').style.display = 'block';
+            
+            userData.visitCount++;
+            userData.lastVisit = new Date().toISOString();
+            localStorage.setItem('vinculoDueleData', JSON.stringify(userData));
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showSection(sectionId) {
+            document.getElementById('main-menu').style.display = 'none';
+            document.querySelector('.greeting').style.display = 'none';
+            
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => section.classList.remove('active'));
+            
+            document.getElementById(sectionId).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function goHome() {
+            document.getElementById('main-menu').style.display = 'grid';
+            document.querySelector('.greeting').style.display = 'block';
+            
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => section.classList.remove('active'));
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // MÓDULO 1: Sentimientos
+        function selectFeeling(feeling) {
+            const buttons = document.querySelectorAll('#modulo1 .option-button');
+            buttons.forEach(btn => btn.classList.remove('selected'));
+            event.target.classList.add('selected');
+            
+            const responses = {
+                'triste': 'Gracias por decirlo. Lo que sentís tiene sentido, incluso si hoy no lo entendés.',
+                'confundida': 'La confusión es parte del proceso. No hace falta tener claridad ahora.',
+                'aliviada': 'Es posible sentir alivio y culpa al mismo tiempo. Ambos son válidos.',
+                'enojada': 'El enojo también es duelo. No lo reprimas. Necesita salir.',
+                'vacia': 'El vacío es real. Es el espacio que ocupaba algo que importaba.',
+                'extranando': 'Extrañar es amor que no tiene a dónde ir. Está bien sentirlo.',
+                'mezcla': 'Sentir todo junto, todo revuelto, es absolutamente normal en el duelo.'
+            };
+            
+            const responseDiv = document.getElementById('feeling-response');
+            responseDiv.textContent = responses[feeling];
+            responseDiv.classList.add('show');
+        }
+
+        // MÓDULO 2: Pérdidas
+        function selectLoss(loss) {
+            const buttons = document.querySelectorAll('#modulo2 .option-button');
+            buttons.forEach(btn => btn.classList.remove('selected'));
+            event.target.classList.add('selected');
+            
+            const responses = {
+                'compania': 'La compañía diaria se vuelve invisible hasta que falta. Es una pérdida enorme.',
+                'rutina': 'La rutina compartida era el tejido de tu día. Ahora hay que rearmarlo, y eso lleva tiempo.',
+                'identidad': 'Pasar de "nosotros" a "yo" es reconstruir tu identidad. Es un proceso profundo.',
+                'seguridad': 'La seguridad que te daba ese vínculo era real. Ahora toca reconstruirla desde otro lugar.',
+                'futuro': 'Perder un futuro imaginado es perder algo que nunca existió, pero dolía como si existiera.',
+                'otra': 'Cada pérdida es única. La tuya importa, aunque no entre en ninguna categoría.'
+            };
+            
+            const responseDiv = document.getElementById('loss-response');
+            responseDiv.textContent = 'Nombrarlo no lo empeora. Lo vuelve más real y menos confuso. ' + responses[loss];
+            responseDiv.classList.add('show');
+        }
+
+        // MÓDULO 3: Validación
+        function selectValidation(validation) {
+            const buttons = document.querySelectorAll('#modulo3 .option-button');
+            buttons.forEach(btn => btn.classList.remove('selected'));
+            event.target.classList.add('selected');
+            
+            const response = 'Que otros no lo vean no significa que no exista. Tu dolor es real, aunque nadie más lo valide.';
+            
+            const responseDiv = document.getElementById('validation-response');
+            responseDiv.textContent = response;
+            responseDiv.classList.add('show');
+        }
+
+        // MÓDULO 5: Guardar dolor
+        function savePain() {
+            const text = document.getElementById('pain-text').value;
+            if (text.trim() === '') {
+                alert('Escribí algo primero');
+                return;
+            }
+            
+            const entries = JSON.parse(localStorage.getItem('vinculoDueleEntries') || '[]');
+            entries.push({
+                fecha: new Date().toLocaleString('es-ES'),
+                texto: text
+            });
+            localStorage.setItem('vinculoDueleEntries', JSON.stringify(entries));
+            
+            userData.entries++;
+            localStorage.setItem('vinculoDueleData', JSON.stringify(userData));
+            
+            const saveMsg = document.getElementById('pain-saved');
+            saveMsg.classList.add('show');
+            
+            setTimeout(() => {
+                saveMsg.classList.remove('show');
+            }, 4000);
+        }
+
+        // MÓDULO 6: Qué extrañás
+        function selectMissing(missing) {
+            const buttons = document.querySelectorAll('#modulo6 .option-button');
+            buttons.forEach(btn => btn.classList.remove('selected'));
+            event.target.classList.add('selected');
+            
+            const responses = {
+                'persona': 'Extrañar a la persona es legítimo. Podés extrañar a alguien y al mismo tiempo saber que la relación no funcionaba.',
+                'costumbre': 'La costumbre es poderosa. A veces extrañamos el hábito más que la persona. Y eso también está bien.',
+                'sosten': 'El sostén emocional que te daba era real. Ahora toca aprender a sostenerte de otra manera.',
+                'soledad': 'No estar sola/o es una necesidad humana. Extrañar eso no te hace débil, te hace humana/o.',
+                'todo': 'Extrañar todo junto es normal. El duelo no separa las cosas con claridad. Vos tampoco tenés que hacerlo.'
+            };
+            
+            const responseDiv = document.getElementById('missing-response');
+            responseDiv.textContent = responses[missing];
+            responseDiv.classList.add('show');
+        }
+
+        // MÓDULO 7: Intención
+        function selectIntention(intention) {
+            const buttons = document.querySelectorAll('#modulo7 .option-button');
+            buttons.forEach(btn => btn.classList.remove('selected'));
+            event.target.classList.add('selected');
+            
+            const responses = {
+                'sentir': 'Hoy te permitís sentir. Sin juzgar, sin apurar. Solo sentir.',
+                'noapurar': 'Hoy no te apurás. El proceso tiene su tiempo. Vos también.',
+                'cuidar': 'Hoy te cuidás. Como cuidarías a alguien que querés.',
+                'respirar': 'Hoy respirás. Una vez. Otra vez. Las veces que haga falta.'
+            };
+            
+            const responseDiv = document.getElementById('intention-response');
+            responseDiv.textContent = responses[intention];
+            responseDiv.classList.add('show');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Corazón Peludo - Acompañamiento en el duelo por tu mascota</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            font-size: 20px;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            min-height: 100vh;
+            padding: 15px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+
+        /* PANTALLA DE CONFIGURACIÓN INICIAL */
+        .setup-screen {
+            padding: 40px 25px;
+            text-align: center;
+            display: none;
+        }
+
+        .setup-screen.active {
+            display: block;
+        }
+
+        .setup-screen h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .setup-screen .avatar {
+            font-size: 5em;
+            margin: 20px 0;
+        }
+
+        .setup-form {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 25px 0;
+            text-align: left;
+        }
+
+        .setup-form label {
+            display: block;
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #2d3436;
+            margin: 20px 0 10px 0;
+        }
+
+        .setup-form input {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.2em;
+            border: 2px solid #dfe6e9;
+            border-radius: 10px;
+            font-family: inherit;
+        }
+
+        .setup-form input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        /* HEADER */
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 25px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        header p {
+            font-size: 1.3em;
+            opacity: 0.95;
+        }
+
+        /* SALUDO PERSONALIZADO */
+        .greeting {
+            background: #fff3cd;
+            padding: 30px;
+            text-align: center;
+            border-bottom: 3px solid #ffc107;
+        }
+
+        .greeting .avatar {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        .greeting h2 {
+            font-size: 2em;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .greeting p {
+            font-size: 1.3em;
+            color: #495057;
+        }
+
+        /* SISTEMA DE LOGROS */
+        .achievement-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            z-index: 1000;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            transition: transform 0.3s;
+            max-width: 90%;
+        }
+
+        .achievement-popup.show {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .achievement-popup .icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+
+        .achievement-popup h3 {
+            font-size: 2em;
+            margin-bottom: 15px;
+        }
+
+        .achievement-popup p {
+            font-size: 1.3em;
+            margin-bottom: 20px;
+        }
+
+        .achievement-popup button {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* MENÚ PRINCIPAL */
+        .main-menu {
+            padding: 30px 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .menu-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 35px 25px;
+            font-size: 1.4em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+            text-align: center;
+        }
+
+        .menu-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .menu-button .icon {
+            font-size: 2.5em;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        /* SECCIONES DE CONTENIDO */
+        .content-section {
+            padding: 35px 25px;
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .back-button {
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            cursor: pointer;
+            margin-bottom: 25px;
+            font-weight: bold;
+        }
+
+        .back-button:hover {
+            background: #5a6268;
+        }
+
+        h2 {
+            color: #667eea;
+            font-size: 2.2em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        h3 {
+            color: #2d3436;
+            font-size: 1.8em;
+            margin: 25px 0 15px 0;
+        }
+
+        p {
+            font-size: 1.3em;
+            color: #495057;
+            margin-bottom: 15px;
+            line-height: 1.7;
+        }
+
+        .card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            border-left: 6px solid #667eea;
+        }
+
+        /* BOTONES */
+        .primary-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 18px 40px;
+            font-size: 1.4em;
+            font-weight: bold;
+            cursor: pointer;
+            display: block;
+            width: 100%;
+            margin: 15px 0;
+        }
+
+        .primary-button:hover {
+            transform: scale(1.02);
+        }
+
+        .secondary-button {
+            background: #74b9ff;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+
+        /* SELECTOR DE SENTIMIENTOS */
+        .feelings-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .feeling-button {
+            background: white;
+            border: 3px solid #dfe6e9;
+            border-radius: 15px;
+            padding: 20px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .feeling-button:hover {
+            border-color: #667eea;
+            background: #e3f2fd;
+        }
+
+        .feeling-button.selected {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .feeling-button .emoji {
+            font-size: 2.5em;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        /* DIARIO */
+        .journal-area textarea {
+            width: 100%;
+            min-height: 200px;
+            font-size: 1.3em;
+            padding: 15px;
+            border: 2px solid #dfe6e9;
+            border-radius: 10px;
+            font-family: inherit;
+            line-height: 1.6;
+            resize: vertical;
+        }
+
+        .saved-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-size: 1.3em;
+            text-align: center;
+            display: none;
+        }
+
+        .saved-message.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        /* QUOTE BOX */
+        .quote-box {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 25px 0;
+            text-align: center;
+            font-size: 1.4em;
+            font-style: italic;
+            color: #2d3436;
+            border: 3px solid #feca57;
+        }
+
+        /* MEMORIAL BOX */
+        .memorial-box {
+            background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 25px 0;
+            text-align: center;
+        }
+
+        .memorial-box h3 {
+            color: white;
+            font-size: 2em;
+            margin-bottom: 15px;
+        }
+
+        .memorial-box p {
+            color: white;
+            font-size: 1.3em;
+            opacity: 0.95;
+        }
+
+        /* ACTIVITIES */
+        .activity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .activity-card {
+            background: white;
+            border: 3px solid #667eea;
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .activity-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .activity-card h4 {
+            color: #667eea;
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        footer {
+            background: #f8f9fa;
+            padding: 25px;
+            text-align: center;
+            color: #6c757d;
+            border-top: 3px solid #dfe6e9;
+        }
+
+        footer p {
+            font-size: 1.1em;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                font-size: 18px;
+            }
+
+            header h1 {
+                font-size: 2.2em;
+            }
+
+            .menu-button {
+                font-size: 1.2em;
+                padding: 30px 20px;
+            }
+
+            h2 {
+                font-size: 1.8em;
+            }
+
+            .main-menu {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- PANTALLA DE CONFIGURACIÓN INICIAL -->
+        <div id="setup-screen" class="setup-screen active">
+            <div class="avatar"><img src="clara-lavanda.jpg" alt="Clara" style="width: 200px; height: 200px; border-radius: 50%; object-fit: cover; box-shadow: 0 5px 15px rgba(0,0,0,0.2);"></div>
+            <h1>Bienvenido/a a Corazón Peludo</h1>
+            <p style="font-size: 1.3em; margin: 20px 0;">Un espacio de acompañamiento en el duelo por tu mascota</p>
+            
+            <div class="setup-form">
+                <label for="user-name">¿Cómo te llamás?</label>
+                <input type="text" id="user-name" placeholder="Tu nombre">
+                
+                <label for="pet-name">¿Cómo se llamaba tu mascota?</label>
+                <input type="text" id="pet-name" placeholder="Nombre de tu mascota">
+                
+                <label for="pet-time-together">¿Cuánto tiempo estuvieron juntos? (opcional)</label>
+                <input type="text" id="pet-time-together" placeholder="Ej: 12 años, 5 meses...">
+                
+                <button class="primary-button" onclick="completeSetup()">Comenzar mi proceso de sanación</button>
+            </div>
+        </div>
+
+        <!-- APLICACIÓN PRINCIPAL -->
+        <div id="main-app" style="display: none;">
+            <header>
+                <h1>🐾 Corazón Peludo</h1>
+                <p>Acompañamiento en el duelo por tu mascota</p>
+            </header>
+
+            <div class="greeting">
+                <div class="avatar"><img src="clara-lavanda.jpg" alt="Clara" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; box-shadow: 0 5px 15px rgba(0,0,0,0.2); margin: 0 auto;"></div>
+                <h2 id="greeting-text"></h2>
+                <p id="current-date"></p>
+            </div>
+
+            <!-- MEMORIAL PERMANENTE -->
+            <div class="memorial-box" id="memorial-box">
+                <h3 id="memorial-name"></h3>
+                <p id="memorial-time"></p>
+                <p style="margin-top: 15px; font-size: 1.2em;">
+                    "El amor que compartiste nunca se pierde. Vive en cada recuerdo, en cada sonrisa que provocó."
+                </p>
+            </div>
+
+            <!-- POPUP DE LOGROS -->
+            <div id="achievement-popup" class="achievement-popup">
+                <div class="icon">🌟</div>
+                <h3 id="achievement-title"></h3>
+                <p id="achievement-message"></p>
+                <button onclick="closeAchievement()">Gracias</button>
+            </div>
+
+            <!-- MENÚ PRINCIPAL -->
+            <div id="main-menu" class="main-menu">
+                <button class="menu-button" onclick="showSection('feelings')">
+                    <span class="icon">💭</span>
+                    Cómo me siento
+                </button>
+
+                <button class="menu-button" onclick="showSection('journal')">
+                    <span class="icon">📝</span>
+                    Mi Diario
+                </button>
+
+                <button class="menu-button" onclick="showSection('activities')">
+                    <span class="icon">🌱</span>
+                    Actividades
+                </button>
+
+                <button class="menu-button" onclick="showSection('memories')">
+                    <span class="icon">💫</span>
+                    Recuerdos
+                </button>
+
+                <button class="menu-button" onclick="showSection('understanding')">
+                    <span class="icon">🧭</span>
+                    Entender el duelo
+                </button>
+
+                <button class="menu-button" onclick="showSection('hope')">
+                    <span class="icon">🌅</span>
+                    Esperanza
+                </button>
+            </div>
+
+            <!-- SECCIÓN SENTIMIENTOS -->
+            <div id="feelings" class="content-section">
+                <button class="back-button" onclick="goHome()">← Volver al inicio</button>
+                
+                <h2>¿Cómo te sentís hoy?</h2>
+                
+                <div id="weekly-quote" class="quote-box">
+                    "Tu dolor es la medida del amor que compartiste"
+                </div>
+
+                <div class="card">
+                    <h3>Es normal sentir:</h3>
+                    <div class="feelings-selector">
+                        <button class="feeling-button" onclick="selectFeeling('triste')">
+                            <span class="emoji">😢</span>
+                            Triste
+                        </button>
+                        <button class="feeling-button" onclick="selectFeeling('culpa')">
+                            <span class="emoji">😔</span>
+                            Culpa
+                        </button>
+                        <button class="feeling-button" onclick="selectFeeling('enojo')">
+                            <span class="emoji">😠</span>
+                            Enojo
+                        </button>
+                        <button class="feeling-button" onclick="selectFeeling('vacio')">
+                            <span class="emoji">😶</span>
+                            Vacío
+                        </button>
+                        <button class="feeling-button" onclick="selectFeeling('paz')">
+                            <span class="emoji">🕊️</span>
+                            Algo de paz
+                        </button>
+                        <button class="feeling-button" onclick="selectFeeling('mixto')">
+                            <span class="emoji">🌊</span>
+                            Todo junto
+                        </button>
+                    </div>
+                    <div id="feeling-response" style="margin-top: 25px; font-size: 1.3em; color: #667eea;"></div>
+                </div>
+            </div>
+
+            <!-- SECCIÓN DIARIO -->
+            <div id="journal" class="content-section">
+                <button class="back-button" onclick="goHome()">← Volver al inicio</button>
+                
+                <h2>Mi Diario de Sanación</h2>
+                
+                <p style="text-align: center; margin-bottom: 25px;">
+                    Este es tu espacio seguro para expresar todo lo que sentís. No hay forma correcta o incorrecta de hacerlo.
+                </p>
+
+                <div class="journal-area">
+                    <textarea id="journal-text" placeholder="Hoy extraño...
+
+Recuerdo cuando...
+
+Me siento...
+
+Le quiero decir..."></textarea>
+                    <button class="primary-button" onclick="saveJournal()">💜 Guardar mi escrito</button>
+                    <div id="save-message" class="saved-message">
+                        ✓ Tu escrito fue guardado con amor
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 30px;">
+                    <h3>Ideas para escribir:</h3>
+                    <p>• Una carta a tu mascota</p>
+                    <p>• Un recuerdo especial que querés guardar</p>
+                    <p>• Lo que más extrañás</p>
+                    <p>• Agradecimientos por el tiempo juntos</p>
+                    <p>• Cómo te sentís hoy</p>
+                </div>
+            </div>
+
+            <!-- SECCIÓN ACTIVIDADES -->
+            <div id="activities" class="content-section">
+                <button class="back-button" onclick="goHome()">← Volver al inicio</button>
+                
+                <h2>Actividades de Sanación</h2>
+                
+                <p style="text-align: center; margin-bottom: 25px;">
+                    Estas actividades pueden ayudarte a procesar tu dolor y honrar la memoria de tu compañero/a.
+                </p>
+
+                <div class="activity-grid">
+                    <div class="activity-card">
+                        <h4>✍️ Escribir una carta</h4>
+                        <p>Expresá todo lo que te quedó por decir. Las palabras sanan.</p>
+                    </div>
+
+                    <div class="activity-card">
+                        <h4>📸 Crear un álbum</h4>
+                        <p>Recopilá fotos y videos. Un tesoro de recuerdos para siempre.</p>
+                    </div>
+
+                    <div class="activity-card">
+                        <h4>🕯️ Ritual de despedida</h4>
+                        <p>Una ceremonia personal que te ayude a cerrar con amor.</p>
+                    </div>
+
+                    <div class="activity-card">
+                        <h4>🌱 Plantar algo vivo</h4>
+                        <p>Un árbol, flores... algo que crezca en su memoria.</p>
+                    </div>
+
+                    <div class="activity-card">
+                        <h4>🎨 Crear algo artístico</h4>
+                        <p>Pinta, dibuja, o crea en su honor. El arte sana.</p>
+                    </div>
+
+                    <div class="activity-card">
+                        <h4>🤲 Donar en su nombre</h4>
+                        <p>Ayudá a otros animales. Su amor vive en otros.</p>
+                    </div>
+
+                    <div class="activity-card">
+                        <h4>💬 Compartir historias</h4>
+                        <p>Contá sobre tu mascota. Mantener viva su historia.</p>
+                    </div>
+
+                    <div class="activity-card">
+                        <h4>🧘 Meditar y respirar</h4>
+                        <p>Momentos de calma para procesar y soltar.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECCIÓN RECUERDOS -->
+            <div id="memories" class="content-section">
+                <button class="back-button" onclick="goHome()">← Volver al inicio</button>
+                
+                <h2>Honrando los Recuerdos</h2>
+                
+                <div class="quote-box">
+                    "Los que amamos nunca mueren, solo se hacen invisibles y viven en nuestros corazones para siempre"
+                </div>
+
+                <div class="card">
+                    <h3>Celebrá el amor compartido</h3>
+                    <p>Tu mascota fue afortunada de tenerte. Y vos fuiste afortunado/a de tenerla a ella.</p>
+                    <p style="margin-top: 15px;">El dolor que sentís ahora es la prueba del amor que compartieron. Y ese amor nunca desaparece.</p>
+                </div>
+
+                <div class="card">
+                    <h3>Preguntas para recordar:</h3>
+                    <p><strong>🌟 ¿Cuál fue el momento más feliz juntos?</strong></p>
+                    <p>Cerrá los ojos y reviví ese momento...</p>
+                    
+                    <p style="margin-top: 15px;"><strong>😊 ¿Qué te hacía sonreír de tu mascota?</strong></p>
+                    <p>Esas pequeñas cosas que la hacían única...</p>
+                    
+                    <p style="margin-top: 15px;"><strong>💝 ¿Qué te enseñó sobre el amor?</strong></p>
+                    <p>El amor incondicional que solo las mascotas saben dar...</p>
+                    
+                    <p style="margin-top: 15px;"><strong>🎁 ¿Qué regalo te dio con su presencia?</strong></p>
+                    <p>Compañía, alegría, propósito, amor...</p>
+                </div>
+
+                <div class="card">
+                    <h3>Mantener viva su memoria</h3>
+                    <p>• Creá un espacio especial con su foto</p>
+                    <p>• Guardá su collar o juguete favorito</p>
+                    <p>• Hablá de ella/él con otros que la/lo conocieron</p>
+                    <p>• Celebrá su cumpleaños o el día que llegó a tu vida</p>
+                    <p>• Escribí sus historias para no olvidarlas</p>
+                </div>
+            </div>
+
+            <!-- SECCIÓN ENTENDER EL DUELO -->
+            <div id="understanding" class="content-section">
+                <button class="back-button" onclick="goHome()">← Volver al inicio</button>
+                
+                <h2>Entendiendo tu Duelo</h2>
+
+                <div class="card">
+                    <h3>💜 Tu dolor es válido</h3>
+                    <p>El duelo por una mascota es TAN real como cualquier otro duelo. No dejes que nadie te diga "era solo un animal".</p>
+                    <p style="margin-top: 15px;">Tu mascota fue familia. Fue compañía. Fue amor incondicional. Y es completamente normal sentir este dolor profundo.</p>
+                </div>
+
+                <div class="card">
+                    <h3>🌊 El duelo no es lineal</h3>
+                    <p>Algunos días vas a sentirte mejor. Otros días el dolor va a volver con fuerza. Eso es NORMAL.</p>
+                    <p style="margin-top: 15px;">No hay un "tiempo correcto" para sanar. Cada persona vive su duelo a su manera y a su ritmo.</p>
+                </div>
+
+                <div class="card">
+                    <h3>Es normal sentir:</h3>
+                    <p>✓ Tristeza profunda y ganas de llorar</p>
+                    <p>✓ Culpa por decisiones tomadas (la eutanasia, no haber hecho más, etc.)</p>
+                    <p>✓ Enojo con el veterinario, con vos mismo/a, con la vida</p>
+                    <p>✓ Vacío en tu rutina diaria</p>
+                    <p>✓ Ver o escuchar a tu mascota aunque ya no esté</p>
+                    <p>✓ No querer otra mascota (o sí querer una inmediatamente)</p>
+                </div>
+
+                <div class="card">
+                    <h3>⚠️ Cuándo buscar ayuda profesional:</h3>
+                    <p>• Si el dolor te impide funcionar en tu vida diaria</p>
+                    <p>• Si tenés pensamientos de hacerte daño</p>
+                    <p>• Si sentís que no podés salir del pozo</p>
+                    <p>• Si no tenés a nadie con quien hablar</p>
+                    <p style="margin-top: 15px;"><em>No tengas vergüenza de pedir ayuda. El duelo por mascotas es real y hay profesionales que entienden.</em></p>
+                </div>
+            </div>
+
+            <!-- SECCIÓN ESPERANZA -->
+            <div id="hope" class="content-section">
+                <button class="back-button" onclick="goHome()">← Volver al inicio</button>
+                
+                <h2>Encontrando Esperanza</h2>
+
+                <div class="quote-box">
+                    "El dolor que sentís hoy es el precio del amor que compartieron. Y ese amor valió cada segundo."
+                </div>
+
+                <div class="card">
+                    <h3>🌅 Va a doler menos</h3>
+                    <p>No hoy. Quizás no mañana. Pero algún día vas a poder recordar sin que duela tanto.</p>
+                    <p style="margin-top: 15px;">Vas a poder sonreír pensando en los buenos momentos sin que se te quiebre el corazón.</p>
+                    <p style="margin-top: 15px;">Ese día va a llegar. Dale tiempo a tu corazón.</p>
+                </div>
+
+                <div class="card">
+                    <h3>💝 El amor no muere</h3>
+                    <p>Tu mascota puede no estar físicamente, pero el amor que compartieron es eterno.</p>
+                    <p style="margin-top: 15px;">Ese amor vive en:</p>
+                    <p>• Los recuerdos que atesorás</p>
+                    <p>• Las fotos que guardás</p>
+                    <p>• Las lecciones que te dejó</p>
+                    <p>• Tu corazón, para siempre</p>
+                </div>
+
+                <div class="card">
+                    <h3>🌈 El puente del arcoíris</h3>
+                    <p style="font-style: italic;">
+                        "Hay un lugar donde nuestras mascotas nos esperan, corriendo libres y felices, hasta que nos volvamos a encontrar."
+                    </p>
+                    <p style="margin-top: 15px;">No importa si creés en esto o no. Lo que importa es que el amor que compartieron trasciende la vida física.</p>
+                </div>
+
+                <div class="card">
+                    <h3>🐾 Honrá su memoria viviendo</h3>
+                    <p>La mejor forma de honrar a tu mascota es:</p>
+                    <p>• Vivir plenamente, como ella/él te enseñó</p>
+                    <p>• Ser amable, como ella/él lo fue contigo</p>
+                    <p>• Amar sin miedo, como ella/él te amó</p>
+                    <p>• Ayudar a otros animales cuando estés listo/a</p>
+                </div>
+            </div>
+
+            <footer>
+                <p><strong>Corazón Peludo</strong> - Acompañamiento en el duelo por tu mascota</p>
+                <p style="margin-top: 15px;">Tu dolor es válido. Tu amor fue real. Tu mascota fue afortunada de tenerte.</p>
+                <p style="margin-top: 15px; font-size: 0.95em;">© 2026 - Todos los derechos reservados</p>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        // DATOS DEL USUARIO
+        let userData = {
+            userName: '',
+            petName: '',
+            timeTogether: '',
+            visitCount: 0,
+            journalEntries: 0,
+            lastVisit: null
+        };
+
+        // CONTENIDO ROTATIVO MENSUAL
+        const monthlyQuotes = [
+            "El dolor que sientes es la medida del amor que compartiste",
+            "No hay un tiempo 'correcto' para sanar. Tomate el que necesites",
+            "Tu mascota fue afortunada de tenerte, así como vos fuiste afortunado/a de tenerla",
+            "Los que amamos nunca mueren, solo se hacen invisibles",
+            "El amor incondicional que te dio nunca desaparecerá",
+            "Está bien llorar. Está bien recordar. Está bien sentir",
+            "Tu dolor es válido y real, aunque otros no lo entiendan",
+            "Cada recuerdo es un tesoro que nadie puede quitarte",
+            "El tiempo no borra el amor, solo suaviza el dolor",
+            "Honrá su memoria siendo la persona que tu mascota creía que eras",
+            "El amor que compartieron trasciende la vida física",
+            "Gracias por todo el amor que le diste. Eso nunca se pierde"
+        ];
+
+        // INICIALIZACIÓN
+        window.onload = function() {
+            const savedUserData = localStorage.getItem('petGriefUserData');
+            if (savedUserData) {
+                userData = JSON.parse(savedUserData);
+                document.getElementById('setup-screen').classList.remove('active');
+                document.getElementById('main-app').style.display = 'block';
+                initApp();
+            }
+        };
+
+        function completeSetup() {
+            const userName = document.getElementById('user-name').value.trim();
+            const petName = document.getElementById('pet-name').value.trim();
+            const timeTogether = document.getElementById('pet-time-together').value.trim();
+            
+            if (!userName || !petName) {
+                alert('Por favor completá tu nombre y el nombre de tu mascota');
+                return;
+            }
+
+            userData.userName = userName;
+            userData.petName = petName;
+            userData.timeTogether = timeTogether;
+            userData.visitCount = 1;
+            userData.lastVisit = new Date().toISOString();
+            
+            localStorage.setItem('petGriefUserData', JSON.stringify(userData));
+            
+            document.getElementById('setup-screen').classList.remove('active');
+            document.getElementById('main-app').style.display = 'block';
+            initApp();
+        }
+
+        function initApp() {
+            updateDate();
+            updateGreeting();
+            updateMemorial();
+            updateWeeklyQuote();
+            checkAchievements();
+            
+            // Incrementar contador de visitas
+            userData.visitCount++;
+            const today = new Date().toDateString();
+            const lastVisit = userData.lastVisit ? new Date(userData.lastVisit).toDateString() : null;
+            
+            if (lastVisit !== today) {
+                userData.lastVisit = new Date().toISOString();
+            }
+            
+            localStorage.setItem('petGriefUserData', JSON.stringify(userData));
+        }
+
+        function updateDate() {
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const today = new Date();
+            const dateString = today.toLocaleDateString('es-ES', options);
+            document.getElementById('current-date').textContent = dateString;
+        }
+
+        function updateGreeting() {
+            const hour = new Date().getHours();
+            let greeting = 'Buenos días';
+            if (hour >= 12 && hour < 20) greeting = 'Buenas tardes';
+            if (hour >= 20 || hour < 6) greeting = 'Buenas noches';
+            
+            document.getElementById('greeting-text').textContent = `${greeting}, ${userData.userName}`;
+        }
+
+        function updateMemorial() {
+            document.getElementById('memorial-name').textContent = `En memoria de ${userData.petName}`;
+            if (userData.timeTogether) {
+                document.getElementById('memorial-time').textContent = `${userData.timeTogether} de amor incondicional`;
+            } else {
+                document.getElementById('memorial-time').textContent = `Un amor que trasciende el tiempo`;
+            }
+        }
+
+        function updateWeeklyQuote() {
+            const month = new Date().getMonth();
+            const quote = monthlyQuotes[month];
+            const quoteBox = document.getElementById('weekly-quote');
+            if (quoteBox) {
+                quoteBox.textContent = `"${quote}"`;
+            }
+        }
+
+        function checkAchievements() {
+            if (userData.visitCount === 7) {
+                showAchievement('7 días de valentía', `${userData.userName}, llevás 7 días enfrentando tu dolor. Eso requiere mucha fuerza. ${userData.petName} estaría orgulloso/a.`);
+            }
+            
+            if (userData.journalEntries === 10) {
+                showAchievement('Escribiendo tu sanación', '10 entradas en tu diario. Cada palabra escrita es un paso hacia la sanación. 💜');
+            }
+            
+            if (userData.visitCount === 30) {
+                showAchievement('Un mes de proceso', `Llevas un mes en este camino, ${userData.userName}. El dolor puede seguir ahí, pero ya no estás en el mismo lugar que hace 30 días.`);
+            }
+        }
+
+        function showAchievement(title, message) {
+            document.getElementById('achievement-title').textContent = title;
+            document.getElementById('achievement-message').textContent = message;
+            document.getElementById('achievement-popup').classList.add('show');
+        }
+
+        function closeAchievement() {
+            document.getElementById('achievement-popup').classList.remove('show');
+        }
+
+        // NAVEGACIÓN
+        function showSection(sectionId) {
+            document.getElementById('main-menu').style.display = 'none';
+            document.querySelector('.greeting').style.display = 'none';
+            document.getElementById('memorial-box').style.display = 'none';
+            
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => section.classList.remove('active'));
+            
+            document.getElementById(sectionId).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function goHome() {
+            document.getElementById('main-menu').style.display = 'grid';
+            document.querySelector('.greeting').style.display = 'block';
+            document.getElementById('memorial-box').style.display = 'block';
+            
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => section.classList.remove('active'));
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // SELECTOR DE SENTIMIENTOS
+        function selectFeeling(feeling) {
+            const buttons = document.querySelectorAll('.feeling-button');
+            buttons.forEach(btn => btn.classList.remove('selected'));
+            event.target.closest('.feeling-button').classList.add('selected');
+            
+            const responses = {
+                'triste': {
+                    text: `Es completamente normal sentirse triste, ${userData.userName}. El dolor es la prueba del amor que compartiste con ${userData.petName}. Llorar no es debilidad, es amor que no tiene a dónde ir.`,
+                    showButton: true
+                },
+                'culpa': {
+                    text: `La culpa es uno de los sentimientos más difíciles del duelo. Pero escuchame bien: hiciste lo mejor que pudiste con la información y recursos que tenías. ${userData.petName} lo sabía y te amaba profundamente.`,
+                    showButton: true
+                },
+                'enojo': {
+                    text: `El enojo también es parte del duelo. Podés estar enojado/a con el veterinario, con vos mismo/a, con la vida. Está bien. Ese enojo necesita salir. No lo guardes adentro.`,
+                    showButton: true
+                },
+                'vacio': {
+                    text: `El vacío que dejó ${userData.petName} es enorme porque el espacio que ocupaba en tu vida también lo era. Ese vacío es el contorno de todo el amor que compartieron.`,
+                    showButton: true
+                },
+                'paz': {
+                    text: `Qué hermoso que puedas sentir algo de paz. Esos momentos son regalos. No te sientas culpable por ellos. ${userData.petName} querría que encuentres paz.`,
+                    showButton: false
+                },
+                'mixto': {
+                    text: `Sentir todo junto, todo revuelto, es absolutamente normal en el duelo. Un minuto estás bien, al siguiente llorás. Es el proceso. No hay que ordenarlo, hay que vivirlo.`,
+                    showButton: true
+                }
+            };
+            
+            const response = responses[feeling];
+            const responseDiv = document.getElementById('feeling-response');
+            
+            responseDiv.innerHTML = `
+                <p style="margin-bottom: 15px;">${response.text}</p>
+                ${response.showButton ? '<button class="secondary-button" onclick="showSection(\'activities\')" style="margin-top: 15px;">Ver actividades de sanación</button>' : ''}
+            `;
+        }
+
+        // DIARIO
+        function saveJournal() {
+            const text = document.getElementById('journal-text').value;
+            if (text.trim() === '') {
+                alert('Escribí algo antes de guardar');
+                return;
+            }
+            
+            const fecha = new Date().toLocaleString('es-ES');
+            const entries = JSON.parse(localStorage.getItem('petGriefJournalEntries') || '[]');
+            entries.push({ fecha: fecha, texto: text });
+            localStorage.setItem('petGriefJournalEntries', JSON.stringify(entries));
+            
+            userData.journalEntries++;
+            localStorage.setItem('petGriefUserData', JSON.stringify(userData));
+            
+            const saveMsg = document.getElementById('save-message');
+            saveMsg.classList.add('show');
+            
+            setTimeout(() => {
+                saveMsg.classList.remove('show');
+            }, 3000);
+            
+            checkAchievements();
+        }
+    </script>
+</body>
+</html>
