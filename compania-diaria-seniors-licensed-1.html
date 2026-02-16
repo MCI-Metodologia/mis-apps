@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compañía Diaria Seniors</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            font-size: 20px;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            min-height: 100vh;
+            padding: 15px;
+        }
+
+        /* MODAL DE BLOQUEO */
+        .lock-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            padding: 20px;
+        }
+
+        .lock-modal.hidden {
+            display: none;
+        }
+
+        .lock-content {
+            background: white;
+            border-radius: 25px;
+            padding: 40px 30px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .lock-logo {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+
+        .lock-content h2 {
+            color: #667eea;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+
+        .lock-content p {
+            color: #636e72;
+            font-size: 1.1em;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .device-id-box {
+            background: #f8f9fa;
+            border: 2px dashed #667eea;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .device-id-box label {
+            display: block;
+            font-size: 0.9em;
+            color: #636e72;
+            margin-bottom: 5px;
+        }
+
+        .device-id-box .id-value {
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            color: #2d3436;
+            word-break: break-all;
+            font-weight: bold;
+        }
+
+        .token-input {
+            width: 100%;
+            padding: 15px;
+            font-size: 1em;
+            border: 2px solid #dfe6e9;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .token-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.02);
+        }
+
+        .btn-whatsapp {
+            background: #25D366;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin: 10px 0;
+            text-decoration: none;
+            display: block;
+        }
+
+        .error-message {
+            background: #ff7675;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 15px 0;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .warning-banner {
+            background: #ffeaa7;
+            color: #2d3436;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .warning-banner.show {
+            display: block;
+        }
+
+        /* APP CONTAINER (cuando está desbloqueada) */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            overflow: hidden;
+            display: none;
+        }
+
+        .container.unlocked {
+            display: block;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 25px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .greeting {
+            background: #fff3cd;
+            padding: 30px;
+            text-align: center;
+            border-bottom: 3px solid #ffc107;
+        }
+
+        .greeting img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            margin: 0 auto 15px auto;
+        }
+
+        .greeting h2 {
+            font-size: 1.8em;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        /* Resto del CSS de la app original... */
+        .main-menu {
+            padding: 30px 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .menu-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 35px 25px;
+            font-size: 1.4em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+            text-align: center;
+        }
+
+        .menu-button:hover {
+            transform: translateY(-5px);
+        }
+
+        .menu-button .icon {
+            font-size: 2.5em;
+            display: block;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- MODAL DE BLOQUEO -->
+    <div id="lockModal" class="lock-modal">
+        <div class="lock-content">
+            <div class="lock-logo">🔒</div>
+            <h2>Compañía Diaria Seniors</h2>
+            <p>Esta aplicación requiere una licencia activa para funcionar.</p>
+            
+            <div class="device-id-box">
+                <label>ID de tu dispositivo:</label>
+                <div class="id-value" id="deviceId"></div>
+                <p style="font-size: 0.85em; color: #636e72; margin-top: 10px;">
+                    Enviá este ID a MCI para obtener tu código de activación
+                </p>
+            </div>
+
+            <input type="text" id="tokenInput" class="token-input" placeholder="Pegá tu código de activación aquí">
+            
+            <button class="btn-primary" onclick="activateLicense()">🔓 Activar Licencia</button>
+            
+            <div id="errorMessage" class="error-message"></div>
+            
+            <a href="https://wa.me/5491128060520?text=Hola%2C%20necesito%20activar%20mi%20licencia%20de%20Compañ%C3%ADa%20Diaria%20Seniors.%20Mi%20ID%20de%20dispositivo%20es%3A%20" 
+               id="whatsappLink"
+               class="btn-whatsapp" 
+               target="_blank">
+                💬 Contactar a MCI por WhatsApp
+            </a>
+        </div>
+    </div>
+
+    <!-- ADVERTENCIA DE VENCIMIENTO -->
+    <div id="warningBanner" class="warning-banner">
+        <strong>⚠️ Tu suscripción vence pronto</strong>
+        <p id="warningText"></p>
+    </div>
+
+    <!-- APLICACIÓN PRINCIPAL -->
+    <div id="appContainer" class="container">
+        <header>
+            <h1>👵 Compañía Diaria Seniors</h1>
+            <p>Tu compañera virtual de cada día</p>
+        </header>
+
+        <div class="greeting">
+            <img src="clara-celeste.jpg" alt="Clara">
+            <h2 id="greetingText">¡Bienvenido/a!</h2>
+            <p id="currentDate"></p>
+        </div>
+
+        <div class="main-menu">
+            <button class="menu-button">
+                <span class="icon">💭</span>
+                Conversemos
+            </button>
+            <button class="menu-button">
+                <span class="icon">📝</span>
+                Mi Diario
+            </button>
+            <button class="menu-button">
+                <span class="icon">🌱</span>
+                Actividades
+            </button>
+            <button class="menu-button">
+                <span class="icon">💊</span>
+                Mis Recordatorios
+            </button>
+            <button class="menu-button">
+                <span class="icon">💫</span>
+                Mis Recuerdos
+            </button>
+            <button class="menu-button">
+                <span class="icon">🧘</span>
+                Relajación
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // SISTEMA DE LICENCIAS
+        // ============================================
+
+        // Generar ID único de dispositivo
+        function generateDeviceId() {
+            let deviceId = localStorage.getItem('deviceId');
+            if (!deviceId) {
+                deviceId = 'DEV-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('deviceId', deviceId);
+            }
+            return deviceId;
+        }
+
+        // Mostrar ID de dispositivo
+        function displayDeviceId() {
+            const deviceId = generateDeviceId();
+            document.getElementById('deviceId').textContent = deviceId;
+            
+            // Actualizar link de WhatsApp con el ID
+            const whatsappLink = document.getElementById('whatsappLink');
+            const currentHref = whatsappLink.getAttribute('href');
+            whatsappLink.setAttribute('href', currentHref + deviceId);
+        }
+
+        // Validar licencia
+        function validateLicense() {
+            const licenseData = localStorage.getItem('licenseToken');
+            
+            if (!licenseData) {
+                return { valid: false, reason: 'no_license' };
+            }
+
+            try {
+                const decoded = atob(licenseData);
+                const license = JSON.parse(decoded);
+                
+                const deviceId = generateDeviceId();
+                const currentDate = new Date();
+                const expiryDate = new Date(license.expiry);
+                
+                // Verificar dispositivo
+                if (license.deviceId !== deviceId) {
+                    return { valid: false, reason: 'wrong_device' };
+                }
+                
+                // Verificar fecha de vencimiento
+                const daysRemaining = Math.ceil((expiryDate - currentDate) / (1000 * 60 * 60 * 24));
+                
+                if (daysRemaining < -5) {
+                    return { valid: false, reason: 'expired' };
+                } else if (daysRemaining < 0) {
+                    return { valid: true, grace: true, daysLeft: 5 + daysRemaining };
+                } else if (daysRemaining <= 5) {
+                    return { valid: true, warning: true, daysLeft: daysRemaining };
+                } else {
+                    return { valid: true };
+                }
+                
+            } catch (error) {
+                return { valid: false, reason: 'invalid_token' };
+            }
+        }
+
+        // Activar licencia
+        function activateLicense() {
+            const token = document.getElementById('tokenInput').value.trim();
+            const errorDiv = document.getElementById('errorMessage');
+            
+            if (!token) {
+                errorDiv.textContent = 'Por favor ingresá un código de activación';
+                errorDiv.classList.add('show');
+                return;
+            }
+
+            try {
+                const decoded = atob(token);
+                const license = JSON.parse(decoded);
+                
+                const deviceId = generateDeviceId();
+                
+                // Verificar que el token sea para este dispositivo
+                if (license.deviceId !== deviceId) {
+                    errorDiv.textContent = 'Este código no es válido para este dispositivo';
+                    errorDiv.classList.add('show');
+                    return;
+                }
+                
+                // Verificar que no esté vencido
+                const expiryDate = new Date(license.expiry);
+                const currentDate = new Date();
+                
+                if (expiryDate < currentDate) {
+                    errorDiv.textContent = 'Este código ya venció. Contactá a MCI para renovar';
+                    errorDiv.classList.add('show');
+                    return;
+                }
+                
+                // Licencia válida - limpiar datos anteriores y guardar
+                localStorage.clear();
+                localStorage.setItem('deviceId', deviceId);
+                localStorage.setItem('licenseToken', token);
+                
+                // Desbloquear app
+                errorDiv.classList.remove('show');
+                unlockApp();
+                
+            } catch (error) {
+                errorDiv.textContent = 'Código inválido. Verificá e intentá de nuevo';
+                errorDiv.classList.add('show');
+            }
+        }
+
+        // Desbloquear aplicación
+        function unlockApp() {
+            document.getElementById('lockModal').classList.add('hidden');
+            document.getElementById('appContainer').classList.add('unlocked');
+            
+            // Mostrar advertencia si está por vencer
+            const validation = validateLicense();
+            if (validation.warning || validation.grace) {
+                const warningBanner = document.getElementById('warningBanner');
+                const warningText = document.getElementById('warningText');
+                
+                if (validation.grace) {
+                    warningText.textContent = `Tu suscripción venció. Tenés ${validation.daysLeft} días de período de gracia. Renovar por $9.99 USD/mes`;
+                } else {
+                    warningText.textContent = `Tu suscripción vence en ${validation.daysLeft} días. Renovar por $9.99 USD/mes`;
+                }
+                
+                warningBanner.classList.add('show');
+            }
+            
+            initApp();
+        }
+
+        // Inicializar app (cuando está desbloqueada)
+        function initApp() {
+            updateDate();
+            // Aquí iría el resto de la lógica de la app
+        }
+
+        function updateDate() {
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const today = new Date();
+            const dateString = today.toLocaleDateString('es-ES', options);
+            const dateEl = document.getElementById('currentDate');
+            if (dateEl) {
+                dateEl.textContent = dateString;
+            }
+        }
+
+        // ============================================
+        // INICIALIZACIÓN AL CARGAR
+        // ============================================
+        window.onload = function() {
+            displayDeviceId();
+            
+            const validation = validateLicense();
+            
+            if (validation.valid) {
+                unlockApp();
+            } else {
+                // Mostrar modal de bloqueo con mensaje específico
+                const errorDiv = document.getElementById('errorMessage');
+                
+                if (validation.reason === 'expired') {
+                    errorDiv.textContent = 'Tu licencia venció. Contactá a MCI para renovar por $9.99 USD/mes';
+                    errorDiv.classList.add('show');
+                } else if (validation.reason === 'wrong_device') {
+                    errorDiv.textContent = 'Esta licencia está vinculada a otro dispositivo';
+                    errorDiv.classList.add('show');
+                }
+            }
+        };
+    </script>
+</body>
+</html>
