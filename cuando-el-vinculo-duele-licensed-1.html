@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuando el Vínculo Duele</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 20px;
+            background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+            min-height: 100vh;
+            padding: 15px;
+        }
+        
+        /* SISTEMA DE LICENCIAS */
+        .lock-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #e17055 0%, #d63031 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            padding: 20px;
+        }
+        .lock-modal.hidden { display: none; }
+        .lock-content {
+            background: white;
+            border-radius: 25px;
+            padding: 40px 30px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+        .lock-logo { font-size: 4em; margin-bottom: 20px; }
+        .lock-content h2 { color: #e17055; font-size: 1.8em; margin-bottom: 15px; }
+        .lock-content p { color: #636e72; font-size: 1.1em; margin-bottom: 20px; }
+        .device-id-box {
+            background: #f8f9fa;
+            border: 2px dashed #e17055;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .device-id-box label { display: block; font-size: 0.9em; color: #636e72; margin-bottom: 5px; }
+        .device-id-box .id-value {
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            color: #2d3436;
+            word-break: break-all;
+            font-weight: bold;
+        }
+        .token-input {
+            width: 100%;
+            padding: 15px;
+            font-size: 1em;
+            border: 2px solid #dfe6e9;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #e17055 0%, #d63031 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin: 10px 0;
+        }
+        .btn-whatsapp {
+            background: #25D366;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin: 10px 0;
+            text-decoration: none;
+            display: block;
+        }
+        .error-message {
+            background: #ff7675;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 15px 0;
+            display: none;
+        }
+        .error-message.show { display: block; }
+        .warning-banner {
+            background: #ffeaa7;
+            color: #2d3436;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .warning-banner.show { display: block; }
+        
+        /* APP */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            overflow: hidden;
+            display: none;
+        }
+        .container.unlocked { display: block; }
+        header {
+            background: linear-gradient(135deg, #e17055 0%, #d63031 100%);
+            color: white;
+            padding: 40px 25px;
+            text-align: center;
+        }
+        header h1 { font-size: 2.3em; margin-bottom: 10px; }
+        .greeting {
+            background: #fff5f5;
+            padding: 30px;
+            text-align: center;
+            border-bottom: 3px solid #e17055;
+        }
+        .greeting img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 15px;
+        }
+    </style>
+</head>
+<body>
+    <div id="lockModal" class="lock-modal">
+        <div class="lock-content">
+            <div class="lock-logo">🔒</div>
+            <h2>Cuando el Vínculo Duele</h2>
+            <p>Esta aplicación requiere una licencia activa para funcionar.</p>
+            <div class="device-id-box">
+                <label>ID de tu dispositivo:</label>
+                <div class="id-value" id="deviceId"></div>
+                <p style="font-size: 0.85em; color: #636e72; margin-top: 10px;">
+                    Enviá este ID a MCI para obtener tu código de activación
+                </p>
+            </div>
+            <input type="text" id="tokenInput" class="token-input" placeholder="Pegá tu código de activación aquí">
+            <button class="btn-primary" onclick="activateLicense()">🔓 Activar Licencia</button>
+            <div id="errorMessage" class="error-message"></div>
+            <a href="https://wa.me/5491130820725?text=Hola%2C%20necesito%20activar%20mi%20licencia%20de%20Cuando%20el%20V%C3%ADnculo%20Duele.%20Mi%20ID%20es%3A%20" 
+               id="whatsappLink" class="btn-whatsapp" target="_blank">
+                💬 Contactar a MCI por WhatsApp
+            </a>
+        </div>
+    </div>
+
+    <div id="warningBanner" class="warning-banner">
+        <strong>⚠️ Tu suscripción vence pronto</strong>
+        <p id="warningText"></p>
+    </div>
+
+    <div id="appContainer" class="container">
+        <header>
+            <h1>💔 Cuando el Vínculo Duele</h1>
+            <p>Acompañamiento tras una separación</p>
+        </header>
+        <div class="greeting">
+            <img src="clara-roja.jpg" alt="Clara">
+            <h2>Estoy aquí para acompañarte</h2>
+        </div>
+    </div>
+
+    <script>
+        function generateDeviceId() {
+            let deviceId = localStorage.getItem('deviceId_separacion');
+            if (!deviceId) {
+                deviceId = 'SEP-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('deviceId_separacion', deviceId);
+            }
+            return deviceId;
+        }
+
+        function displayDeviceId() {
+            const deviceId = generateDeviceId();
+            document.getElementById('deviceId').textContent = deviceId;
+            const whatsappLink = document.getElementById('whatsappLink');
+            const currentHref = whatsappLink.getAttribute('href');
+            whatsappLink.setAttribute('href', currentHref + deviceId);
+        }
+
+        function validateLicense() {
+            const licenseData = localStorage.getItem('licenseToken_separacion');
+            if (!licenseData) return { valid: false, reason: 'no_license' };
+            
+            try {
+                const decoded = atob(licenseData);
+                const license = JSON.parse(decoded);
+                const deviceId = generateDeviceId();
+                const currentDate = new Date();
+                const expiryDate = new Date(license.expiry);
+                
+                if (license.deviceId !== deviceId) {
+                    return { valid: false, reason: 'wrong_device' };
+                }
+                
+                const daysRemaining = Math.ceil((expiryDate - currentDate) / (1000 * 60 * 60 * 24));
+                
+                if (daysRemaining < -5) {
+                    return { valid: false, reason: 'expired' };
+                } else if (daysRemaining < 0) {
+                    return { valid: true, grace: true, daysLeft: 5 + daysRemaining };
+                } else if (daysRemaining <= 5) {
+                    return { valid: true, warning: true, daysLeft: daysRemaining };
+                }
+                return { valid: true };
+            } catch (error) {
+                return { valid: false, reason: 'invalid_token' };
+            }
+        }
+
+        function activateLicense() {
+            const token = document.getElementById('tokenInput').value.trim();
+            const errorDiv = document.getElementById('errorMessage');
+            
+            if (!token) {
+                errorDiv.textContent = 'Por favor ingresá un código de activación';
+                errorDiv.classList.add('show');
+                return;
+            }
+
+            try {
+                const decoded = atob(token);
+                const license = JSON.parse(decoded);
+                const deviceId = generateDeviceId();
+                
+                if (license.deviceId !== deviceId) {
+                    errorDiv.textContent = 'Este código no es válido para este dispositivo';
+                    errorDiv.classList.add('show');
+                    return;
+                }
+                
+                const expiryDate = new Date(license.expiry);
+                if (expiryDate < new Date()) {
+                    errorDiv.textContent = 'Este código ya venció. Contactá a MCI para renovar';
+                    errorDiv.classList.add('show');
+                    return;
+                }
+                
+                // Limpiar y guardar
+                Object.keys(localStorage).forEach(key => {
+                    if (key.includes('separacion')) localStorage.removeItem(key);
+                });
+                localStorage.setItem('deviceId_separacion', deviceId);
+                localStorage.setItem('licenseToken_separacion', token);
+                
+                errorDiv.classList.remove('show');
+                unlockApp();
+            } catch (error) {
+                errorDiv.textContent = 'Código inválido';
+                errorDiv.classList.add('show');
+            }
+        }
+
+        function unlockApp() {
+            document.getElementById('lockModal').classList.add('hidden');
+            document.getElementById('appContainer').classList.add('unlocked');
+            
+            const validation = validateLicense();
+            if (validation.warning || validation.grace) {
+                const warningBanner = document.getElementById('warningBanner');
+                const warningText = document.getElementById('warningText');
+                
+                if (validation.grace) {
+                    warningText.textContent = `Tu suscripción venció. Tenés ${validation.daysLeft} días de período de gracia. Renovar por $9.99 USD/mes`;
+                } else {
+                    warningText.textContent = `Tu suscripción vence en ${validation.daysLeft} días. Renovar por $9.99 USD/mes`;
+                }
+                warningBanner.classList.add('show');
+            }
+        }
+
+        window.onload = function() {
+            displayDeviceId();
+            const validation = validateLicense();
+            
+            if (validation.valid) {
+                unlockApp();
+            } else {
+                const errorDiv = document.getElementById('errorMessage');
+                if (validation.reason === 'expired') {
+                    errorDiv.textContent = 'Tu licencia venció. Contactá a MCI para renovar por $9.99 USD/mes';
+                    errorDiv.classList.add('show');
+                } else if (validation.reason === 'wrong_device') {
+                    errorDiv.textContent = 'Esta licencia está vinculada a otro dispositivo';
+                    errorDiv.classList.add('show');
+                }
+            }
+        };
+    </script>
+</body>
+</html>
