@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compagnia Quotidiana per Anziani</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 15px;
+        }
+        .lock-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            padding: 20px;
+        }
+        .lock-modal.hidden { display: none; }
+        .lock-content {
+            background: white;
+            border-radius: 25px;
+            padding: 40px 30px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+        .lock-logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5em;
+        }
+        .lock-content h2 { color: #667eea; font-size: 1.8em; margin-bottom: 15px; }
+        .lock-content p { color: #636e72; font-size: 1.1em; margin-bottom: 20px; line-height: 1.6; }
+        .device-id-box {
+            background: #f8f9fa;
+            border: 2px dashed #667eea;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .device-id-box label { display: block; font-size: 0.9em; color: #636e72; margin-bottom: 5px; }
+        .device-id-box .id-value {
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            color: #2d3436;
+            word-break: break-all;
+            font-weight: bold;
+        }
+        .token-input {
+            width: 100%;
+            padding: 15px;
+            font-size: 1em;
+            border: 2px solid #dfe6e9;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+        }
+        .token-input:focus { outline: none; border-color: #667eea; }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin: 10px 0;
+            transition: transform 0.2s;
+        }
+        .btn-primary:hover { transform: translateY(-2px); }
+        .btn-hotmart {
+            background: #FF6B35;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin: 10px 0;
+            text-decoration: none;
+            display: block;
+            transition: transform 0.2s;
+        }
+        .btn-hotmart:hover { transform: translateY(-2px); background: #E55A2B; }
+        .btn-whatsapp {
+            background: #25D366;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin: 10px 0;
+            text-decoration: none;
+            display: block;
+            transition: transform 0.2s;
+        }
+        .btn-whatsapp:hover { transform: translateY(-2px); }
+        .error-message {
+            background: #ff7675;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 15px 0;
+            display: none;
+        }
+        .error-message.show { display: block; }
+        .warning-banner {
+            background: #ffeaa7;
+            color: #2d3436;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .warning-banner.show { display: block; }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            overflow: hidden;
+            display: none;
+        }
+        .container.unlocked { display: block; }
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 25px;
+            text-align: center;
+        }
+        header h1 { font-size: 2.3em; margin-bottom: 10px; }
+        .greeting {
+            background: #fff3cd;
+            padding: 30px;
+            text-align: center;
+            border-bottom: 3px solid #ffc107;
+        }
+        .greeting img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            margin: 0 auto 15px auto;
+        }
+    </style>
+</head>
+<body>
+    <div id="lockModal" class="lock-modal">
+        <div class="lock-content">
+            <div class="lock-logo">🔒</div>
+            <h2>Compagnia Quotidiana per Anziani</h2>
+            <p>Questa applicazione richiede una licenza attiva per funzionare.</p>
+            <div class="device-id-box">
+                <label>ID del tuo dispositivo:</label>
+                <div class="id-value" id="deviceId"></div>
+                <p style="font-size: 0.85em; color: #636e72; margin-top: 10px;">
+                    Invia questo ID a MCI per ottenere il tuo codice di attivazione
+                </p>
+            </div>
+            <input type="text" id="tokenInput" class="token-input" placeholder="Incolla qui il tuo codice di attivazione">
+            <button class="btn-primary" onclick="activateLicense()">🔓 Attiva Licenza</button>
+            <div id="errorMessage" class="error-message"></div>
+            <a href="#" id="hotmartLink" class="btn-hotmart" target="_blank">🛒 Ottieni Accesso</a>
+            <a href="https://wa.me/5491130820725" id="whatsappLink" class="btn-whatsapp" target="_blank">💬 Contatta MCI su WhatsApp</a>
+        </div>
+    </div>
+    <div id="warningBanner" class="warning-banner">
+        <strong>⚠️ Il tuo abbonamento scade presto</strong>
+        <p id="warningText"></p>
+    </div>
+    <div id="appContainer" class="container">
+        <header>
+            <h1>👵 Compagnia Quotidiana per Anziani</h1>
+            <p>La tua compagna virtuale di ogni giorno</p>
+        </header>
+        <div class="greeting">
+            <img src="clara-celeste.jpg" alt="Clara">
+            <h2>Benvenuto/a!</h2>
+            <p id="currentDate"></p>
+        </div>
+    </div>
+    <script>
+        const HOTMART_LINK = '#';
+        function generateDeviceId() {
+            let deviceId = localStorage.getItem('deviceId_seniors_it');
+            if (!deviceId) {
+                deviceId = 'SEN-IT-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('deviceId_seniors_it', deviceId);
+            }
+            return deviceId;
+        }
+        function displayDeviceId() {
+            const deviceId = generateDeviceId();
+            document.getElementById('deviceId').textContent = deviceId;
+            const message = encodeURIComponent('Salve, ho bisogno di attivare la mia licenza Compagnia Quotidiana per Anziani. Il mio ID è: ' + deviceId);
+            document.getElementById('whatsappLink').setAttribute('href', 'https://wa.me/5491130820725?text=' + message);
+            document.getElementById('hotmartLink').setAttribute('href', HOTMART_LINK);
+        }
+        function validateLicense() {
+            const licenseData = localStorage.getItem('licenseToken_seniors_it');
+            if (!licenseData) return { valid: false, reason: 'no_license' };
+            try {
+                const decoded = atob(licenseData);
+                const license = JSON.parse(decoded);
+                const deviceId = generateDeviceId();
+                if (license.deviceId !== deviceId) return { valid: false, reason: 'wrong_device' };
+                const daysRemaining = Math.ceil((new Date(license.expiry) - new Date()) / 86400000);
+                if (daysRemaining < -5) return { valid: false, reason: 'expired' };
+                if (daysRemaining < 0) return { valid: true, grace: true, daysLeft: 5 + daysRemaining };
+                if (daysRemaining <= 5) return { valid: true, warning: true, daysLeft: daysRemaining };
+                return { valid: true };
+            } catch (error) {
+                return { valid: false, reason: 'invalid_token' };
+            }
+        }
+        function activateLicense() {
+            const token = document.getElementById('tokenInput').value.trim();
+            const errorDiv = document.getElementById('errorMessage');
+            if (!token) { errorDiv.textContent = 'Per favore inserisci un codice di attivazione'; errorDiv.classList.add('show'); return; }
+            try {
+                const decoded = atob(token);
+                const license = JSON.parse(decoded);
+                const deviceId = generateDeviceId();
+                if (license.deviceId !== deviceId) { errorDiv.textContent = 'Questo codice non è valido per questo dispositivo'; errorDiv.classList.add('show'); return; }
+                if (new Date(license.expiry) < new Date()) { errorDiv.textContent = 'Questo codice è scaduto. Contatta MCI per rinnovare'; errorDiv.classList.add('show'); return; }
+                Object.keys(localStorage).forEach(key => { if (key.includes('seniors_it') && !key.includes('deviceId')) localStorage.removeItem(key); });
+                localStorage.setItem('licenseToken_seniors_it', token);
+                errorDiv.classList.remove('show');
+                unlockApp();
+            } catch (error) { errorDiv.textContent = 'Codice non valido'; errorDiv.classList.add('show'); }
+        }
+        function unlockApp() {
+            document.getElementById('lockModal').classList.add('hidden');
+            document.getElementById('appContainer').classList.add('unlocked');
+            const validation = validateLicense();
+            if (validation.warning || validation.grace) {
+                const warningText = document.getElementById('warningText');
+                warningText.textContent = validation.grace ? 
+                    `Il tuo abbonamento è scaduto. Hai ${validation.daysLeft} giorni di periodo di grazia. Rinnova per $9.99 USD/mese` : 
+                    `Il tuo abbonamento scade tra ${validation.daysLeft} giorni. Rinnova per $9.99 USD/mese`;
+                document.getElementById('warningBanner').classList.add('show');
+            }
+            updateDate();
+        }
+        function updateDate() {
+            const today = new Date();
+            const dateString = today.toLocaleDateString('it-IT', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            const dateEl = document.getElementById('currentDate');
+            if (dateEl) dateEl.textContent = dateString;
+        }
+        window.onload = function() {
+            displayDeviceId();
+            const validation = validateLicense();
+            if (validation.valid) {
+                unlockApp();
+            } else {
+                const errorDiv = document.getElementById('errorMessage');
+                if (validation.reason === 'expired') { errorDiv.textContent = 'La tua licenza è scaduta. Contatta MCI per rinnovare a $9.99 USD/mese'; errorDiv.classList.add('show'); }
+                else if (validation.reason === 'wrong_device') { errorDiv.textContent = 'Questa licenza è collegata a un altro dispositivo'; errorDiv.classList.add('show'); }
+            }
+        };
+    </script>
+</body>
+</html>
