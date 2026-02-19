@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Companionship for Seniors | Virtual Emotional Support | MCI Orion Series</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="MCI Orion Series - Integral Consciousness Methodology. Emotional support for older adults. Help against loneliness, anxiety and social isolation. Consciousness and personal development tools.">
+    <meta name="keywords" content="MCI Orion Series, Integral Consciousness Methodology, emotional support, senior support, loneliness in old age, senior anxiety, personal development, consciousness tools, personal growth, stress management">
+    <meta name="author" content="MCI Integral Consciousness Methodology">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Daily Companionship for Seniors | MCI Orion Series">
+    <meta property="og:description" content="Emotional support and companionship for older adults. Integral Consciousness Methodology.">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            font-size: 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 15px;
+            line-height: 1.6;
+        }
+        
+        .lock-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .lock-modal.hidden { display: none; }
+        
+        .lock-content {
+            background: white;
+            border-radius: 20px;
+            padding: 35px 25px;
+            max-width: 550px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            text-align: center;
+            margin: 20px auto;
+        }
+        
+        .lock-logo {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2em;
+        }
+        
+        .lock-content h2 {
+            color: #667eea;
+            font-size: 1.6em;
+            margin-bottom: 10px;
+        }
+        
+        .lock-content p {
+            color: #636e72;
+            font-size: 1em;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .device-warning {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 15px 0;
+        }
+        
+        .device-warning strong {
+            color: #856404;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .device-warning p {
+            color: #856404;
+            font-size: 0.85em;
+        }
+        
+        .device-id-box {
+            background: #f8f9fa;
+            border: 2px dashed #667eea;
+            border-radius: 10px;
+            padding: 12px;
+            margin: 15px 0;
+        }
+        
+        .device-id-box label {
+            display: block;
+            font-size: 0.85em;
+            color: #636e72;
+            margin-bottom: 5px;
+        }
+        
+        .device-id-box .id-value {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #2d3436;
+            word-break: break-all;
+            font-weight: bold;
+        }
+        
+        .token-input {
+            width: 100%;
+            padding: 12px;
+            font-size: 0.95em;
+            border: 2px solid #dfe6e9;
+            border-radius: 8px;
+            margin: 12px 0;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .token-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 14px 28px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin: 8px 0;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .btn-hotmart {
+            background: #FF6B35;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 14px 28px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin: 8px 0;
+            text-decoration: none;
+            display: block;
+            transition: all 0.3s;
+        }
+        
+        .btn-hotmart:hover {
+            transform: translateY(-2px);
+            background: #E55A2B;
+            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.4);
+        }
+        
+        .btn-whatsapp {
+            background: #25D366;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 14px 28px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin: 8px 0;
+            text-decoration: none;
+            display: block;
+            transition: all 0.3s;
+        }
+        
+        .btn-whatsapp:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.4);
+        }
+        
+        .checkbox-container {
+            display: flex;
+            align-items: flex-start;
+            text-align: left;
+            margin: 15px 0;
+            gap: 10px;
+        }
+        
+        .checkbox-container input[type="checkbox"] {
+            margin-top: 4px;
+            flex-shrink: 0;
+        }
+        
+        .checkbox-container label {
+            font-size: 0.85em;
+            color: #636e72;
+            line-height: 1.4;
+        }
+        
+        .checkbox-container label a {
+            color: #667eea;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        .checkbox-container label a:hover {
+            text-decoration: underline;
+        }
+        
+        .error-message {
+            background: #ff7675;
+            color: white;
+            padding: 10px;
+            border-radius: 6px;
+            margin: 10px 0;
+            display: none;
+            font-size: 0.9em;
+        }
+        
+        .error-message.show { display: block; }
+        
+        .success-message {
+            background: #00b894;
+            color: white;
+            padding: 10px;
+            border-radius: 6px;
+            margin: 10px 0;
+            display: none;
+            font-size: 0.9em;
+        }
+        
+        .success-message.show { display: block; }
+        
+        .legal-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 11000;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .legal-modal.show { display: flex; }
+        
+        .legal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 700px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            margin: 20px;
+        }
+        
+        .legal-content h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+        
+        .legal-content h3 {
+            color: #2d3436;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .legal-content p, .legal-content ul {
+            color: #636e72;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+        
+        .legal-content ul {
+            margin-left: 20px;
+        }
+        
+        .btn-close-legal {
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s;
+        }
+        
+        .btn-close-legal:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+        
+        .warning-banner {
+            background: #ffeaa7;
+            color: #2d3436;
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: none;
+            text-align: center;
+        }
+        
+        .warning-banner.show { display: block; }
+        
+        .warning-banner strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            overflow: hidden;
+            display: none;
+        }
+        
+        .container.unlocked { display: block; }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 35px 25px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2.2em;
+            margin-bottom: 8px;
+        }
+        
+        header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+        
+        .intro-section {
+            padding: 30px 25px;
+            background: #f8f9fa;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        .intro-section h2 {
+            color: #667eea;
+            font-size: 1.6em;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .intro-section p {
+            color: #636e72;
+            font-size: 1em;
+            line-height: 1.7;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .greeting {
+            background: #fff3cd;
+            padding: 30px 25px;
+            text-align: center;
+            border-bottom: 3px solid #ffc107;
+        }
+        
+        .greeting img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            margin: 0 auto 15px auto;
+            display: block;
+        }
+        
+        .greeting h2 {
+            color: #2d3436;
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+        
+        .greeting p {
+            color: #636e72;
+            font-size: 1.1em;
+        }
+        
+        .contact-cta {
+            padding: 30px 25px;
+            text-align: center;
+            background: white;
+        }
+        
+        .contact-cta p {
+            color: #636e72;
+            margin-bottom: 15px;
+            font-size: 1em;
+            line-height: 1.6;
+        }
+        
+        .contact-cta a {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 14px 28px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .contact-cta a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        footer {
+            background: #2d3436;
+            color: #dfe6e9;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        footer p {
+            margin: 5px 0;
+            font-size: 0.9em;
+        }
+        
+        footer a {
+            color: #74b9ff;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        footer a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 600px) {
+            body { font-size: 16px; }
+            .lock-content { padding: 25px 20px; }
+            header h1 { font-size: 1.8em; }
+            .intro-section h2 { font-size: 1.4em; }
+        }
+    </style>
+</head>
+<body>
+    <div id="lockModal" class="lock-modal">
+        <div class="lock-content">
+            <div class="lock-logo">🔒</div>
+            <h2>Daily Companionship for Seniors</h2>
+            <p>This application requires an active license to function.</p>
+            
+            <div class="device-warning">
+                <strong>⚠️ Important: Single Device</strong>
+                <p>Your license will be linked to THIS device. If you change devices, contact MCI for assistance.</p>
+            </div>
+            
+            <div class="device-id-box">
+                <label>Your device ID:</label>
+                <div class="id-value" id="deviceId"></div>
+                <p style="font-size: 0.85em; color: #636e72; margin-top: 8px;">
+                    Send this ID to MCI to get your activation code
+                </p>
+            </div>
+            
+            <input type="text" id="tokenInput" class="token-input" placeholder="Paste your activation code here">
+            
+            <div class="checkbox-container">
+                <input type="checkbox" id="termsCheckbox">
+                <label for="termsCheckbox">
+                    I accept the <a onclick="showTerms()">Terms and Conditions</a> and <a onclick="showPrivacy()">Privacy Policy</a>
+                </label>
+            </div>
+            
+            <button class="btn-primary" id="activateBtn" onclick="activateLicense()" disabled>🔓 Activate License</button>
+            
+            <div id="errorMessage" class="error-message"></div>
+            <div id="successMessage" class="success-message"></div>
+            
+            <a href="#" id="hotmartLink" class="btn-hotmart" target="_blank">🛒 Get Access</a>
+            <a href="https://wa.me/5491130820725?text=Hello%2C%20I%20need%20help%20with%20my%20Daily%20Companionship%20for%20Seniors%20license" class="btn-whatsapp" target="_blank">💬 Contact MCI on WhatsApp</a>
+        </div>
+    </div>
+
+    <div id="termsModal" class="legal-modal">
+        <div class="legal-content">
+            <h2>Terms and Conditions</h2>
+            <h3>1. Acceptance of Terms</h3>
+            <p>By using this application, you accept these terms.</p>
+            <h3>2. License</h3>
+            <ul>
+                <li>Subscription: <strong>$9.99 USD/month</strong></li>
+                <li>Automatic renewal (can be canceled anytime)</li>
+                <li><strong>Single device license:</strong> linked to your device ID</li>
+                <li>Payment via Hotmart</li>
+            </ul>
+            <h3>3. Appropriate Use</h3>
+            <p>This emotional support and personal development tool <strong>DOES NOT replace</strong> professional medical, psychological or psychiatric care.</p>
+            <h3>4. Minimum Age</h3>
+            <p>You must be <strong>18 years or older</strong>. Minors require parental or legal guardian authorization.</p>
+            <h3>5. Cancellation and Refunds</h3>
+            <ul>
+                <li>You can cancel at any time</li>
+                <li>No refunds for partial months</li>
+                <li>Access continues until end of paid period</li>
+            </ul>
+            <h3>6. Modifications</h3>
+            <p>We reserve the right to modify these terms. Changes will be notified by email.</p>
+            <h3>7. Intellectual Property</h3>
+            <p>All content is property of <strong>MCI Integral Consciousness Methodology</strong>. Reproduction without authorization is prohibited.</p>
+            <p style="margin-top: 20px;"><strong>Last updated:</strong> February 2026</p>
+            <button class="btn-close-legal" onclick="closeTerms()">Close</button>
+        </div>
+    </div>
+
+    <div id="privacyModal" class="legal-modal">
+        <div class="legal-content">
+            <h2>Privacy Policy</h2>
+            <h3>1. Information We Collect</h3>
+            <p><strong>Very little.</strong> We only store:</p>
+            <ul>
+                <li><strong>Device ID:</strong> Automatically generated in your browser</li>
+                <li><strong>Activation date:</strong> To manage your license</li>
+                <li><strong>Purchase email:</strong> Provided by Hotmart</li>
+            </ul>
+            <h3>2. How We Use Your Information</h3>
+            <ul>
+                <li>Validate your active license</li>
+                <li>Send you renewal notifications</li>
+                <li>Technical support if needed</li>
+            </ul>
+            <h3>3. Local Storage</h3>
+            <p>Your device ID is saved <strong>only in your browser</strong> (localStorage). We don't send it to external servers.</p>
+            <h3>4. Third Party Sharing</h3>
+            <p><strong>We DO NOT share your information</strong> with third parties, except Hotmart (processes your payment).</p>
+            <h3>5. Your Rights</h3>
+            <p>You have the right to access, correct or delete your data. Contact: Instagram @metodologia.mci</p>
+            <h3>6. Security</h3>
+            <p>We use HTTPS and encrypted local storage.</p>
+            <p style="margin-top: 20px;"><strong>Last updated:</strong> February 2026</p>
+            <button class="btn-close-legal" onclick="closePrivacy()">Close</button>
+        </div>
+    </div>
+
+    <div id="warningBanner" class="warning-banner">
+        <strong id="warningTitle">⚠️ Your subscription expires soon</strong>
+        <p id="warningText"></p>
+    </div>
+
+    <div id="appContainer" class="container">
+        <header>
+            <h1>👵 Daily Companionship for Seniors</h1>
+            <p>Your daily virtual companion</p>
+            <p style="font-size: 0.9em; margin-top: 8px; opacity: 0.9;">MCI Orion Series - Integral Consciousness Methodology</p>
+        </header>
+
+        <div class="intro-section">
+            <h2>Emotional Support for Older Adults</h2>
+            <p>If you're experiencing <strong>loneliness in old age</strong>, facing <strong>anxiety or social isolation</strong>, this <strong>personal development</strong> tool is designed to accompany you.</p>
+            <p>Our <strong>Integral Consciousness Methodology</strong> combines <strong>stress management</strong> techniques with personalized <strong>emotional support</strong>.</p>
+        </div>
+
+        <div class="greeting">
+            <img src="clara-celeste.jpg" alt="Clara - MCI Virtual Companion">
+            <h2>Welcome!</h2>
+            <p id="currentDate"></p>
+        </div>
+
+        <div class="contact-cta">
+            <p><strong>Want to go deeper with MCI Integral Consciousness Methodology?</strong></p>
+            <p>Click to schedule a support session:</p>
+            <a href="https://www.instagram.com/metodologia.mci/" target="_blank">💬 Contact MCI</a>
+        </div>
+
+        <footer>
+            <p><strong>© 2026 MCI Integral Consciousness Methodology</strong></p>
+            <p>All rights reserved.</p>
+            <p style="margin-top: 10px; font-size: 0.8em; line-height: 1.5;">
+                This application is for informational purposes. Content is property of MCI and does not substitute professional advice.
+            </p>
+            <p style="margin-top: 10px;">
+                <a onclick="showTerms()">Terms</a> | 
+                <a onclick="showPrivacy()">Privacy</a> | 
+                <a href="https://www.instagram.com/metodologia.mci/" target="_blank">Contact</a>
+            </p>
+            <p style="margin-top: 8px; font-size: 0.75em; color: #adb5bd;">MCI 2026 v1.0</p>
+        </footer>
+    </div>
+
+    <script>
+        const HOTMART_LINK = '#';
+        document.getElementById('hotmartLink').href = HOTMART_LINK;
+
+        function showTerms() { document.getElementById('termsModal').classList.add('show'); }
+        function closeTerms() { document.getElementById('termsModal').classList.remove('show'); }
+        function showPrivacy() { document.getElementById('privacyModal').classList.add('show'); }
+        function closePrivacy() { document.getElementById('privacyModal').classList.remove('show'); }
+
+        document.getElementById('termsCheckbox').addEventListener('change', function() {
+            document.getElementById('activateBtn').disabled = !this.checked;
+        });
+
+        function generateDeviceId() {
+            let deviceId = localStorage.getItem('deviceId_seniors_en');
+            if (!deviceId) {
+                deviceId = 'SEN-EN-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('deviceId_seniors_en', deviceId);
+            }
+            return deviceId;
+        }
+
+        function displayDeviceId() {
+            const deviceId = generateDeviceId();
+            document.getElementById('deviceId').textContent = deviceId;
+        }
+
+        function validateLicense() {
+            const licenseData = localStorage.getItem('licenseToken_seniors_en');
+            if (!licenseData) return { valid: false, reason: 'no_license' };
+            try {
+                const license = JSON.parse(atob(licenseData));
+                const deviceId = generateDeviceId();
+                if (license.deviceId !== deviceId) return { valid: false, reason: 'wrong_device' };
+                const daysRemaining = Math.ceil((new Date(license.expiry) - new Date()) / 86400000);
+                if (daysRemaining < -5) return { valid: false, reason: 'expired' };
+                if (daysRemaining < 0) return { valid: true, grace: true, daysLeft: 5 + daysRemaining };
+                if (daysRemaining <= 5) return { valid: true, warning: true, daysLeft: daysRemaining };
+                return { valid: true };
+            } catch (error) {
+                return { valid: false, reason: 'invalid_token' };
+            }
+        }
+
+        function activateLicense() {
+            const token = document.getElementById('tokenInput').value.trim();
+            const errorDiv = document.getElementById('errorMessage');
+            if (!token) { errorDiv.textContent = 'Please enter an activation code'; errorDiv.classList.add('show'); return; }
+            try {
+                const license = JSON.parse(atob(token));
+                const deviceId = generateDeviceId();
+                if (license.deviceId !== deviceId) { errorDiv.textContent = 'This code is not valid for this device'; errorDiv.classList.add('show'); return; }
+                if (new Date(license.expiry) < new Date()) { errorDiv.textContent = 'This code has expired. Contact MCI to renew'; errorDiv.classList.add('show'); return; }
+                Object.keys(localStorage).forEach(key => { if (key.includes('seniors_en') && !key.includes('deviceId')) localStorage.removeItem(key); });
+                localStorage.setItem('licenseToken_seniors_en', token);
+                errorDiv.classList.remove('show');
+                unlockApp();
+            } catch (error) { errorDiv.textContent = 'Invalid code'; errorDiv.classList.add('show'); }
+        }
+
+        function unlockApp() {
+            document.getElementById('lockModal').classList.add('hidden');
+            document.getElementById('appContainer').classList.add('unlocked');
+            const validation = validateLicense();
+            if (validation.warning || validation.grace) {
+                document.getElementById('warningText').textContent = validation.grace ? 
+                    `Your subscription has expired. You have ${validation.daysLeft} days grace period. Renew for $9.99 USD/month` : 
+                    `Your subscription expires in ${validation.daysLeft} days. Renew for $9.99 USD/month`;
+                document.getElementById('warningBanner').classList.add('show');
+            }
+            updateDate();
+        }
+
+        function updateDate() {
+            const today = new Date();
+            const dateString = today.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            const dateEl = document.getElementById('currentDate');
+            if (dateEl) dateEl.textContent = dateString;
+        }
+
+        window.onload = function() {
+            displayDeviceId();
+            const validation = validateLicense();
+            if (validation.valid) {
+                unlockApp();
+            } else {
+                const errorDiv = document.getElementById('errorMessage');
+                if (validation.reason === 'expired') { errorDiv.textContent = 'Your license has expired. Contact MCI to renew for $9.99 USD/month'; errorDiv.classList.add('show'); }
+                else if (validation.reason === 'wrong_device') { errorDiv.textContent = 'This license is linked to another device'; errorDiv.classList.add('show'); }
+            }
+        };
+    </script>
+</body>
+</html>
