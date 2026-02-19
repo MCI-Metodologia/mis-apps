@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Códigos MCI 2026</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .generator-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 30px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5em;
+        }
+        
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 1.8em;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #636e72;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        
+        .warning-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .warning-box h3 {
+            color: #856404;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        
+        .warning-box ul {
+            color: #856404;
+            padding-left: 20px;
+            line-height: 1.6;
+        }
+        
+        .warning-box li {
+            margin: 5px 0;
+        }
+        
+        .confirmation {
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            background: #e8f4f8;
+            border-radius: 8px;
+        }
+        
+        .confirmation label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.05em;
+            color: #2d3436;
+        }
+        
+        .confirmation input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+        
+        .input-group {
+            margin: 20px 0;
+        }
+        
+        .input-group label {
+            display: block;
+            color: #2d3436;
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 1em;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            font-size: 1em;
+            border: 2px solid #dfe6e9;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .btn-generate {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin: 15px 0;
+            transition: all 0.3s;
+        }
+        
+        .btn-generate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-generate:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .result-box {
+            display: none;
+            background: #d4edda;
+            border: 2px solid #28a745;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .result-box.show { display: block; }
+        
+        .result-box h3 {
+            color: #155724;
+            margin-bottom: 10px;
+        }
+        
+        .result-code {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            word-break: break-all;
+            margin: 10px 0;
+            border: 1px solid #c3e6cb;
+            font-size: 0.95em;
+        }
+        
+        .btn-copy {
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .btn-copy:hover {
+            background: #218838;
+        }
+        
+        .instructions {
+            background: #e8f4f8;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .instructions h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .instructions ol {
+            padding-left: 20px;
+            color: #2d3436;
+            line-height: 1.6;
+        }
+        
+        .error-box {
+            background: #f8d7da;
+            border: 2px solid #f5c6cb;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            display: none;
+        }
+        
+        .error-box.show { display: block; }
+        
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #636e72;
+            font-size: 0.9em;
+        }
+        
+        footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="generator-container">
+        <div class="logo">🔑</div>
+        <h1>Generador de Códigos MCI 2026</h1>
+        <p class="subtitle">Metodología de Conciencia Integral</p>
+        
+        <div class="warning-box">
+            <h3>⚠️ IMPORTANTE - Leé antes de generar</h3>
+            <ul>
+                <li><strong>Tu código funcionará SOLO en este dispositivo</strong></li>
+                <li>NO podrás usarlo en otro celular o computadora</li>
+                <li>Si generás el código en el dispositivo equivocado, tendrás que comprar otra licencia</li>
+                <li>Asegurate de estar en el dispositivo que vas a usar siempre</li>
+            </ul>
+        </div>
+        
+        <div class="confirmation">
+            <label>
+                <input type="checkbox" id="confirmDevice">
+                <strong>Confirmo que estoy en el dispositivo correcto</strong>
+            </label>
+        </div>
+        
+        <div class="instructions">
+            <h3>📋 Cómo usar este generador:</h3>
+            <ol>
+                <li>Abrí tu app MCI en el dispositivo que vas a usar</li>
+                <li>Copiá el ID que aparece en la pantalla</li>
+                <li>Pegalo en el campo de abajo</li>
+                <li>Click en "Generar mi Código"</li>
+                <li>Copiá el código generado</li>
+                <li>Volvé a tu app y pegalo para activarla</li>
+            </ol>
+        </div>
+        
+        <div class="input-group">
+            <label for="deviceIdInput">Tu ID de Dispositivo:</label>
+            <input 
+                type="text" 
+                id="deviceIdInput" 
+                placeholder="Ejemplo: SEN-ES-1739851234-abc123xyz"
+                disabled
+            >
+        </div>
+        
+        <button id="generateBtn" class="btn-generate" onclick="generateCode()" disabled>
+            🔑 Generar mi Código de Activación
+        </button>
+        
+        <div id="errorBox" class="error-box"></div>
+        
+        <div id="resultBox" class="result-box">
+            <h3>✅ ¡Código Generado con Éxito!</h3>
+            <p>Copiá este código y pegalo en tu app para activarla:</p>
+            <div class="result-code" id="generatedCode"></div>
+            <button class="btn-copy" onclick="copyCode()">📋 Copiar Código</button>
+            <p style="margin-top: 15px; font-size: 0.9em; color: #155724;">
+                <strong>Válido hasta:</strong> <span id="expiryDate"></span><br>
+                <strong>Renovación:</strong> $9.99 USD/mes
+            </p>
+        </div>
+        
+        <footer>
+            <p><strong>© 2026 MCI Metodología de Conciencia Integral</strong></p>
+            <p style="margin-top: 5px;">
+                ¿Problemas? Contactanos: 
+                <a href="https://www.instagram.com/metodologia.mci/" target="_blank">@metodologia.mci</a>
+            </p>
+            <p style="margin-top: 10px; font-size: 0.85em;">MCI 2026 v1.0</p>
+        </footer>
+    </div>
+
+    <script>
+        // Habilitar input y botón cuando se confirme dispositivo
+        document.getElementById('confirmDevice').addEventListener('change', function() {
+            const input = document.getElementById('deviceIdInput');
+            const btn = document.getElementById('generateBtn');
+            
+            if (this.checked) {
+                input.disabled = false;
+                input.focus();
+            } else {
+                input.disabled = true;
+                btn.disabled = true;
+            }
+        });
+
+        // Habilitar botón cuando hay texto en el input
+        document.getElementById('deviceIdInput').addEventListener('input', function() {
+            const btn = document.getElementById('generateBtn');
+            btn.disabled = this.value.trim().length === 0;
+        });
+
+        function generateCode() {
+            const deviceId = document.getElementById('deviceIdInput').value.trim();
+            const errorBox = document.getElementById('errorBox');
+            const resultBox = document.getElementById('resultBox');
+            
+            // Limpiar mensajes anteriores
+            errorBox.classList.remove('show');
+            resultBox.classList.remove('show');
+            
+            // Validar formato del ID
+            if (!deviceId.match(/^[A-Z]{3}-[A-Z]{2}-\d+-[a-z0-9]+$/)) {
+                errorBox.textContent = '❌ El ID no tiene el formato correcto. Copialo exactamente como aparece en tu app.';
+                errorBox.classList.add('show');
+                return;
+            }
+            
+            // Generar código
+            try {
+                // Calcular fecha de expiración (30 días desde hoy)
+                const expiry = new Date();
+                expiry.setDate(expiry.getDate() + 30);
+                
+                // Crear objeto de licencia
+                const license = {
+                    deviceId: deviceId,
+                    expiry: expiry.toISOString(),
+                    version: 'MCI2026',
+                    generated: new Date().toISOString()
+                };
+                
+                // Convertir a base64
+                const licenseJson = JSON.stringify(license);
+                const licenseCode = btoa(licenseJson);
+                
+                // Mostrar resultado
+                document.getElementById('generatedCode').textContent = licenseCode;
+                document.getElementById('expiryDate').textContent = expiry.toLocaleDateString('es-ES', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                
+                resultBox.classList.add('show');
+                
+                // Scroll al resultado
+                resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                
+            } catch (error) {
+                errorBox.textContent = '❌ Error al generar el código. Intentá de nuevo o contactá soporte.';
+                errorBox.classList.add('show');
+            }
+        }
+
+        function copyCode() {
+            const code = document.getElementById('generatedCode').textContent;
+            
+            // Copiar al portapapeles
+            navigator.clipboard.writeText(code).then(function() {
+                // Cambiar texto del botón temporalmente
+                const btn = event.target;
+                const originalText = btn.textContent;
+                btn.textContent = '✅ ¡Copiado!';
+                btn.style.background = '#28a745';
+                
+                setTimeout(function() {
+                    btn.textContent = originalText;
+                    btn.style.background = '#28a745';
+                }, 2000);
+            }).catch(function() {
+                alert('No se pudo copiar automáticamente. Por favor, seleccioná y copiá el código manualmente.');
+            });
+        }
+
+        // Permitir enter para generar
+        document.getElementById('deviceIdInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !document.getElementById('generateBtn').disabled) {
+                generateCode();
+            }
+        });
+    </script>
+</body>
+</html>

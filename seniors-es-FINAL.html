@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compañía Diaria para Seniors | Apoyo Emocional Virtual | MCI Serie Orión</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="MCI Serie Orión - Metodología de Conciencia Integral. Acompañamiento emocional para adultos mayores. Apoyo contra la soledad, ansiedad y aislamiento social. Herramientas de conciencia y desarrollo personal.">
+    <meta name="keywords" content="MCI Serie Orión, Metodología de Conciencia Integral, acompañamiento emocional, apoyo adultos mayores, soledad en la vejez, ansiedad seniors, desarrollo personal, herramientas de conciencia, crecimiento personal, manejo del estrés">
+    <meta name="author" content="MCI Metodología de Conciencia Integral">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Compañía Diaria para Seniors | MCI Serie Orión">
+    <meta property="og:description" content="Acompañamiento emocional y apoyo para adultos mayores. Metodología de Conciencia Integral.">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            font-size: 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 15px;
+            line-height: 1.6;
+        }
+        
+        .lock-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .lock-modal.hidden { display: none; }
+        
+        .lock-content {
+            background: white;
+            border-radius: 20px;
+            padding: 35px 25px;
+            max-width: 550px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            text-align: center;
+            margin: 20px auto;
+        }
+        
+        .lock-logo {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2em;
+        }
+        
+        .lock-content h2 {
+            color: #667eea;
+            font-size: 1.6em;
+            margin-bottom: 10px;
+        }
+        
+        .lock-content p {
+            color: #636e72;
+            font-size: 1em;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .device-warning {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 15px 0;
+        }
+        
+        .device-warning strong {
+            color: #856404;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .device-warning p {
+            color: #856404;
+            font-size: 0.85em;
+        }
+        
+        .device-id-box {
+            background: #f8f9fa;
+            border: 2px dashed #667eea;
+            border-radius: 10px;
+            padding: 12px;
+            margin: 15px 0;
+        }
+        
+        .device-id-box label {
+            display: block;
+            font-size: 0.85em;
+            color: #636e72;
+            margin-bottom: 5px;
+        }
+        
+        .device-id-box .id-value {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #2d3436;
+            word-break: break-all;
+            font-weight: bold;
+        }
+        
+        .token-input {
+            width: 100%;
+            padding: 12px;
+            font-size: 0.95em;
+            border: 2px solid #dfe6e9;
+            border-radius: 8px;
+            margin: 12px 0;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .token-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 14px 28px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin: 8px 0;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .btn-hotmart {
+            background: #FF6B35;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 14px 28px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin: 8px 0;
+            text-decoration: none;
+            display: block;
+            transition: all 0.3s;
+        }
+        
+        .btn-hotmart:hover {
+            transform: translateY(-2px);
+            background: #E55A2B;
+            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.4);
+        }
+        
+        .btn-generator {
+            background: #00b894;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 14px 28px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin: 8px 0;
+            text-decoration: none;
+            display: block;
+            transition: all 0.3s;
+        }
+        
+        .btn-generator:hover {
+            transform: translateY(-2px);
+            background: #00a383;
+            box-shadow: 0 5px 15px rgba(0, 184, 148, 0.4);
+        }
+        
+        .error-message {
+            background: #ff7675;
+            color: white;
+            padding: 10px;
+            border-radius: 6px;
+            margin: 12px 0;
+            display: none;
+            font-size: 0.9em;
+        }
+        
+        .error-message.show { display: block; }
+        
+        .warning-banner {
+            background: #ffeaa7;
+            color: #2d3436;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: none;
+        }
+        
+        .warning-banner.show { display: block; }
+        
+        .terms-checkbox {
+            text-align: left;
+            margin: 15px 0;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .terms-checkbox label {
+            display: flex;
+            align-items: flex-start;
+            cursor: pointer;
+            font-size: 0.85em;
+            color: #2d3436;
+        }
+        
+        .terms-checkbox input[type="checkbox"] {
+            margin-right: 8px;
+            margin-top: 3px;
+            cursor: pointer;
+        }
+        
+        .terms-checkbox a {
+            color: #667eea;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        
+        .legal-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 10001;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .legal-modal.show { display: flex; }
+        
+        .legal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 700px;
+            margin: auto;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .legal-content h2 { color: #667eea; margin-bottom: 15px; }
+        .legal-content h3 { color: #2d3436; margin: 15px 0 8px 0; font-size: 1.1em; }
+        .legal-content p, .legal-content ul { margin-bottom: 12px; color: #636e72; line-height: 1.6; }
+        .legal-content ul { padding-left: 20px; }
+        
+        .btn-close-legal {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+        
+        .disclaimer-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 12px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        
+        .disclaimer-box strong { color: #856404; }
+        .disclaimer-box p { color: #856404; font-size: 0.85em; margin: 5px 0; }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            overflow: hidden;
+            display: none;
+        }
+        
+        .container.unlocked { display: block; }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 35px 20px;
+            text-align: center;
+        }
+        
+        header h1 { font-size: 2em; margin-bottom: 8px; }
+        header p { font-size: 1.1em; opacity: 0.95; }
+        
+        .intro-section {
+            padding: 25px 20px;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .intro-section h2 { color: #667eea; margin-bottom: 12px; font-size: 1.4em; }
+        .intro-section p { color: #495057; line-height: 1.7; margin-bottom: 10px; }
+        
+        .greeting {
+            background: #fff3cd;
+            padding: 25px;
+            text-align: center;
+            border-bottom: 3px solid #ffc107;
+        }
+        
+        .greeting img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            margin: 0 auto 12px auto;
+        }
+        
+        footer {
+            background: #2d3436;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        footer p { margin: 5px 0; font-size: 0.85em; }
+        footer a { color: #667eea; text-decoration: none; margin: 0 8px; }
+        footer a:hover { text-decoration: underline; }
+        
+        .contact-cta {
+            background: #e8f4f8;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin: 20px;
+            border-radius: 8px;
+        }
+        
+        .contact-cta p { color: #2d3436; margin-bottom: 10px; }
+        .contact-cta a {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div id="lockModal" class="lock-modal">
+        <div class="lock-content">
+            <div class="lock-logo">🔒</div>
+            <h2>Compañía Diaria Seniors</h2>
+            <p><strong>MCI Serie Orión</strong> - Metodología de Conciencia Integral</p>
+            <p>Esta aplicación requiere una licencia activa para funcionar.</p>
+            
+            <div class="device-warning">
+                <strong>⚠️ IMPORTANTE - LEÉ ANTES DE ACTIVAR</strong>
+                <p>Tu código funcionará SOLO en este dispositivo (celular o computadora).</p>
+                <p>NO podrás usarlo en otro dispositivo después.</p>
+                <p>¿Estás en el dispositivo que vas a usar siempre? Si no, abrí la app en ese dispositivo primero.</p>
+            </div>
+            
+            <div class="disclaimer-box">
+                <strong>⚠️ Aviso Médico</strong>
+                <p>Esta aplicación NO reemplaza atención médica o psicológica profesional. Si experimentás pensamientos de autolesión o crisis graves, contactá inmediatamente:</p>
+                <p>🆘 Argentina: 135 (Línea de Prevención del Suicidio) | Emergencias: 911</p>
+            </div>
+            
+            <div class="device-id-box">
+                <label>ID de tu dispositivo:</label>
+                <div class="id-value" id="deviceId"></div>
+                <p style="font-size: 0.8em; color: #636e72; margin-top: 8px;">
+                    Copiá este ID para generar tu código de activación
+                </p>
+            </div>
+            
+            <a href="generador.html" class="btn-generator" target="_blank">🔑 Generar mi Código de Activación</a>
+            
+            <input type="text" id="tokenInput" class="token-input" placeholder="Pegá tu código de activación aquí">
+            
+            <div class="terms-checkbox">
+                <label>
+                    <input type="checkbox" id="termsCheckbox">
+                    <span>Acepto los <a onclick="showTerms()">Términos y Condiciones</a> y la <a onclick="showPrivacy()">Política de Privacidad</a></span>
+                </label>
+            </div>
+            
+            <button class="btn-primary" id="activateBtn" onclick="activateLicense()" disabled>🔓 Activar Licencia</button>
+            
+            <div id="errorMessage" class="error-message"></div>
+            
+            <a href="https://pay.hotmart.com/W104511907Q?off=xgx4w7wr&src=MCI2026" class="btn-hotmart" target="_blank">🛒 Obtener Acceso</a>
+            
+            <p style="font-size: 0.85em; color: #636e72; margin-top: 15px;">
+                ¿Consultas? Instagram: <a href="https://www.instagram.com/metodologia.mci/" target="_blank" style="color: #667eea;">@metodologia.mci</a><br>
+                Respondemos 9-18hs (Argentina)
+            </p>
+        </div>
+    </div>
+
+    <!-- MODALES LEGALES (igual que antes) -->
+    <div id="termsModal" class="legal-modal">
+        <div class="legal-content">
+            <h2>Términos y Condiciones</h2>
+            <h3>1. Aceptación de Términos</h3>
+            <p>Al usar esta aplicación de MCI Serie Orión - Metodología de Conciencia Integral, aceptás estos términos en su totalidad.</p>
+            <h3>2. Licencia de Uso</h3>
+            <ul>
+                <li>La licencia es <strong>personal e intransferible</strong></li>
+                <li>Válida para <strong>UN solo dispositivo</strong></li>
+                <li>Renovación mensual automática: <strong>$9.99 USD/mes</strong></li>
+                <li>Período de gracia: <strong>5 días</strong> tras vencimiento</li>
+            </ul>
+            <h3>3. Uso Apropiado</h3>
+            <p>Esta herramienta de acompañamiento emocional y desarrollo personal <strong>NO sustituye</strong> atención médica, psicológica o psiquiátrica profesional.</p>
+            <h3>4. Edad Mínima</h3>
+            <p>Debes ser mayor de <strong>18 años</strong>. Menores requieren autorización de padres o tutor legal.</p>
+            <h3>5. Cancelación y Reembolsos</h3>
+            <ul>
+                <li>Podés cancelar en cualquier momento</li>
+                <li>No hay reembolsos por meses parciales</li>
+                <li>El acceso continúa hasta fin del período pagado</li>
+            </ul>
+            <h3>6. Modificaciones</h3>
+            <p>Nos reservamos el derecho de modificar estos términos. Los cambios se notificarán por email.</p>
+            <h3>7. Propiedad Intelectual</h3>
+            <p>Todo el contenido es propiedad de <strong>MCI Metodología de Conciencia Integral</strong>. Prohibida su reproducción sin autorización.</p>
+            <p style="margin-top: 20px;"><strong>Última actualización:</strong> Febrero 2026</p>
+            <button class="btn-close-legal" onclick="closeTerms()">Cerrar</button>
+        </div>
+    </div>
+
+    <div id="privacyModal" class="legal-modal">
+        <div class="legal-content">
+            <h2>Política de Privacidad</h2>
+            <h3>1. Información que Recopilamos</h3>
+            <p><strong>Muy poca.</strong> Solo almacenamos:</p>
+            <ul>
+                <li><strong>ID de dispositivo:</strong> Generado automáticamente en tu navegador</li>
+                <li><strong>Fecha de activación:</strong> Para gestionar tu licencia</li>
+                <li><strong>Email de compra:</strong> Proporcionado por Hotmart</li>
+            </ul>
+            <h3>2. Cómo Usamos tu Información</h3>
+            <ul>
+                <li>Validar tu licencia activa</li>
+                <li>Enviarte notificaciones de renovación</li>
+                <li>Soporte técnico si lo necesitás</li>
+            </ul>
+            <h3>3. Almacenamiento Local</h3>
+            <p>Tu ID de dispositivo se guarda <strong>solo en tu navegador</strong> (localStorage). No lo enviamos a servidores externos.</p>
+            <h3>4. Compartir con Terceros</h3>
+            <p><strong>NO compartimos tu información</strong> con terceros, excepto Hotmart (procesa tu pago).</p>
+            <h3>5. Tus Derechos</h3>
+            <p>Tenés derecho a acceder, corregir o eliminar tus datos. Contacto: Instagram @metodologia.mci</p>
+            <h3>6. Seguridad</h3>
+            <p>Usamos HTTPS y almacenamiento local encriptado.</p>
+            <p style="margin-top: 20px;"><strong>Última actualización:</strong> Febrero 2026</p>
+            <button class="btn-close-legal" onclick="closePrivacy()">Cerrar</button>
+        </div>
+    </div>
+
+    <div id="warningBanner" class="warning-banner">
+        <strong id="warningTitle">⚠️ Tu suscripción vence pronto</strong>
+        <p id="warningText"></p>
+    </div>
+
+    <div id="appContainer" class="container">
+        <header>
+            <h1>👵 Compañía Diaria Seniors</h1>
+            <p>Tu compañera virtual de cada día</p>
+            <p style="font-size: 0.9em; margin-top: 8px; opacity: 0.9;">MCI Serie Orión - Metodología de Conciencia Integral</p>
+        </header>
+
+        <div class="intro-section">
+            <h2>Acompañamiento Emocional para Adultos Mayores</h2>
+            <p>Si estás atravesando <strong>soledad en la vejez</strong>, enfrentando <strong>ansiedad o aislamiento social</strong>, esta herramienta de <strong>desarrollo personal</strong> está diseñada para acompañarte.</p>
+            <p>Nuestra <strong>Metodología de Conciencia Integral</strong> combina técnicas de <strong>manejo del estrés</strong> con <strong>acompañamiento emocional</strong> personalizado.</p>
+        </div>
+
+        <div class="greeting">
+            <img src="clara-celeste.jpg" alt="Clara - Acompañante Virtual MCI">
+            <h2>¡Bienvenido/a!</h2>
+            <p id="currentDate"></p>
+        </div>
+
+        <div class="contact-cta">
+            <p><strong>¿Querés profundizar con MCI Metodología de Conciencia Integral?</strong></p>
+            <p>Hacé clic para coordinar una sesión de acompañamiento:</p>
+            <a href="https://www.instagram.com/metodologia.mci/" target="_blank">💬 Contacto MCI</a>
+        </div>
+
+        <footer>
+            <p><strong>© 2026 MCI Metodología de Conciencia Integral</strong></p>
+            <p>Todos los derechos reservados.</p>
+            <p style="margin-top: 10px; font-size: 0.8em; line-height: 1.5;">
+                Esta aplicación es de carácter informativo. El contenido es propiedad de MCI y no sustituye el consejo profesional.
+            </p>
+            <p style="margin-top: 10px;">
+                <a onclick="showTerms()">Términos</a> | 
+                <a onclick="showPrivacy()">Privacidad</a> | 
+                <a href="https://www.instagram.com/metodologia.mci/" target="_blank">Contacto</a>
+            </p>
+            <p style="margin-top: 8px; font-size: 0.75em; color: #adb5bd;">MCI 2026 v1.0</p>
+        </footer>
+    </div>
+
+    <script>
+        function showTerms() { document.getElementById('termsModal').classList.add('show'); }
+        function closeTerms() { document.getElementById('termsModal').classList.remove('show'); }
+        function showPrivacy() { document.getElementById('privacyModal').classList.add('show'); }
+        function closePrivacy() { document.getElementById('privacyModal').classList.remove('show'); }
+
+        document.getElementById('termsCheckbox').addEventListener('change', function() {
+            document.getElementById('activateBtn').disabled = !this.checked;
+        });
+
+        function generateDeviceId() {
+            let deviceId = localStorage.getItem('deviceId_seniors_es');
+            if (!deviceId) {
+                deviceId = 'SEN-ES-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('deviceId_seniors_es', deviceId);
+            }
+            return deviceId;
+        }
+
+        function displayDeviceId() {
+            const deviceId = generateDeviceId();
+            document.getElementById('deviceId').textContent = deviceId;
+        }
+
+        function validateLicense() {
+            const licenseData = localStorage.getItem('licenseToken_seniors_es');
+            if (!licenseData) return { valid: false, reason: 'no_license' };
+            try {
+                const license = JSON.parse(atob(licenseData));
+                const deviceId = generateDeviceId();
+                if (license.deviceId !== deviceId) return { valid: false, reason: 'wrong_device' };
+                const daysRemaining = Math.ceil((new Date(license.expiry) - new Date()) / 86400000);
+                if (daysRemaining < -5) return { valid: false, reason: 'expired' };
+                if (daysRemaining < 0) return { valid: true, grace: true, daysLeft: 5 + daysRemaining };
+                if (daysRemaining <= 5) return { valid: true, warning: true, daysLeft: daysRemaining };
+                return { valid: true };
+            } catch (error) {
+                return { valid: false, reason: 'invalid_token' };
+            }
+        }
+
+        function activateLicense() {
+            const token = document.getElementById('tokenInput').value.trim();
+            const errorDiv = document.getElementById('errorMessage');
+            if (!token) { errorDiv.textContent = 'Por favor ingresá un código de activación'; errorDiv.classList.add('show'); return; }
+            try {
+                const license = JSON.parse(atob(token));
+                const deviceId = generateDeviceId();
+                if (license.deviceId !== deviceId) { errorDiv.textContent = 'Este código no es válido para este dispositivo'; errorDiv.classList.add('show'); return; }
+                if (new Date(license.expiry) < new Date()) { errorDiv.textContent = 'Este código ya venció. Contactá a MCI para renovar'; errorDiv.classList.add('show'); return; }
+                Object.keys(localStorage).forEach(key => { if (key.includes('seniors_es') && !key.includes('deviceId')) localStorage.removeItem(key); });
+                localStorage.setItem('licenseToken_seniors_es', token);
+                errorDiv.classList.remove('show');
+                unlockApp();
+            } catch (error) { errorDiv.textContent = 'Código inválido'; errorDiv.classList.add('show'); }
+        }
+
+        function unlockApp() {
+            document.getElementById('lockModal').classList.add('hidden');
+            document.getElementById('appContainer').classList.add('unlocked');
+            const validation = validateLicense();
+            if (validation.warning || validation.grace) {
+                document.getElementById('warningText').textContent = validation.grace ? 
+                    `Tu suscripción venció. Tenés ${validation.daysLeft} días de período de gracia. Renovar por $9.99 USD/mes` : 
+                    `Tu suscripción vence en ${validation.daysLeft} días. Renovar por $9.99 USD/mes`;
+                document.getElementById('warningBanner').classList.add('show');
+            }
+            updateDate();
+        }
+
+        function updateDate() {
+            const today = new Date();
+            const dateString = today.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            const dateEl = document.getElementById('currentDate');
+            if (dateEl) dateEl.textContent = dateString;
+        }
+
+        window.onload = function() {
+            displayDeviceId();
+            const validation = validateLicense();
+            if (validation.valid) {
+                unlockApp();
+            } else {
+                const errorDiv = document.getElementById('errorMessage');
+                if (validation.reason === 'expired') { errorDiv.textContent = 'Tu licencia venció. Contactá a MCI para renovar por $9.99 USD/mes'; errorDiv.classList.add('show'); }
+                else if (validation.reason === 'wrong_device') { errorDiv.textContent = 'Esta licencia está vinculada a otro dispositivo'; errorDiv.classList.add('show'); }
+            }
+        };
+    </script>
+</body>
+</html>
