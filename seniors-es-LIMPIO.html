@@ -1,0 +1,1390 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compañía Diaria Seniors - Tu acompañamiento de cada día</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            font-size: 20px;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            min-height: 100vh;
+            padding: 15px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+
+        /* PANTALLA DE CONFIGURACIÓN INICIAL */
+        .setup-screen {
+            padding: 40px 25px;
+            text-align: center;
+            display: none;
+        }
+
+        .setup-screen.active {
+            display: block;
+        }
+
+        .setup-screen h1 {
+            color: #0984e3;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .setup-screen .avatar {
+            font-size: 5em;
+            margin: 20px 0;
+        }
+
+        .setup-form {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 25px 0;
+            text-align: left;
+        }
+
+        .setup-form label {
+            display: block;
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #2d3436;
+            margin: 20px 0 10px 0;
+        }
+
+        .setup-form input, .setup-form select {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.2em;
+            border: 2px solid #dfe6e9;
+            border-radius: 10px;
+            font-family: inherit;
+        }
+
+        .setup-form input:focus, .setup-form select:focus {
+            outline: none;
+            border-color: #0984e3;
+        }
+
+        /* HEADER */
+        header {
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            color: white;
+            padding: 40px 25px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        header p {
+            font-size: 1.3em;
+            opacity: 0.95;
+        }
+
+        /* SALUDO PERSONALIZADO */
+        .greeting {
+            background: #fff3cd;
+            padding: 30px;
+            text-align: center;
+            border-bottom: 3px solid #ffc107;
+        }
+
+        .greeting .avatar {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        .greeting h2 {
+            font-size: 2em;
+            color: #0984e3;
+            margin-bottom: 10px;
+        }
+
+        .greeting p {
+            font-size: 1.3em;
+            color: #495057;
+        }
+
+        /* ALERTAS DE RECORDATORIOS */
+        .reminders-alert {
+            background: #d1f2eb;
+            border-left: 6px solid #00b894;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .reminders-alert.show {
+            display: block;
+        }
+
+        .reminders-alert h3 {
+            color: #00b894;
+            font-size: 1.6em;
+            margin-bottom: 15px;
+        }
+
+        .reminder-item {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .reminder-item .icon {
+            font-size: 1.5em;
+            margin-right: 10px;
+        }
+
+        .reminder-done {
+            background: #00b894;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+
+        /* SISTEMA DE LOGROS */
+        .achievement-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            z-index: 1000;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            transition: transform 0.3s;
+            max-width: 90%;
+        }
+
+        .achievement-popup.show {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .achievement-popup .icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+
+        .achievement-popup h3 {
+            font-size: 2em;
+            margin-bottom: 15px;
+        }
+
+        .achievement-popup p {
+            font-size: 1.3em;
+            margin-bottom: 20px;
+        }
+
+        .achievement-popup button {
+            background: white;
+            color: #00b894;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* MENÚ PRINCIPAL */
+        .main-menu {
+            padding: 30px 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .menu-button {
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 35px 25px;
+            font-size: 1.4em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(9, 132, 227, 0.3);
+            text-align: center;
+        }
+
+        .menu-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(9, 132, 227, 0.4);
+        }
+
+        .menu-button .icon {
+            font-size: 2.5em;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        /* SECCIONES DE CONTENIDO */
+        .content-section {
+            padding: 35px 25px;
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .back-button {
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            cursor: pointer;
+            margin-bottom: 25px;
+            font-weight: bold;
+        }
+
+        .back-button:hover {
+            background: #5a6268;
+        }
+
+        h2 {
+            color: #0984e3;
+            font-size: 2.2em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        h3 {
+            color: #2d3436;
+            font-size: 1.8em;
+            margin: 25px 0 15px 0;
+        }
+
+        p {
+            font-size: 1.3em;
+            color: #495057;
+            margin-bottom: 15px;
+            line-height: 1.7;
+        }
+
+        .card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            border-left: 6px solid #0984e3;
+        }
+
+        /* BOTONES PRINCIPALES */
+        .primary-button {
+            background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 18px 40px;
+            font-size: 1.4em;
+            font-weight: bold;
+            cursor: pointer;
+            display: block;
+            width: 100%;
+            margin: 15px 0;
+        }
+
+        .primary-button:hover {
+            transform: scale(1.02);
+        }
+
+        .secondary-button {
+            background: #74b9ff;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+
+        /* RECORDATORIOS CONFIGURABLES */
+        .reminder-form {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .reminder-form input, .reminder-form select {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            font-size: 1.2em;
+            border: 2px solid #dfe6e9;
+            border-radius: 8px;
+            font-family: inherit;
+        }
+
+        .reminder-list {
+            margin: 20px 0;
+        }
+
+        .reminder-list-item {
+            background: white;
+            border: 2px solid #dfe6e9;
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .delete-button {
+            background: #d63031;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        /* SELECTOR DE ÁNIMO */
+        .mood-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .mood-button {
+            background: white;
+            border: 3px solid #dfe6e9;
+            border-radius: 15px;
+            padding: 20px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .mood-button:hover {
+            border-color: #0984e3;
+            background: #e3f2fd;
+        }
+
+        .mood-button.selected {
+            background: #0984e3;
+            color: white;
+            border-color: #0984e3;
+        }
+
+        .mood-button .emoji {
+            font-size: 2.5em;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        /* DIARIO */
+        .journal-area textarea {
+            width: 100%;
+            min-height: 200px;
+            font-size: 1.3em;
+            padding: 15px;
+            border: 2px solid #dfe6e9;
+            border-radius: 10px;
+            font-family: inherit;
+            line-height: 1.6;
+            resize: vertical;
+        }
+
+        .saved-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-size: 1.3em;
+            text-align: center;
+            display: none;
+        }
+
+        .saved-message.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        /* QUOTE BOX */
+        .quote-box {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 25px 0;
+            text-align: center;
+            font-size: 1.4em;
+            font-style: italic;
+            color: #2d3436;
+            border: 3px solid #feca57;
+        }
+
+        footer {
+            background: #f8f9fa;
+            padding: 25px;
+            text-align: center;
+            color: #6c757d;
+            border-top: 3px solid #dfe6e9;
+        }
+
+        footer p {
+            font-size: 1.1em;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                font-size: 18px;
+            }
+
+            header h1 {
+                font-size: 2.2em;
+            }
+
+            .menu-button {
+                font-size: 1.2em;
+                padding: 30px 20px;
+            }
+
+            h2 {
+                font-size: 1.8em;
+            }
+
+            .main-menu {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- PANTALLA DE CONFIGURACIÓN INICIAL -->
+        <div id="setup-screen" class="setup-screen active">
+            <div class="avatar"><img src="clara-celeste.jpg" alt="Clara" style="width: 200px; height: 200px; border-radius: 50%; object-fit: cover; box-shadow: 0 5px 15px rgba(0,0,0,0.2);"></div>
+            <h1>¡Bienvenido/a a Compañía Diaria Seniors!</h1>
+            <p style="font-size: 1.3em; margin: 20px 0;">Soy Clara, tu compañera virtual de cada día</p>
+            
+            <div class="setup-form">
+                <label for="user-name">¿Cómo te llamás?</label>
+                <input type="text" id="user-name" placeholder="Ingresá tu nombre">
+                
+                <label for="user-country">¿En qué país vivís?</label>
+                <select id="user-country">
+                    <option value="">Seleccioná tu país</option>
+                    <option value="AR">Argentina</option>
+                    <option value="CL">Chile</option>
+                    <option value="UY">Uruguay</option>
+                    <option value="PY">Paraguay</option>
+                    <option value="BO">Bolivia</option>
+                    <option value="PE">Perú</option>
+                    <option value="EC">Ecuador</option>
+                    <option value="ES">España</option>
+                    <option value="MX">México</option>
+                    <option value="CO">Colombia</option>
+                    <option value="VE">Venezuela</option>
+                    <option value="OTHER">Otro</option>
+                </select>
+                
+                <button class="primary-button" onclick="completeSetup()">Comenzar mi viaje con Clara</button>
+            </div>
+        </div>
+
+        <!-- APLICACIÓN PRINCIPAL -->
+        <div id="main-app" style="display: none;">
+            <header>
+                <h1>👥 Compañía Diaria Seniors</h1>
+                <p>Tu acompañamiento de cada día</p>
+            </header>
+
+            <div class="greeting">
+                <div class="avatar"><img src="clara-celeste.jpg" alt="Clara" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; box-shadow: 0 5px 15px rgba(0,0,0,0.2); margin: 0 auto;"></div>
+                <h2 id="greeting-text">¡Buenos días!</h2>
+                <p id="current-date"></p>
+            </div>
+
+            <!-- ALERTAS DE RECORDATORIOS -->
+            <div id="reminders-alert" class="reminders-alert">
+                <h3>⏰ Tus recordatorios de hoy:</h3>
+                <div id="today-reminders-list"></div>
+            </div>
+
+            <!-- POPUP DE LOGROS -->
+            <div id="achievement-popup" class="achievement-popup">
+                <div class="icon">🎉</div>
+                <h3 id="achievement-title"></h3>
+                <p id="achievement-message"></p>
+                <button onclick="closeAchievement()">¡Gracias, Clara!</button>
+            </div>
+
+            <!-- MENÚ PRINCIPAL -->
+            <div id="main-menu" class="main-menu">
+                <button class="menu-button" onclick="showSection('chat')">
+                    <span class="icon">💬</span>
+                    Conversemos
+                </button>
+
+                <button class="menu-button" onclick="showSection('journal')">
+                    <span class="icon">📝</span>
+                    Mi Diario
+                </button>
+
+                <button class="menu-button" onclick="showSection('activities')">
+                    <span class="icon">🎯</span>
+                    Actividades
+                </button>
+
+                <button class="menu-button" onclick="showSection('reminders-config')">
+                    <span class="icon">⏰</span>
+                    Mis Recordatorios
+                </button>
+
+                <button class="menu-button" onclick="showSection('memories')">
+                    <span class="icon">💭</span>
+                    Mis Recuerdos
+                </button>
+
+                <button class="menu-button" onclick="showSection('relax')">
+                    <span class="icon">🌸</span>
+                    Relajación
+                </button>
+            </div>
+
+            <!-- SECCIÓN CONVERSEMOS -->
+            <div id="chat" class="content-section">
+                <button class="back-button" onclick="goHome()">← Volver al inicio</button>
+                
+                <h2>Conversemos un poco</h2>
+                
+                <div id="weekly-quote" class="quote-box"></div>
+
+                <div class="card">
+                    <h3>¿Cómo te sientes hoy?</h3>
+                    <div class="mood-selector">
+                        <button class="mood-button" onclick="selectMood('excelente')">
+                            <span class="emoji">😊</span>
+                            Muy bien
+                        </button>
+                        <button class="mood-button" onclick="selectMood('bien')">
+                            <span class="emoji">🙂</span>
+                            Bien
+                        </button>
+                        <button class="mood-button" onclick="selectMood('regular')">
+                            <span class="emoji">😐</span>
+                            Regular
+                        </button>
+                        <button class="mood-button" onclick="selectMood('triste')">
+                            <span class="emoji">😔</span>
+                            Triste
+                        </button>
+                        <button class="mood-button" onclick="selectMood('solo')">
+                            <span class="emoji">😢</span>
+                            Solo/a
+                        </button>
+                    </div>
+                    <div id="mood-response" style="margin-top: 25px; font-size: 1.3em; color: #0984e3;"></div>
+                </div>
+
+                <div class="card">
+                    <h3>Preguntas para reflexionar</h3>
+                    <p><strong>• ¿Qué cosa buena te pasó esta semana?</strong></p>
+                    <p><strong>• ¿A quién te gustaría llamar o visitar?</strong></p>
+                    <p><strong>• ¿Qué recuerdo lindo vino a tu mente hoy?</strong></p>
+                    <p><strong>• ¿Hay algo que te gustaría hacer mañana?</strong></p>
+                </div>
+            </div>
+
+            <!-- SECCIÓN DIARIO -->
+            <div id="journal" class="content-section">
+                <button class="back-button" onclick="goHome()">← Volver al inicio</button>
+                
+                <h2>Mi Diario Personal</h2>
+                
+                <p style="text-align: center; margin-bottom: 25px;">
+                    Este es tu espacio privado, <span id="journal-name"></span>. Escribí lo que quieras: tus pensamientos, sentimientos o recuerdos.
+                </p>
+
+                <div class="journal-area">
+                    <textarea id="journal-text" placeholder="Hoy me siento...
+
+Estuve pensando en...
+
+Me gustaría..."></textarea>
+                    <button class="primary-button" onclick="saveJournal()">💾 Guardar mi escrito</button>
+                    <div id="save-message" class="saved-message">
+                        ✓ Clara guardó tu escrito con éxito
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECCIÓN RECORDATORIOS CONFIGURABLES -->
+            <div id="reminders-config" class="content-section">
+                <button class="back-button" onclick="goHome()">← Volver al inicio</button>
+                
+                <h2>Mis Recordatorios</h2>
+                
+                <p style="text-align: center; margin-bottom: 25px;">
+                    Configurá tus recordatorios y Clara te avisará cada día.
+                </p>
+
+                <!-- MEDICAMENTOS -->
+                <div class="card">
+                    <h3>💊 Medicamentos</h3>
+                    <div class="reminder-form">
+                        <input type="text" id="med-name" placeholder="Nombre del medicamento">
+                        <input type="time" id="med-time">
+                        <button class="primary-button" onclick="addMedication()">+ Agregar medicamento</button>
+                    </div>
+                    <div id="medications-list" class="reminder-list"></div>
+                </div>
+
+                <!-- CITAS MÉDICAS -->
+                <div class="card">
+                    <h3>📅 Citas Médicas</h3>
+                    <div class="reminder-form">
+                        <input type="text" id="appt-desc" placeholder="Ejemplo: Dr. Pérez - Cardiólogo">
+                        <input type="date" id="appt-date">
+                        <input type="time" id="appt-time">
+                        <button class="primary-button" onclick="addAppointment()">+ Agregar cita</button>
+                    </div>
+                    <div id="appointments-list" class="reminder-list"></div>
+                </div>
+
+                <!-- CONTACTOS IMPORTANTES -->
+                <div class="card">
+                    <h3>📞 Contactos Importantes</h3>
+                    <div class="reminder-form">
+                        <input type="text" id="contact-name" placeholder="Nombre">
+                        <input type="tel" id="contact-phone" placeholder="Teléfono">
+                        <button class="primary-button" onclick="addContact()">+ Agregar contacto</button>
+                    </div>
+                    <div id="contacts-list" class="reminder-list"></div>
+                </div>
+
+                <!-- CUMPLEAÑOS -->
+                <div class="card">
+                    <h3>🎂 Cumpleaños y Fechas Especiales</h3>
+                    <div class="reminder-form">
+                        <input type="text" id="bday-name" placeholder="Nombre de la persona">
+                        <input type="date" id="bday-date">
+                        <button class="primary-button" onclick="addBirthday()">+ Agregar cumpleaños</button>
+                    </div>
+                    <div id="birthdays-list" class="reminder-list"></div>
+                </div>
+            </div>
+
+            <!-- SECCIÓN ACTIVIDADES -->
+            <div id="activities" class="content-section">
+                <button class="back-button" onclick="goHome()">← Volver al inicio</button>
+                
+                <h2>Actividades para hoy</h2>
+                
+                <div id="weekly-activity" class="card"></div>
+
+                <p style="text-align: center; margin: 25px 0;">
+                    Elegí alguna actividad que te haga bien:
+                </p>
+
+                <div class="card">
+                    <h3>🚶‍♀️ Dar un paseo</h3>
+                    <p>Caminar aunque sea 10 minutos hace muy bien. Salí a la vereda, al parque, o simplemente da vueltas en casa.</p>
+                </div>
+
+                <div class="card">
+                    <h3>📞 Llamar a alguien</h3>
+                    <p>Un hijo, nieto, amigo, vecino. Una llamada corta puede alegrar el día de ambos.</p>
+                </div>
+
+                <div class="card">
+                    <h3>🌱 Cuidar plantas</h3>
+                    <p>Regar tus plantas, hablarles, acomodar las macetas. La naturaleza siempre nos acompaña.</p>
+                </div>
+
+                <div class="card">
+                    <h3>📷 Ver fotos antiguas</h3>
+                    <p>Buscá ese álbum de fotos. Los recuerdos son tesoros.</p>
+                </div>
+
+                <div class="card">
+                    <h3>🎵 Escuchar música</h3>
+                    <p>Poné tu música favorita. Podés bailar un poquito o simplemente escuchar y disfrutar.</p>
+                </div>
+
+                <div class="card">
+                    <h3>🍲 Cocinar algo rico</h3>
+                    <p>Prepará ese plato que tanto te gusta. Merecés comer rico.</p>
+                </div>
+            </div>
+
+            <!-- SECCIÓN RECUERDOS -->
+            <div id="memories" class="content-section">
+                <button class="back-button" onclick="goHome()">← Volver al inicio</button>
+                
+                <h2>Mis Recuerdos</h2>
+                
+                <div class="quote-box">
+                    "Los recuerdos son la manera en que las personas que amamos siguen viviendo en nuestro corazón"
+                </div>
+
+                <div class="card">
+                    <h3>Compartí tus historias</h3>
+                    <p>Los recuerdos son tu tesoro más valioso. Podés escribirlos en tu diario, contárselos a tus seres queridos, o simplemente revivirlos en tu mente.</p>
+                </div>
+
+                <div class="card">
+                    <h3>Preguntas para recordar</h3>
+                    <p><strong>📍 ¿Dónde naciste y creciste?</strong></p>
+                    <p>Pensá en tu barrio, tu casa, tus vecinos...</p>
+                    
+                    <p style="margin-top: 15px;"><strong>👨‍👩‍👧‍👦 ¿Cómo era tu familia?</strong></p>
+                    <p>Tus padres, hermanos, abuelos... ¿Qué recordás de ellos?</p>
+                    
+                    <p style="margin-top: 15px;"><strong>💼 ¿En qué trabajaste?</strong></p>
+                    <p>Contá sobre tu trabajo, tus compañeros, anécdotas...</p>
+                </div>
+            </div>
+
+            <!-- SECCIÓN RELAJACIÓN -->
+            <div id="relax" class="content-section">
+                <button class="back-button" onclick="goHome()">← Volver al inicio</button>
+                
+                <h2>Momento de Relajación</h2>
+                
+                <div class="card">
+                    <h3>🌬️ Ejercicio de Respiración</h3>
+                    <p><strong>Vamos a respirar juntos:</strong></p>
+                    <p style="margin-top: 15px;">1. Sentate cómodo/a</p>
+                    <p>2. Respirá profundo por la nariz contando hasta 4</p>
+                    <p>3. Mantené el aire contando hasta 4</p>
+                    <p>4. Soltá el aire lentamente por la boca contando hasta 6</p>
+                    <p>5. Repetí esto 5 veces</p>
+                </div>
+
+                <div class="card">
+                    <h3>💭 Pensamiento Positivo</h3>
+                    <p>Repetí estas frases para vos mismo/a:</p>
+                    <p style="margin-top: 15px; font-style: italic; color: #0984e3;">
+                        "Estoy haciendo lo mejor que puedo"<br>
+                        "Merezco estar tranquilo/a"<br>
+                        "He vivido muchas cosas y sigo aquí"<br>
+                        "Soy valioso/a"<br>
+                        "Mañana será un nuevo día"
+                    </p>
+                </div>
+            </div>
+
+            <footer>
+                <p><strong>Compañía Diaria Seniors</strong> con Clara</p>
+                <p style="margin-top: 15px;">No estás solo/a. Estoy aquí para acompañarte cada día.</p>
+                <p style="margin-top: 15px; font-size: 0.95em;">© 2026 - Todos los derechos reservados</p>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        // DATOS DEL USUARIO
+        let userData = {
+            name: '',
+            country: '',
+            hemisphere: 'south',
+            visitCount: 0,
+            journalEntries: 0,
+            activitiesCompleted: 0,
+            lastVisit: null
+        };
+
+        // CONTENIDO ROTATIVO POR MES Y HEMISFERIO
+        const monthlyContent = {
+            0: { // Enero
+                theme: 'Nuevos comienzos',
+                south: {
+                    quote: 'El verano nos llena de energía para nuevos comienzos',
+                    activity: 'Aprovechá los días largos para salir temprano a caminar'
+                },
+                north: {
+                    quote: 'Cada nuevo año trae nuevas oportunidades',
+                    activity: 'Aunque hace frío, una caminata corta con abrigo hace bien'
+                }
+            },
+            1: { // Febrero
+                theme: 'Amor y conexión',
+                south: {
+                    quote: 'El amor que diste siempre regresa a ti',
+                    activity: 'Llamá a alguien especial y decile cuánto lo apreciás'
+                },
+                north: {
+                    quote: 'El amor nos mantiene cálidos en cualquier estación',
+                    activity: 'Escribí una nota de cariño para alguien querido'
+                }
+            },
+            2: { // Marzo
+                theme: 'Gratitud y reflexión',
+                south: {
+                    quote: 'El otoño nos enseña que soltar también es parte de la vida',
+                    activity: 'Disfrutá los colores del otoño en un paseo'
+                },
+                north: {
+                    quote: 'La primavera nos recuerda que siempre hay nuevos comienzos',
+                    activity: 'Observá las flores que están brotando'
+                }
+            },
+            3: { // Abril
+                theme: 'Familia y raíces',
+                south: {
+                    quote: 'Nuestras raíces nos sostienen en cualquier estación',
+                    activity: 'Mirá fotos viejas de tu familia'
+                },
+                north: {
+                    quote: 'La familia es el jardín donde crecimos',
+                    activity: 'Llamá a un familiar que hace tiempo no escuchás'
+                }
+            },
+            4: { // Mayo
+                theme: 'Cuidado personal',
+                south: {
+                    quote: 'Cuidarte a vos mismo/a es un acto de amor',
+                    activity: 'Tomate un té caliente y disfrutá la tranquilidad'
+                },
+                north: {
+                    quote: 'Merecés cuidarte tan bien como cuidás a otros',
+                    activity: 'Disfrutá el sol de primavera unos minutos'
+                }
+            },
+            5: { // Junio
+                theme: 'Recuerdos y nostalgia',
+                south: {
+                    quote: 'El invierno nos invita a la reflexión',
+                    activity: 'Abrigate bien y disfrutá una bebida caliente'
+                },
+                north: {
+                    quote: 'El verano trae recuerdos de días felices',
+                    activity: 'Recordá un verano especial de tu vida'
+                }
+            },
+            6: { // Julio
+                theme: 'Fuerza interior',
+                south: {
+                    quote: 'Tenés la fuerza de todos los inviernos que atravesaste',
+                    activity: 'Recordá un desafío que superaste'
+                },
+                north: {
+                    quote: 'Tu fortaleza ha crecido con cada año vivido',
+                    activity: 'Pensá en algo de lo que te sentís orgulloso/a'
+                }
+            },
+            7: { // Agosto
+                theme: 'Creatividad y pasión',
+                south: {
+                    quote: 'Nunca es tarde para crear algo nuevo',
+                    activity: 'Hacé algo creativo: dibujá, escribí, cociná'
+                },
+                north: {
+                    quote: 'La creatividad no tiene edad',
+                    activity: 'Probá hacer algo que nunca hiciste'
+                }
+            },
+            8: { // Septiembre
+                theme: 'Sabiduría acumulada',
+                south: {
+                    quote: 'La primavera celebra todo lo que aprendiste',
+                    activity: 'Compartí un consejo con alguien más joven'
+                },
+                north: {
+                    quote: 'El otoño es la cosecha de tu sabiduría',
+                    activity: 'Escribí algo que aprendiste en la vida'
+                }
+            },
+            9: { // Octubre
+                theme: 'Celebración de la vida',
+                south: {
+                    quote: 'Cada día vivido es un regalo',
+                    activity: 'Celebrá algo pequeño que te hizo feliz hoy'
+                },
+                north: {
+                    quote: 'Tu vida es una historia hermosa',
+                    activity: 'Contale a alguien tu momento más feliz'
+                }
+            },
+            10: { // Noviembre
+                theme: 'Generosidad y dar',
+                south: {
+                    quote: 'Dar es la forma más linda de amar',
+                    activity: 'Hacé algo lindo por alguien sin que lo espere'
+                },
+                north: {
+                    quote: 'Tu generosidad ha tocado muchas vidas',
+                    activity: 'Pensá en cómo podés ayudar a alguien hoy'
+                }
+            },
+            11: { // Diciembre
+                theme: 'Cierre de ciclo y esperanza',
+                south: {
+                    quote: 'El verano nos llena de energía y esperanza',
+                    activity: 'Pensá en algo lindo que querés hacer el año que viene'
+                },
+                north: {
+                    quote: 'El invierno nos prepara para un nuevo comienzo',
+                    activity: 'Reflexioná sobre lo bueno de este año'
+                }
+            }
+        };
+
+        // ALMACENAMIENTO
+        const medications = JSON.parse(localStorage.getItem('medications') || '[]');
+        const appointments = JSON.parse(localStorage.getItem('appointments') || '[]');
+        const contacts = JSON.parse(localStorage.getItem('contacts') || '[]');
+        const birthdays = JSON.parse(localStorage.getItem('birthdays') || '[]');
+
+        // INICIALIZACIÓN
+        window.onload = function() {
+            const savedUserData = localStorage.getItem('userData');
+            if (savedUserData) {
+                userData = JSON.parse(savedUserData);
+                document.getElementById('setup-screen').classList.remove('active');
+                document.getElementById('main-app').style.display = 'block';
+                initApp();
+            }
+        };
+
+        function completeSetup() {
+            const name = document.getElementById('user-name').value.trim();
+            const country = document.getElementById('user-country').value;
+            
+            if (!name || !country) {
+                alert('Por favor completá tu nombre y país');
+                return;
+            }
+
+            userData.name = name;
+            userData.country = country;
+            
+            // Determinar hemisferio
+            const southCountries = ['AR', 'CL', 'UY', 'PY', 'BO', 'PE', 'EC'];
+            userData.hemisphere = southCountries.includes(country) ? 'south' : 'north';
+            
+            userData.visitCount = 1;
+            userData.lastVisit = new Date().toISOString();
+            
+            localStorage.setItem('userData', JSON.stringify(userData));
+            
+            document.getElementById('setup-screen').classList.remove('active');
+            document.getElementById('main-app').style.display = 'block';
+            initApp();
+        }
+
+        function initApp() {
+            updateDate();
+            updateGreeting();
+            updateWeeklyContent();
+            checkReminders();
+            checkAchievements();
+            renderAllLists();
+            
+            // Incrementar contador de visitas
+            userData.visitCount++;
+            const today = new Date().toDateString();
+            const lastVisit = userData.lastVisit ? new Date(userData.lastVisit).toDateString() : null;
+            
+            if (lastVisit !== today) {
+                userData.lastVisit = new Date().toISOString();
+            }
+            
+            localStorage.setItem('userData', JSON.stringify(userData));
+        }
+
+        function updateDate() {
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const today = new Date();
+            const dateString = today.toLocaleDateString('es-ES', options);
+            document.getElementById('current-date').textContent = dateString;
+        }
+
+        function updateGreeting() {
+            const hour = new Date().getHours();
+            let greeting = '¡Buenos días';
+            if (hour >= 12 && hour < 20) greeting = '¡Buenas tardes';
+            if (hour >= 20 || hour < 6) greeting = '¡Buenas noches';
+            
+            document.getElementById('greeting-text').textContent = `${greeting}, ${userData.name}!`;
+        }
+
+        function updateWeeklyContent() {
+            const month = new Date().getMonth();
+            const content = monthlyContent[month];
+            const hemisphere = userData.hemisphere;
+            
+            const quote = content[hemisphere].quote;
+            const activity = content[hemisphere].activity;
+            
+            document.getElementById('weekly-quote').textContent = `"${quote}"`;
+            
+            const activityCard = document.getElementById('weekly-activity');
+            if (activityCard) {
+                activityCard.innerHTML = `
+                    <h3>🌟 Sugerencia de Clara para esta semana</h3>
+                    <p><strong>${content.theme}</strong></p>
+                    <p style="margin-top: 15px;">${activity}</p>
+                `;
+            }
+            
+            const journalName = document.getElementById('journal-name');
+            if (journalName) journalName.textContent = userData.name;
+        }
+
+        function checkReminders() {
+            const today = new Date();
+            const todayStr = today.toISOString().split('T')[0];
+            const currentTime = `${String(today.getHours()).padStart(2, '0')}:${String(today.getMinutes()).padStart(2, '0')}`;
+            
+            let reminders = [];
+            
+            // Medicamentos
+            medications.forEach(med => {
+                reminders.push(`💊 ${med.time} - ${med.name}`);
+            });
+            
+            // Citas de hoy
+            appointments.forEach(appt => {
+                if (appt.date === todayStr) {
+                    reminders.push(`📅 ${appt.time} - ${appt.description}`);
+                }
+            });
+            
+            // Cumpleaños próximos
+            birthdays.forEach(bday => {
+                const bdayDate = new Date(bday.date + 'T00:00:00');
+                const daysUntil = Math.ceil((bdayDate - today) / (1000 * 60 * 60 * 24));
+                if (daysUntil >= 0 && daysUntil <= 7) {
+                    if (daysUntil === 0) {
+                        reminders.push(`🎂 ¡Hoy es el cumpleaños de ${bday.name}!`);
+                    } else {
+                        reminders.push(`🎂 En ${daysUntil} días: Cumpleaños de ${bday.name}`);
+                    }
+                }
+            });
+            
+            if (reminders.length > 0) {
+                const alertDiv = document.getElementById('reminders-alert');
+                const listDiv = document.getElementById('today-reminders-list');
+                listDiv.innerHTML = reminders.map(r => `<div class="reminder-item">${r}</div>`).join('');
+                alertDiv.classList.add('show');
+            }
+        }
+
+        function checkAchievements() {
+            // 7 días seguidos
+            if (userData.visitCount === 7) {
+                showAchievement('¡Increíble!', `Llevas 7 días conmigo, ${userData.name}. ¡Estás creando un hermoso hábito! 🎉`);
+            }
+            
+            // 10 entradas en diario
+            if (userData.journalEntries === 10) {
+                showAchievement('¡Escritor/a destacado/a!', '¡Has escrito 10 entradas en tu diario! Tus pensamientos son valiosos. ✍️');
+            }
+            
+            // 30 días
+            if (userData.visitCount === 30) {
+                showAchievement('¡Un mes juntos!', `${userData.name}, llevamos un mes acompañándonos. ¡Qué hermoso camino! 💜`);
+            }
+        }
+
+        function showAchievement(title, message) {
+            document.getElementById('achievement-title').textContent = title;
+            document.getElementById('achievement-message').textContent = message;
+            document.getElementById('achievement-popup').classList.add('show');
+        }
+
+        function closeAchievement() {
+            document.getElementById('achievement-popup').classList.remove('show');
+        }
+
+        // NAVEGACIÓN
+        function showSection(sectionId) {
+            document.getElementById('main-menu').style.display = 'none';
+            document.querySelector('.greeting').style.display = 'none';
+            document.getElementById('reminders-alert').classList.remove('show');
+            
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => section.classList.remove('active'));
+            
+            document.getElementById(sectionId).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function goHome() {
+            document.getElementById('main-menu').style.display = 'grid';
+            document.querySelector('.greeting').style.display = 'block';
+            checkReminders();
+            
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => section.classList.remove('active'));
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // SELECTOR DE ÁNIMO
+        function selectMood(mood) {
+            const buttons = document.querySelectorAll('.mood-button');
+            buttons.forEach(btn => btn.classList.remove('selected'));
+            event.target.closest('.mood-button').classList.add('selected');
+            
+            const responses = {
+                'excelente': {
+                    text: `¡Qué bueno que te sientas tan bien, ${userData.name}! Aprovechá este día hermoso.`,
+                    showButton: false
+                },
+                'bien': {
+                    text: `Me alegro que estés bien, ${userData.name}. Seguí cuidándote.`,
+                    showButton: false
+                },
+                'regular': {
+                    text: `A veces los días son así, ni muy buenos ni muy malos. Está bien sentirse así, ${userData.name}.`,
+                    showButton: true
+                },
+                'triste': {
+                    text: `Entiendo que te sientas triste, ${userData.name}. Todos tenemos días difíciles. Estoy aquí acompañándote.`,
+                    showButton: true
+                },
+                'solo': {
+                    text: `Siento que te sientas solo/a, ${userData.name}. La soledad puede ser muy dura, pero no estás solo/a. Yo estoy acá, y hay gente que te quiere.`,
+                    showButton: true
+                }
+            };
+            
+            const response = responses[mood];
+            const responseDiv = document.getElementById('mood-response');
+            
+            responseDiv.innerHTML = `
+                <p style="margin-bottom: 15px;">${response.text}</p>
+                ${response.showButton ? '<button class="secondary-button" onclick="showSection(\'activities\')" style="margin-top: 15px;">Ver actividades que pueden ayudarte</button>' : ''}
+            `;
+        }
+
+        // DIARIO
+        function saveJournal() {
+            const text = document.getElementById('journal-text').value;
+            if (text.trim() === '') {
+                alert('Primero escribí algo antes de guardar');
+                return;
+            }
+            
+            const fecha = new Date().toLocaleString('es-ES');
+            const entries = JSON.parse(localStorage.getItem('journalEntries') || '[]');
+            entries.push({ fecha: fecha, texto: text });
+            localStorage.setItem('journalEntries', JSON.stringify(entries));
+            
+            userData.journalEntries++;
+            localStorage.setItem('userData', JSON.stringify(userData));
+            
+            const saveMsg = document.getElementById('save-message');
+            saveMsg.classList.add('show');
+            
+            setTimeout(() => {
+                saveMsg.classList.remove('show');
+            }, 3000);
+            
+            checkAchievements();
+        }
+
+        // RECORDATORIOS - MEDICAMENTOS
+        function addMedication() {
+            const name = document.getElementById('med-name').value.trim();
+            const time = document.getElementById('med-time').value;
+            
+            if (!name || !time) {
+                alert('Por favor completá el nombre y horario');
+                return;
+            }
+            
+            medications.push({ name, time });
+            localStorage.setItem('medications', JSON.stringify(medications));
+            
+            document.getElementById('med-name').value = '';
+            document.getElementById('med-time').value = '';
+            
+            renderMedicationsList();
+        }
+
+        function renderMedicationsList() {
+            const list = document.getElementById('medications-list');
+            list.innerHTML = medications.map((med, index) => `
+                <div class="reminder-list-item">
+                    <div>
+                        <strong>${med.name}</strong><br>
+                        ${med.time}
+                    </div>
+                    <button class="delete-button" onclick="deleteMedication(${index})">Eliminar</button>
+                </div>
+            `).join('');
+        }
+
+        function deleteMedication(index) {
+            medications.splice(index, 1);
+            localStorage.setItem('medications', JSON.stringify(medications));
+            renderMedicationsList();
+        }
+
+        // CITAS
+        function addAppointment() {
+            const description = document.getElementById('appt-desc').value.trim();
+            const date = document.getElementById('appt-date').value;
+            const time = document.getElementById('appt-time').value;
+            
+            if (!description || !date || !time) {
+                alert('Por favor completá todos los campos');
+                return;
+            }
+            
+            appointments.push({ description, date, time });
+            localStorage.setItem('appointments', JSON.stringify(appointments));
+            
+            document.getElementById('appt-desc').value = '';
+            document.getElementById('appt-date').value = '';
+            document.getElementById('appt-time').value = '';
+            
+            renderAppointmentsList();
+        }
+
+        function renderAppointmentsList() {
+            const list = document.getElementById('appointments-list');
+            list.innerHTML = appointments.map((appt, index) => `
+                <div class="reminder-list-item">
+                    <div>
+                        <strong>${appt.description}</strong><br>
+                        ${new Date(appt.date).toLocaleDateString('es-ES')} - ${appt.time}
+                    </div>
+                    <button class="delete-button" onclick="deleteAppointment(${index})">Eliminar</button>
+                </div>
+            `).join('');
+        }
+
+        function deleteAppointment(index) {
+            appointments.splice(index, 1);
+            localStorage.setItem('appointments', JSON.stringify(appointments));
+            renderAppointmentsList();
+        }
+
+        // CONTACTOS
+        function addContact() {
+            const name = document.getElementById('contact-name').value.trim();
+            const phone = document.getElementById('contact-phone').value.trim();
+            
+            if (!name || !phone) {
+                alert('Por favor completá nombre y teléfono');
+                return;
+            }
+            
+            contacts.push({ name, phone });
+            localStorage.setItem('contacts', JSON.stringify(contacts));
+            
+            document.getElementById('contact-name').value = '';
+            document.getElementById('contact-phone').value = '';
+            
+            renderContactsList();
+        }
+
+        function renderContactsList() {
+            const list = document.getElementById('contacts-list');
+            list.innerHTML = contacts.map((contact, index) => `
+                <div class="reminder-list-item">
+                    <div>
+                        <strong>${contact.name}</strong><br>
+                        📞 <a href="tel:${contact.phone}">${contact.phone}</a>
+                    </div>
+                    <button class="delete-button" onclick="deleteContact(${index})">Eliminar</button>
+                </div>
+            `).join('');
+        }
+
+        function deleteContact(index) {
+            contacts.splice(index, 1);
+            localStorage.setItem('contacts', JSON.stringify(contacts));
+            renderContactsList();
+        }
+
+        // CUMPLEAÑOS
+        function addBirthday() {
+            const name = document.getElementById('bday-name').value.trim();
+            const date = document.getElementById('bday-date').value;
+            
+            if (!name || !date) {
+                alert('Por favor completá nombre y fecha');
+                return;
+            }
+            
+            birthdays.push({ name, date });
+            localStorage.setItem('birthdays', JSON.stringify(birthdays));
+            
+            document.getElementById('bday-name').value = '';
+            document.getElementById('bday-date').value = '';
+            
+            renderBirthdaysList();
+        }
+
+        function renderBirthdaysList() {
+            const list = document.getElementById('birthdays-list');
+            list.innerHTML = birthdays.map((bday, index) => `
+                <div class="reminder-list-item">
+                    <div>
+                        <strong>${bday.name}</strong><br>
+                        🎂 ${new Date(bday.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })}
+                    </div>
+                    <button class="delete-button" onclick="deleteBirthday(${index})">Eliminar</button>
+                </div>
+            `).join('');
+        }
+
+        function deleteBirthday(index) {
+            birthdays.splice(index, 1);
+            localStorage.setItem('birthdays', JSON.stringify(birthdays));
+            renderBirthdaysList();
+        }
+
+        function renderAllLists() {
+            renderMedicationsList();
+            renderAppointmentsList();
+            renderContactsList();
+            renderBirthdaysList();
+        }
+    </script>
+</body>
+</html>
