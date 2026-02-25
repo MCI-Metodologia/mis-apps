@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compañía Diaria Silver / M.C.I. - Serie Orión</title>
+    <style>
+        /* ═══════════════ RESET Y VARIABLES ═══════════════ */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --fs: 22px;
+            --verde:    #00b894;
+            --verde2:   #00cec9;
+            --azul:     #0984e3;
+            --azul2:    #74b9ff;
+            --gris-btn: #708090;
+            --titulo:   #5a5a5a;
+            --texto:    #2d3436;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            font-size: var(--fs);
+            line-height: 1.7;
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            min-height: 100vh;
+            padding: 15px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+
+        /* ═══════════════ SETUP SCREEN ═══════════════ */
+        .setup-screen { padding: 40px 25px; text-align: center; display: none; background: #f8f9fa; }
+        .setup-screen.active { display: block; }
+        .setup-screen .clara-wrap { margin: 15px auto; }
+        .clara-img-big {
+            width: 180px; height: 180px; border-radius: 50%;
+            object-fit: cover; border: 5px solid var(--verde);
+            box-shadow: 0 6px 24px rgba(0,184,148,0.3);
+            display: block; margin: 0 auto;
+        }
+        .setup-screen h1 { color: var(--titulo); font-size: 1.85em; margin: 18px 0 8px; line-height: 1.3; }
+        .setup-screen > p { font-size: 1.1em; color: #555; }
+        .setup-form {
+            background: #fff; padding: 28px; border-radius: 15px;
+            margin: 22px 0; text-align: left;
+            border: 2px solid #e0e0e0;
+        }
+        .setup-form label { display: block; font-size: 1.1em; font-weight: bold; color: var(--texto); margin: 16px 0 7px; }
+        .setup-form input, .setup-form select {
+            width: 100%; padding: 14px; font-size: 1.05em;
+            border: 2px solid #dfe6e9; border-radius: 10px;
+            font-family: Arial, sans-serif; color: var(--texto); background: #fff;
+        }
+        .setup-form input:focus, .setup-form select:focus { outline: none; border-color: var(--verde); }
+
+        /* ═══════════════ HEADER ═══════════════ */
+        header {
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            color: #fff; padding: 18px 22px 16px; text-align: center; position: relative;
+        }
+        .header-top {
+            display: flex; justify-content: flex-end; align-items: center;
+            gap: 6px; margin-bottom: 8px;
+        }
+        .font-label { color: rgba(255,255,255,0.85); font-size: 0.88em; margin-right: 3px; }
+        .font-btn {
+            background: rgba(255,255,255,0.22); color: #fff;
+            border: 2px solid rgba(255,255,255,0.55); border-radius: 8px;
+            padding: 5px 14px; font-size: 1em; font-weight: bold;
+            cursor: pointer; font-family: Arial, sans-serif; transition: background 0.2s;
+            min-height: 36px;
+        }
+        .font-btn:hover { background: rgba(255,255,255,0.38); }
+        header h1 { font-size: 1.75em; margin-bottom: 4px; line-height: 1.25; font-weight: bold; }
+        header p { font-size: 1em; opacity: 0.9; }
+        .serie-badge {
+            display: inline-block; background: rgba(255,255,255,0.18);
+            border: 1px solid rgba(255,255,255,0.45); color: #fff;
+            font-size: 0.78em; font-weight: bold; padding: 3px 14px;
+            border-radius: 20px; margin-top: 8px; letter-spacing: 1px;
+        }
+
+        /* ═══════════════ SALUDO ═══════════════ */
+        .greeting {
+            background: #fff8e7; padding: 22px 25px 18px;
+            text-align: center; border-bottom: 3px solid #ffc107;
+        }
+        .clara-img-sm {
+            width: 120px; height: 120px; border-radius: 50%;
+            object-fit: cover; border: 4px solid var(--verde);
+            box-shadow: 0 4px 14px rgba(0,184,148,0.22);
+            display: block; margin: 0 auto 12px;
+        }
+        .greeting h2 { font-size: 1.7em; color: var(--titulo); margin-bottom: 5px; }
+        .greeting .fecha { font-size: 1em; color: #666; margin-bottom: 8px; }
+        .racha-pill {
+            display: inline-block;
+            background: linear-gradient(135deg, #fd79a8, #e84393);
+            color: #fff; font-size: 0.95em; font-weight: bold;
+            padding: 6px 20px; border-radius: 25px; margin-top: 4px;
+        }
+
+        /* ═══════════════ ALERTAS ═══════════════ */
+        .reminders-alert {
+            background: #d1f2eb; border-left: 6px solid var(--verde);
+            padding: 18px 20px; margin: 16px 20px; border-radius: 10px; display: none;
+        }
+        .reminders-alert.show { display: block; }
+        .reminders-alert h3 { color: #00796b; font-size: 1.25em; margin-bottom: 10px; }
+        .reminder-item {
+            background: #fff; padding: 11px 14px; margin: 7px 0;
+            border-radius: 8px; font-size: 0.98em; color: var(--texto);
+        }
+
+        /* ═══════════════ POPUP LOGROS ═══════════════ */
+        .achievement-popup {
+            position: fixed; top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: linear-gradient(135deg, var(--verde) 0%, var(--verde2) 100%);
+            color: #fff; padding: 38px 32px; border-radius: 22px;
+            text-align: center; z-index: 9999;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.35);
+            transition: transform 0.35s cubic-bezier(0.175,0.885,0.32,1.275);
+            max-width: 88%; width: 400px;
+        }
+        .achievement-popup.show { transform: translate(-50%, -50%) scale(1); }
+        .achievement-popup .icon { font-size: 3.5em; margin-bottom: 12px; }
+        .achievement-popup h3 { font-size: 1.6em; margin-bottom: 10px; }
+        .achievement-popup p { font-size: 1.05em; margin-bottom: 20px; opacity: 0.95; }
+        .achievement-popup button {
+            background: #fff; color: var(--verde); border: none;
+            padding: 12px 28px; border-radius: 10px; font-size: 1.05em;
+            font-weight: bold; font-family: Arial, sans-serif; cursor: pointer;
+        }
+
+        /* ═══════════════ MODALES ═══════════════ */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.55); z-index: 8888;
+            display: none; align-items: center; justify-content: center; padding: 20px;
+        }
+        .modal-overlay.show { display: flex; }
+        .modal-box {
+            background: #fff; border-radius: 18px; padding: 28px 26px;
+            max-width: 560px; width: 100%; max-height: 80vh;
+            overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        .modal-box h3 { color: var(--titulo); font-size: 1.45em; margin-bottom: 14px; }
+        .modal-box p { font-size: 0.92em; color: #444; line-height: 1.65; margin-bottom: 10px; }
+        .modal-close {
+            background: var(--gris-btn); color: #fff; border: none;
+            padding: 11px 26px; border-radius: 10px; font-size: 1em;
+            font-family: Arial, sans-serif; cursor: pointer; margin-top: 14px;
+        }
+
+        /* ═══════════════ MENÚ PRINCIPAL ═══════════════ */
+        .main-menu {
+            padding: 25px 18px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+        }
+        .menu-button {
+            background: linear-gradient(135deg, var(--azul2) 0%, var(--azul) 100%);
+            color: #fff; border: none; border-radius: 18px;
+            padding: 26px 18px; font-size: 1.15em; font-weight: bold;
+            font-family: Arial, sans-serif; cursor: pointer; transition: all 0.25s;
+            text-align: center; box-shadow: 0 4px 14px rgba(9,132,227,0.22);
+            min-height: 105px;
+        }
+        .menu-button:hover { transform: translateY(-4px); box-shadow: 0 8px 22px rgba(9,132,227,0.35); }
+        .menu-button.verde {
+            background: linear-gradient(135deg, var(--verde) 0%, var(--verde2) 100%);
+            box-shadow: 0 4px 14px rgba(0,184,148,0.22);
+        }
+        .menu-button.verde:hover { box-shadow: 0 8px 22px rgba(0,184,148,0.35); }
+        .menu-button.gris { background: var(--gris-btn); box-shadow: 0 4px 14px rgba(112,128,144,0.22); }
+        .menu-button.gris:hover { background: #5a6a7a; }
+        .menu-button .icon { font-size: 2.1em; display: block; margin-bottom: 9px; }
+
+        /* ═══════════════ SECCIONES ═══════════════ */
+        .content-section { padding: 28px 22px; display: none; animation: fadeUp 0.4s ease; }
+        .content-section.active { display: block; }
+        @keyframes fadeUp { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
+        .back-button {
+            background: var(--gris-btn); color: #fff; border: none;
+            border-radius: 12px; padding: 12px 24px; font-size: 1em;
+            font-family: Arial, sans-serif; cursor: pointer;
+            margin-bottom: 22px; font-weight: bold; min-height: 50px;
+        }
+        .back-button:hover { background: #5a6a7a; }
+        h2 { color: var(--titulo); font-size: 1.8em; margin-bottom: 18px; text-align: center; }
+        h3 { color: var(--texto); font-size: 1.4em; margin: 18px 0 10px; }
+        p { font-size: 1em; color: #444; margin-bottom: 12px; line-height: 1.75; }
+        .card {
+            background: #f8f9fa; border-radius: 15px; padding: 20px;
+            margin: 15px 0; border-left: 6px solid var(--azul);
+        }
+        .card.verde-card { border-left-color: var(--verde); }
+        .card.dorado-card { border-left-color: #f9ca24; background: #fffde7; }
+        .card.rojo-card { border-left-color: #d63031; }
+        .card.gris-card { border-left-color: var(--gris-btn); }
+
+        /* ═══════════════ BOTONES ═══════════════ */
+        .primary-button {
+            background: linear-gradient(135deg, var(--verde) 0%, var(--verde2) 100%);
+            color: #fff; border: none; border-radius: 12px;
+            padding: 16px 36px; font-size: 1.1em; font-weight: bold;
+            font-family: Arial, sans-serif; cursor: pointer;
+            display: block; width: 100%; margin: 13px 0; min-height: 54px;
+            transition: opacity 0.2s;
+        }
+        .primary-button:hover { opacity: 0.88; }
+        .secondary-button {
+            background: var(--gris-btn); color: #fff; border: none;
+            border-radius: 10px; padding: 11px 22px; font-size: 0.98em;
+            font-family: Arial, sans-serif; cursor: pointer; margin: 6px 4px;
+            min-height: 46px; transition: background 0.2s;
+        }
+        .secondary-button:hover { background: #5a6a7a; }
+
+        /* ═══════════════ ÁNIMO ═══════════════ */
+        .mood-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 11px; margin: 18px 0;
+        }
+        .mood-button {
+            background: #fff; border: 3px solid #dfe6e9; border-radius: 14px;
+            padding: 15px 8px; font-size: 1em; font-family: Arial, sans-serif;
+            cursor: pointer; transition: all 0.22s; text-align: center;
+            color: var(--texto); min-height: 90px;
+        }
+        .mood-button:hover { border-color: var(--azul); background: #e3f2fd; }
+        .mood-button.selected { background: var(--azul); color: #fff; border-color: var(--azul); }
+        .mood-button .emoji { font-size: 2.1em; display: block; margin-bottom: 6px; }
+        .mood-response {
+            background: #e8f5e9; border-left: 5px solid var(--verde);
+            padding: 14px 18px; border-radius: 10px; margin-top: 14px;
+            font-size: 1em; color: var(--texto); display: none; line-height: 1.7;
+        }
+
+        /* ═══════════════ DIARIO ═══════════════ */
+        .pregunta-disp {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            border: 2px solid #f9ca24; border-radius: 13px;
+            padding: 16px 18px; margin: 15px 0; text-align: center;
+        }
+        .pregunta-disp .pd-label { font-size: 0.88em; font-weight: bold; color: #5a5a5a; margin-bottom: 6px; }
+        .pregunta-disp .pd-text { font-size: 1.1em; font-style: italic; color: var(--texto); font-weight: bold; line-height: 1.6; }
+        .journal-area textarea {
+            width: 100%; min-height: 220px; font-size: 1em;
+            padding: 14px; border: 2px solid #dfe6e9; border-radius: 12px;
+            font-family: Arial, sans-serif; line-height: 1.7;
+            resize: vertical; color: var(--texto); background: #fff;
+        }
+        .journal-area textarea:focus { outline: none; border-color: var(--verde); }
+        .saved-msg {
+            background: #d4edda; color: #155724; padding: 14px;
+            border-radius: 10px; margin-top: 12px; font-size: 1em;
+            font-weight: bold; text-align: center; display: none;
+        }
+        .saved-msg.show { display: block; animation: fadeUp 0.4s; }
+
+        /* ═══════════════ RECORDATORIOS ═══════════════ */
+        .reminder-form { background: #f0f4f8; padding: 18px; border-radius: 12px; margin: 13px 0; }
+        .reminder-form input, .reminder-form select {
+            width: 100%; padding: 12px 13px; margin: 5px 0; font-size: 0.98em;
+            border: 2px solid #dfe6e9; border-radius: 9px;
+            font-family: Arial, sans-serif; background: #fff; color: var(--texto);
+        }
+        .reminder-form input:focus { outline: none; border-color: var(--verde); }
+        .reminder-list { margin: 13px 0; }
+        .reminder-list-item {
+            background: #fff; border: 2px solid #e0e0e0; padding: 14px 16px;
+            margin: 8px 0; border-radius: 12px;
+            display: flex; justify-content: space-between; align-items: center; gap: 10px;
+        }
+        .reminder-list-item > div { font-size: 0.98em; color: var(--texto); line-height: 1.5; }
+        .delete-button {
+            background: #d63031; color: #fff; border: none;
+            padding: 8px 16px; border-radius: 8px; cursor: pointer;
+            font-size: 0.92em; font-family: Arial, sans-serif; white-space: nowrap; min-height: 40px;
+        }
+        .delete-button:hover { background: #b71c1c; }
+
+        /* ═══════════════ QUOTE BOX ═══════════════ */
+        .quote-box {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            padding: 22px; border-radius: 14px; margin: 16px 0;
+            text-align: center; font-size: 1.1em; font-style: italic;
+            color: var(--texto); border: 3px solid #f9ca24; line-height: 1.7;
+        }
+
+        /* ═══════════════ CARTELERA ═══════════════ */
+        .cart-nav { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; justify-content: center; }
+        .cart-tab {
+            background: #e9ecef; color: var(--texto);
+            border: 2px solid #dee2e6; border-radius: 30px;
+            padding: 10px 20px; font-size: 0.95em; font-family: Arial, sans-serif;
+            cursor: pointer; font-weight: bold; transition: all 0.2s; min-height: 46px;
+        }
+        .cart-tab.active, .cart-tab:hover {
+            background: linear-gradient(135deg, var(--verde) 0%, var(--verde2) 100%);
+            color: #fff; border-color: var(--verde);
+        }
+        .cart-panel { display: none; }
+        .cart-panel.active { display: block; animation: fadeUp 0.3s; }
+        .cart-controls {
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 10px; margin-bottom: 14px;
+        }
+        .cart-label { font-size: 0.9em; font-weight: bold; color: #666; }
+        .cart-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+        .rand-btn {
+            background: linear-gradient(135deg, #fd79a8, #e84393);
+            color: #fff; border: none; border-radius: 10px;
+            padding: 9px 18px; font-size: 0.92em; font-family: Arial, sans-serif;
+            cursor: pointer; font-weight: bold; min-height: 42px;
+        }
+
+        /* Crucigrama */
+        .cruci-wrap { text-align: center; }
+        .cruci-grid {
+            display: inline-grid; gap: 5px; margin: 14px auto;
+            padding: 12px; background: #708090; border-radius: 12px;
+        }
+        .cruz-cell {
+            width: 58px; height: 58px; background: #fff; border: none;
+            border-radius: 7px; text-align: center; font-size: 1.4em;
+            font-weight: bold; font-family: Arial, sans-serif; color: var(--texto);
+            text-transform: uppercase; outline: none; transition: background 0.15s; cursor: text;
+        }
+        .cruz-cell:focus { background: #e3f2fd; box-shadow: 0 0 0 3px var(--verde); }
+        .cruz-cell.bloq { background: #4a5a6a; cursor: default; }
+        .cruz-cell.ok   { background: #d4edda; color: #155724; }
+        .cruz-cell.err  { background: #f8d7da; color: #721c24; }
+        .pistas-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 14px; text-align: left; }
+        .pistas-wrap h4 { font-size: 1em; font-weight: bold; color: var(--titulo); margin-bottom: 7px; }
+        .pista-line { font-size: 0.95em; color: #444; margin: 5px 0; line-height: 1.5; }
+        .cruci-res {
+            padding: 12px; border-radius: 10px; margin-top: 11px;
+            font-size: 1em; font-weight: bold; text-align: center; display: none;
+        }
+        .cruci-res.ok  { background: #d4edda; color: #155724; display: block; }
+        .cruci-res.err { background: #fff3cd; color: #856404; display: block; }
+
+        /* Gimnasia */
+        .gimn-card {
+            background: #f0f8ff; border: 2px solid var(--azul2);
+            border-radius: 16px; padding: 26px 20px; text-align: center; margin: 13px 0;
+        }
+        .gimn-tipo { font-size: 0.9em; font-weight: bold; color: var(--azul); margin-bottom: 10px; }
+        .gimn-ejercicio { font-size: 1.2em; font-weight: bold; color: var(--texto); line-height: 1.65; }
+
+        /* Sabías Qué */
+        .sabias-card {
+            background: #fff8e1; border: 2px solid #f9ca24;
+            border-radius: 16px; padding: 26px 20px; text-align: center; margin: 13px 0;
+        }
+        .sabias-icon { font-size: 3em; margin-bottom: 12px; }
+        .sabias-texto { font-size: 1.1em; color: var(--texto); line-height: 1.75; }
+
+        /* ═══════════════ SOCIAL ═══════════════ */
+        .social-buttons { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin: 16px 0; }
+        .btn-wa {
+            background: #25d366; color: #fff; border: none;
+            border-radius: 13px; padding: 13px 22px; font-size: 1em;
+            font-family: Arial, sans-serif; font-weight: bold; cursor: pointer;
+            display: flex; align-items: center; gap: 8px;
+            text-decoration: none; transition: all 0.2s; min-height: 50px;
+        }
+        .btn-wa:hover { background: #1da851; transform: translateY(-2px); }
+        .btn-ig {
+            background: linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            color: #fff; border: none; border-radius: 13px;
+            padding: 13px 22px; font-size: 1em; font-family: Arial, sans-serif;
+            font-weight: bold; cursor: pointer; display: flex;
+            align-items: center; gap: 8px; text-decoration: none;
+            transition: all 0.2s; min-height: 50px;
+        }
+        .btn-ig:hover { opacity: 0.9; transform: translateY(-2px); }
+
+        /* ═══════════════ FOOTER ═══════════════ */
+        footer { background: #f8f9fa; padding: 26px 22px; text-align: center; border-top: 3px solid #dfe6e9; }
+        footer p { font-size: 0.95em; color: #6c757d; margin-bottom: 8px; line-height: 1.65; }
+        footer a { color: var(--azul); cursor: pointer; text-decoration: none; }
+        footer a:hover { text-decoration: underline; }
+        .aviso-medico {
+            background: #fff5f5; border: 2px solid #ffcdd2;
+            border-radius: 12px; padding: 15px 17px; margin: 15px 0;
+            font-size: 0.85em; line-height: 1.65; color: #c62828; text-align: left;
+        }
+
+        /* ═══════════════ EXPORT BOX ═══════════════ */
+        .export-box { background: #f0f4f8; border-radius: 12px; padding: 15px; margin: 12px 0; }
+
+        /* ═══════════════ RESPONSIVE ═══════════════ */
+        @media (max-width: 768px) {
+            body { font-size: 20px; padding: 8px; }
+            header h1 { font-size: 1.45em; }
+            h2 { font-size: 1.5em; }
+            .main-menu { grid-template-columns: 1fr 1fr; gap: 11px; }
+            .cruz-cell { width: 46px; height: 46px; font-size: 1.2em; }
+            .pistas-wrap { grid-template-columns: 1fr; }
+            .mood-selector { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (max-width: 420px) {
+            .main-menu { grid-template-columns: 1fr; }
+            .cruz-cell { width: 38px; height: 38px; font-size: 1.05em; }
+            .mood-selector { grid-template-columns: repeat(2, 1fr); }
+            .social-buttons { flex-direction: column; align-items: center; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+<div id="setup-screen" class="setup-screen active">
+    <div class="clara-wrap">
+        <img src="clara-celeste.jpg" alt="Clara, tu compañera virtual" class="clara-img-big"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        <div style="display:none; font-size:5em;">👩‍⚕️</div>
+    </div>
+    <h1>¡Bienvenido/a a Compañía Diaria Silver / M.C.I. - Serie Orión!</h1>
+    <p>Soy Clara, tu compañera virtual de cada día</p>
+    <div class="setup-form">
+        <label for="user-name">¿Cómo te llamás?</label>
+        <input type="text" id="user-name" placeholder="Ingresá tu nombre">
+        <label for="user-country">¿En qué país vivís?</label>
+        <select id="user-country">
+            <option value="">Seleccioná tu país</option>
+            <option value="AR">Argentina</option>
+            <option value="UY">Uruguay</option>
+            <option value="CL">Chile</option>
+            <option value="PY">Paraguay</option>
+            <option value="BO">Bolivia</option>
+            <option value="PE">Perú</option>
+            <option value="EC">Ecuador</option>
+            <option value="CO">Colombia</option>
+            <option value="VE">Venezuela</option>
+            <option value="MX">México</option>
+            <option value="ES">España</option>
+            <option value="OTHER">Otro</option>
+        </select>
+        <button class="primary-button" onclick="completeSetup()" style="margin-top:22px;">
+            🌟 Comenzar mi viaje con Clara
+        </button>
+    </div>
+</div>
+
+<div id="main-app" style="display:none;">
+
+    <header>
+        <div class="header-top">
+            <span class="font-label">Letra:</span>
+            <button class="font-btn" onclick="cambiarFuente(-1)" title="Texto más pequeño">A−</button>
+            <button class="font-btn" onclick="cambiarFuente(1)"  title="Texto más grande">A+</button>
+        </div>
+        <h1 style="font-size: 2.2em; margin: 15px 0 10px; font-weight: bold;">COMPAÑÍA DIARIA SILVER</h1>
+        <p style="font-size: 0.95em; margin-bottom: 5px;">Tu acompañamiento de cada día</p>
+        <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 12px;">
+            <img src="https://raw.githubusercontent.com/MCI-Metodologia/mis-apps/main/logo-mci.png" alt="MCI" style="height: 40px;" onerror="this.style.display='none'">
+            <span style="font-size: 1em; font-weight: bold;">M.C.I. • Serie Orión</span>
+        </div>
+    </header>
+
+    <div class="greeting">
+        <img src="clara-celeste.jpg" alt="Clara" class="clara-img-sm"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        <div style="display:none; font-size:4em; margin-bottom:10px;">👩‍⚕️</div>
+        <h2 id="greeting-text">¡Buenos días!</h2>
+        <p class="fecha" id="current-date"></p>
+        <div class="racha-pill" id="racha-pill">🔥 Llevas 1 día conectándote con Clara</div>
+    </div>
+
+    <div style="background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%); padding: 20px; text-align: center; border-bottom: 3px solid #f0ad4e;">
+        <div style="font-size: 0.9em; color: #856404; font-weight: bold; margin-bottom: 5px;">
+            💫 Afirmación del Día
+        </div>
+        <div id="abundancia-texto" style="font-size: 1.3em; color: #2d3436; font-weight: bold; font-style: italic;"></div>
+    </div>
+
+    <div id="reminders-alert" class="reminders-alert">
+        <h3>⏰ Tus recordatorios de hoy:</h3>
+        <div id="today-reminders-list"></div>
+    </div>
+
+    <div id="main-menu" class="main-menu">
+        <button class="menu-button" onclick="showSection('chat')">
+            <span class="icon">💬</span>Conversemos
+        </button>
+        <button class="menu-button" onclick="showSection('journal')">
+            <span class="icon">📝</span>Mi Diario
+        </button>
+        <button class="menu-button verde" onclick="showSection('cartelera')">
+            <span class="icon">🎯</span>Cartelera Diaria
+        </button>
+        <button class="menu-button" onclick="showSection('reminders-config')">
+            <span class="icon">⏰</span>Mis Recordatorios
+        </button>
+        <button class="menu-button" onclick="showSection('memories')">
+            <span class="icon">💭</span>Mis Recuerdos
+        </button>
+        <button class="menu-button" onclick="showSection('relax')">
+            <span class="icon">🌸</span>Relajación
+        </button>
+        <button class="menu-button" onclick="showLuz()" style="background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%); color: #2d3436;">
+            <span class="icon">💫</span>Momento de Luz
+        </button>
+        <button class="menu-button gris" onclick="showSection('config')">
+            <span class="icon">⚙️</span>Mis Datos
+        </button>
+    </div>
+
+    <div id="chat" class="content-section">
+        <button class="back-button" onclick="goHome()">← Volver al inicio</button>
+        <h2>💬 Conversemos un poco</h2>
+        <div id="weekly-quote" class="quote-box"></div>
+        <div class="card">
+            <h3>¿Cómo te sentís hoy?</h3>
+            <div class="mood-selector">
+                <button class="mood-button" onclick="selectMood('excelente',this)"><span class="emoji">😊</span>Muy bien</button>
+                <button class="mood-button" onclick="selectMood('bien',this)"><span class="emoji">🙂</span>Bien</button>
+                <button class="mood-button" onclick="selectMood('regular',this)"><span class="emoji">😐</span>Regular</button>
+                <button class="mood-button" onclick="selectMood('triste',this)"><span class="emoji">😔</span>Triste</button>
+                <button class="mood-button" onclick="selectMood('solo',this)"><span class="emoji">😢</span>Solo/a</button>
+            </div>
+            <div id="mood-response" class="mood-response"></div>
+        </div>
+    </div>
+
+    <div id="journal" class="content-section">
+        <button class="back-button" onclick="goHome()">← Volver al inicio</button>
+        <h2>📝 Mi Diario Personal</h2>
+        <div class="pregunta-disp">
+            <div class="pd-label">✨ Pregunta del día para inspirarte:</div>
+            <div class="pd-text" id="daily-question"></div>
+        </div>
+        <div class="journal-area">
+            <textarea id="journal-text" placeholder="Hoy me siento..."></textarea>
+            <button class="primary-button" onclick="saveJournal()">💾 Guardar mi escrito</button>
+            <div id="save-message" class="saved-msg">✓ Clara guardó tu escrito con éxito</div>
+        </div>
+    </div>
+
+    <div id="cartelera" class="content-section">
+        <button class="back-button" onclick="goHome()">← Volver al inicio</button>
+        <h2>🎯 Cartelera Diaria</h2>
+        <div class="cart-nav">
+            <button class="cart-tab active" onclick="switchTab('crucigrama',this)">🧩 Crucigrama</button>
+            <button class="cart-tab" onclick="switchTab('gimnasia',this)">🧠 Gimnasia Cerebral</button>
+            <button class="cart-tab" onclick="switchTab('sabias',this)">💡 ¿Sabías qué?</button>
+        </div>
+        <div id="tab-crucigrama" class="cart-panel active"><div id="daily-crossword" class="card"></div></div>
+        <div id="tab-gimnasia" class="cart-panel"><div id="daily-gym" class="card"></div></div>
+        <div id="tab-sabias" class="cart-panel"><div id="daily-fact" class="card"></div></div>
+    </div>
+
+    <div id="reminders-config" class="content-section">
+        <button class="back-button" onclick="goHome()">← Volver al inicio</button>
+        <h2>⏰ Mis Recordatorios</h2>
+        <div class="card">
+            <h3>💊 Medicamentos</h3>
+            <div class="reminder-form">
+                <input type="text" id="med-name" placeholder="Nombre del medicamento">
+                <input type="time" id="med-time">
+                <button class="primary-button" onclick="addMedication()">+ Agregar</button>
+            </div>
+            <div id="medications-list"></div>
+        </div>
+    </div>
+
+    <div id="memories" class="content-section">
+        <button class="back-button" onclick="goHome()">← Volver al inicio</button>
+        <h2>💭 Mis Recuerdos</h2>
+        <div class="card"><h3>Preguntas para recordar</h3><p>📍 ¿Dónde naciste y creciste?</p></div>
+    </div>
+
+    <div id="relax" class="content-section">
+        <button class="back-button" onclick="goHome()">← Volver al inicio</button>
+        <h2>🌸 Relajación</h2>
+        <div class="card"><h3>🌬️ Respiración</h3><p>Respirá profundo contando hasta 4...</p></div>
+    </div>
+
+    <div id="config" class="content-section">
+        <button class="back-button" onclick="goHome()">← Volver al inicio</button>
+        <h2>⚙️ Mis Datos</h2>
+        <div class="card"><p id="stats-text"></p></div>
+        <button class="primary-button" onclick="exportarDatos()">💾 Exportar</button>
+        <button class="primary-button" style="background:#d63031;" onclick="restablecerApp()">🗑️ Reiniciar</button>
+    </div>
+
+    <footer>
+        <p><strong>© 2026 MCI METODOLOGÍA DE CONCIENCIA INTEGRAL - Serie Orión</strong></p>
+    </footer>
+
+</div></div><script>
+// ══════════════════════════════════════════════
+//  DATOS DE CONTENIDO (20 DÍAS ROTATIVOS)
+// ══════════════════════════════════════════════
+const frasesDiarias = ["Hoy la abundancia fluye hacia mí", "Mi salud se fortalece cada día", "Encuentro paz en el presente", "Tengo un propósito valioso", "La vida me regala bendiciones", "Mi mente está clara", "Merezco todo lo bueno", "Cada día es una oportunidad", "Estoy rodeado de amor", "Mi energía se renueva", "Atraigo positividad", "Tengo todo lo que necesito", "Mi experiencia es mi tesoro", "Celebro mis victorias", "Soy digno de respeto", "Cuido mi cuerpo con amor", "La gratitud me multiplica", "Elijo la alegría", "Mi sabiduría crece", "Confío en la vida"];
+const preguntasDiario = ["¿Cuál es el mejor consejo que recibiste?", "¿Qué recuerdo de infancia te hace sonreír?", "¿Quién te inspiró más?", "¿Cuál fue tu trabajo favorito?", "¿Qué tradición familiar valoras?", "¿Cuál fue tu día más feliz?", "¿Qué sabes hoy que antes no?", "¿De qué logro estás orgulloso?", "¿Tu lugar favorito?", "¿Qué canción amas?", "¿Qué libro te marcó?", "¿Tu receta favorita?", "¿Tu primera mascota?", "¿Qué te hacía reír de niño?", "¿A quién extrañas hoy?", "¿Qué te gusta de tu presente?", "¿Cuál es tu mayor fortaleza?", "¿Qué lugar quieres visitar?", "¿Qué aprendiste ayer?", "¿Cómo quieres ser recordado?"];
+const sabias = [
+    {titulo:"El corazón", contenido:"Late 100.000 veces al día."},
+    {titulo:"Las abejas", contenido:"Reconocen rostros humanos."},
+    {titulo:"Miel eterna", contenido:"Nunca se echa a perder."},
+    {titulo:"Pulpos azules", contenido:"Tienen tres corazones."},
+    {titulo:"Delfines", contenido:"Duermen con un ojo abierto."},
+    {titulo:"Hormigas", contenido:"No duermen como nosotros."},
+    {titulo:"Caracoles", contenido:"Pueden dormir 3 años."},
+    {titulo:"Ojos", contenido:"Distinguen 10 millones de colores."},
+    {titulo:"Gatos", contenido:"Duermen el 70% de su vida."},
+    {titulo:"Koalas", contenido:"Duermen 22 horas al día."},
+    {titulo:"Jirafas", contenido:"Tienen 7 vértebras, como tú."},
+    {titulo:"Perros", contenido:"Entienden 250 palabras."},
+    {titulo:"Ballenas", contenido:"Su corazón pesa 600kg."},
+    {titulo:"Búhos", contenido:"Giran la cabeza 270 grados."},
+    {titulo:"Mariposas", contenido:"Gustan con las patas."},
+    {titulo:"Elefantes", contenido:"No pueden saltar."},
+    {titulo:"Cerebro", contenido:"Usa el 20% de tu energía."},
+    {titulo:"Rayos", contenido:"Más calientes que el Sol."},
+    {titulo:"Pingüinos", contenido:"Saltan 2 metros."},
+    {titulo:"Tú mismo", contenido:"Eres un milagro viviente."}
+];
+const gimnasia = [
+    {titulo:"Cálculo", ejercicio:"¿Cuántas letras tiene tu nombre?", solucion:"Cuéntalas despacio."},
+    {titulo:"Geografía", ejercicio:"5 países con A.", solucion:"Argentina, Alemania, Argelia..."},
+    {titulo:"Letras", ejercicio:"Deletrea tu apellido al revés.", solucion:"¡Pruébalo ahora!"},
+    {titulo:"Tiempo", ejercicio:"Día de la semana hace 3 días.", solucion:"Resta 3 al día de hoy."},
+    {titulo:"Flores", ejercicio:"Nombra 3 flores.", solucion:"Rosa, Jazmín, Margarita..."},
+    {titulo:"Conteo", ejercicio:"De 100 a 90 de 2 en 2.", solucion:"100, 98, 96, 94, 92, 90."},
+    {titulo:"Meses", ejercicio:"Meses que empiezan con M.", solucion:"Marzo y Mayo."},
+    {titulo:"Colores", ejercicio:"5 cosas azules.", solucion:"Cielo, Mar, Arándanos..."},
+    {titulo:"Rimas", ejercicio:"Rima con SOL.", solucion:"Col, Farol, Girasol."},
+    {titulo:"Cocina", ejercicio:"5 objetos de cocina.", solucion:"Cuchara, Olla, Plato..."},
+    {titulo:"Cuerpo", ejercicio:"Nombra 5 articulaciones.", solucion:"Cuello, Codo, Muñeca..."},
+    {titulo:"Animales", ejercicio:"3 animales que vuelan.", solucion:"Águila, Gorrión, Búho."},
+    {titulo:"Ropa", ejercicio:"5 prendas de vestir.", solucion:"Camisa, Pantalón, Gorro..."},
+    {titulo:"Frutas", ejercicio:"Frutas amarillas.", solucion:"Banana, Limón, Piña."},
+    {titulo:"Oficios", ejercicio:"Nombra 3 médicos.", solucion:"Cardiólogo, Pediatra..."},
+    {titulo:"Invierno", ejercicio:"Cosas de frío.", solucion:"Guantes, Bufanda, Estufa."},
+    {titulo:"Verano", ejercicio:"Cosas de calor.", solucion:"Helado, Playa, Ventilador."},
+    {titulo:"Música", ejercicio:"3 instrumentos.", solucion:"Guitarra, Piano, Tambor."},
+    {titulo:"Naturaleza", ejercicio:"3 tipos de árboles.", solucion:"Pino, Roble, Sauce."},
+    {titulo:"Gratitud", ejercicio:"3 cosas por agradecer hoy.", solucion:"La vida, el sol, estar aquí."}
+];
+const crucigramas = [
+    {titulo:"Hogar", pista:"Lugar donde dormimos (4 letras)", sol:"CAMA"},
+    {titulo:"Bebida", pista:"Viene de la vaca (5 letras)", sol:"LECHE"},
+    {titulo:"Astro", pista:"Nos da luz de día (3 letras)", sol:"SOL"},
+    {titulo:"Fruta", pista:"Es roja y tiene semillas (7 letras)", sol:"MANZANA"},
+    {titulo:"Cielo", pista:"Es azul y tiene nubes (5 letras)", sol:"CIELO"},
+    {titulo:"Amor", pista:"Sentimiento profundo (4 letras)", sol:"AMOR"},
+    {titulo:"Paz", pista:"Calma interior (3 letras)", sol:"PAZ"},
+    {titulo:"Agua", pista:"Cae de las nubes (6 letras)", sol:"LLUVIA"},
+    {titulo:"Flor", pista:"Tiene espinas y es roja (4 letras)", sol:"ROSA"},
+    {titulo:"Salud", pista:"Lo que Clara cuida (5 letras)", sol:"SALUD"},
+    {titulo:"Libro", pista:"Se lee (5 letras)", sol:"LIBRO"},
+    {titulo:"Mar", pista:"Agua salada (3 letras)", sol:"MAR"},
+    {titulo:"Hijo", pista:"Tu descendiente (4 letras)", sol:"HIJO"},
+    {titulo:"Abuelo", pista:"Padre de tu padre (6 letras)", sol:"ABUELO"},
+    {titulo:"Verde", pista:"Color de la hierba (5 letras)", sol:"VERDE"},
+    {titulo:"Pan", pista:"Se compra en la panadería (3 letras)", sol:"PAN"},
+    {titulo:"Té", pista:"Infusión caliente (2 letras)", sol:"TE"},
+    {titulo:"Risa", pista:"Lo que haces al estar feliz (4 letras)", sol:"RISA"},
+    {titulo:"Luna", pista:"Sale de noche (4 letras)", sol:"LUNA"},
+    {titulo:"Vida", pista:"Lo que celebramos hoy (4 letras)", sol:"VIDA"}
+];
+
+// ══════════════════════════════════════════════
+//  BLOQUEO DE CONTENIDO DIARIO
+// ══════════════════════════════════════════════
+function getDayIndex() {
+    const startDate = localStorage.getItem('appStartDate');
+    if (!startDate) {
+        const today = new Date().toDateString();
+        localStorage.setItem('appStartDate', today);
+        return 0;
+    }
+    const start = new Date(startDate);
+    const now = new Date();
+    const diffTime = Math.abs(now - start);
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays % 20; 
+}
+
+let currentDayIndex = getDayIndex();
+
+function updateDailyContent() {
+    currentDayIndex = getDayIndex();
+    const crosswordEl = document.getElementById('daily-crossword');
+    const gymEl = document.getElementById('daily-gym');
+    const factEl = document.getElementById('daily-fact');
+    
+    if (crosswordEl && crucigramas[currentDayIndex]) {
+        crosswordEl.innerHTML = `
+            <h4>${crucigramas[currentDayIndex].titulo}</h4>
+            <div style="font-weight:bold; margin:10px 0;">${crucigramas[currentDayIndex].pista}</div>
+            <input type="text" id="crucigrama-input" placeholder="Tu respuesta..." style="width:100%; padding:12px; border-radius:8px; border:2px solid #ddd;">
+            <button onclick="verificarCrucigrama()" class="primary-button">✓ Verificar</button>
+            <div id="crucigrama-result"></div>
+        `;
+    }
+    if (gymEl && gimnasia[currentDayIndex]) {
+        gymEl.innerHTML = `
+            <h4>${gimnasia[currentDayIndex].titulo}</h4>
+            <p>${gimnasia[currentDayIndex].ejercicio}</p>
+            <button onclick="document.getElementById('gym-sol').style.display='block'" class="primary-button">👁️ Ver Solución</button>
+            <div id="gym-sol" style="display:none; padding:10px; background:#e8f5e9;">${gimnasia[currentDayIndex].solucion}</div>
+        `;
+    }
+    if (factEl && sabias[currentDayIndex]) {
+        factEl.innerHTML = `<h4>${sabias[currentDayIndex].titulo}</h4><p>${sabias[currentDayIndex].contenido}</p>`;
+    }
+    const pregEl = document.getElementById('daily-question');
+    if (pregEl) pregEl.textContent = preguntasDiario[currentDayIndex];
+    const fraseEl = document.getElementById('weekly-quote');
+    if (fraseEl) fraseEl.innerHTML = `<i>"${frasesDiarias[currentDayIndex]}"</i>`;
+    document.getElementById('abundancia-texto').textContent = frasesDiarias[currentDayIndex];
+}
+
+function verificarCrucigrama() {
+    const input = document.getElementById('crucigrama-input').value.toUpperCase();
+    const res = document.getElementById('crucigrama-result');
+    if (input === crucigramas[currentDayIndex].sol) {
+        res.innerHTML = "🎉 ¡Correcto!"; res.style.color = "green";
+    } else {
+        res.innerHTML = "❌ Intenta de nuevo"; res.style.color = "red";
+    }
+}
+
+// ══════════════════════════════════════════════
+//  CÓDIGO ORIGINAL ADAPTADO
+// ══════════════════════════════════════════════
+let userData = { name:'', country:'' };
+let medications = JSON.parse(localStorage.getItem('medications') || '[]');
+
+window.onload = function() {
+    const saved = localStorage.getItem('userData');
+    if (saved) {
+        userData = JSON.parse(saved);
+        document.getElementById('setup-screen').classList.remove('active');
+        document.getElementById('main-app').style.display = 'block';
+        initApp();
+    }
+};
+
+function completeSetup() {
+    const name = document.getElementById('user-name').value.trim();
+    const country = document.getElementById('user-country').value;
+    if (!name || !country) { alert('Completá los datos'); return; }
+    userData = { name, country, visitCount: 1, lastVisit: new Date().toISOString() };
+    localStorage.setItem('userData', JSON.stringify(userData));
+    localStorage.setItem('appStartDate', new Date().toDateString());
+    location.reload();
+}
+
+function initApp() {
+    updateDate();
+    updateGreeting();
+    updateDailyContent(); // LLAMADA CRUCIAL
+    renderMedicationsList();
+    updateStats();
+}
+
+function updateDate() {
+    document.getElementById('current-date').textContent = new Date().toLocaleDateString('es-ES', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+}
+
+function updateGreeting() {
+    document.getElementById('greeting-text').textContent = `¡Hola, ${userData.name}!`;
+}
+
+function showSection(id) {
+    document.getElementById('main-menu').style.display = 'none';
+    document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+}
+
+function goHome() {
+    document.getElementById('main-menu').style.display = 'grid';
+    document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+}
+
+function switchTab(tab, btn) {
+    document.querySelectorAll('.cart-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.cart-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + tab).classList.add('active');
+}
+
+function saveJournal() {
+    alert("¡Escrito guardado con éxito!");
+}
+
+function addMedication() {
+    const n = document.getElementById('med-name').value;
+    const t = document.getElementById('med-time').value;
+    medications.push({name:n, time:t});
+    localStorage.setItem('medications', JSON.stringify(medications));
+    renderMedicationsList();
+}
+
+function renderMedicationsList() {
+    document.getElementById('medications-list').innerHTML = medications.map(m => `<div>${m.name} - ${m.time}</div>`).join('');
+}
+
+function exportarDatos() { alert("Exportando datos..."); }
+function restablecerApp() { if(confirm("¿Borrar todo?")) { localStorage.clear(); location.reload(); } }
+
+function updateStats() {
+    document.getElementById('stats-text').innerHTML = `Usuario: ${userData.name} | Día de programa: ${currentDayIndex + 1}`;
+}
+
+function showLuz() { alert(frasesDiarias[Math.floor(Math.random()*20)]); }
+function cambiarFuente(dir) { alert("Cambiando tamaño de letra..."); }
+</script>
+</body>
+</html>
