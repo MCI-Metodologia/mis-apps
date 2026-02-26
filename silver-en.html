@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCI - Integral Consciousness Methodology</title>
+    <style>
+        :root {
+            --primary-silver: #7f8c8d;
+            --accent-blue: #2c3e50;
+            --soft-bg: #f8f9fa;
+        }
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--soft-bg);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            color: #2d3436;
+        }
+        .app-wrapper {
+            width: 100%;
+            max-width: 500px;
+            background: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 30px rgba(0,0,0,0.05);
+        }
+        .header-mci {
+            background: linear-gradient(135deg, #bdc3c7, #2c3e50);
+            padding: 40px 20px;
+            text-align: center;
+            color: white;
+        }
+        .avatar-box {
+            margin-top: -60px;
+            text-align: center;
+        }
+        .avatar-img {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            border: 6px solid #fff;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .main-content {
+            padding: 25px;
+            flex-grow: 1;
+        }
+        .mci-card {
+            background: #fff;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border: 1px solid #e1e8ed;
+        }
+        h2 { color: var(--accent-blue); font-size: 1.4rem; margin-top: 0; }
+        .instruction { color: #636e72; font-style: italic; margin-bottom: 15px; }
+        textarea {
+            width: 100%;
+            height: 150px;
+            border: 1px solid #dcdde1;
+            border-radius: 10px;
+            padding: 15px;
+            font-size: 16px;
+            resize: none;
+            box-sizing: border-box;
+            background: #fbfbfb;
+        }
+        .btn-mci {
+            background: var(--accent-blue);
+            color: #fff;
+            border: none;
+            width: 100%;
+            padding: 18px;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+        .btn-mci:hover { background: #1a252f; }
+        .moment-light-box {
+            background: #fff9db;
+            border-left: 5px solid #f1c40f;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 10px;
+        }
+        .footer-mci {
+            padding: 30px;
+            text-align: center;
+            font-size: 13px;
+            color: #b2bec3;
+            border-top: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-wrapper">
+        <header class="header-mci">
+            <h1>MCI Methodology</h1>
+            <p>Integral Consciousness - Silver Level</p>
+        </header>
+
+        <div class="avatar-box">
+            <img src="https://mci-metodologia.github.io/mis-apps/img/clara.png" alt="Clara" class="avatar-img">
+        </div>
+
+        <main class="main-content">
+            <div class="mci-card">
+                <h2>Welcome, I am Clara</h2>
+                <p>Today we continue your path of expansion. I am here to support your daily process and your inner connection.</p>
+            </div>
+
+            <div class="mci-card">
+                <h2>Consciousness Journal</h2>
+                <p class="instruction">Write down your reflections, emotions, or insights from today:</p>
+                <textarea id="journalEntry" placeholder="Enter your thoughts here..."></textarea>
+                <button class="btn-mci" onclick="saveMCIProgress()">Register Session</button>
+            </div>
+
+            <div id="mciQuoteDisplay" class="moment-light-box">
+                </div>
+        </main>
+
+        <footer class="footer-mci">
+            © 2026 MCI - Integral Consciousness Methodology<br>
+            Confidentiality and Professional Ethics.
+        </footer>
+    </div>
+
+    <script>
+        const mciQuotes = [
+            "Your breath is the conscious bridge to your interior.",
+            "Transformation begins with the courage to observe oneself.",
+            "Each moment of presence is a victory for your consciousness.",
+            "Acceptance is the fertile ground where change grows."
+        ];
+
+        function saveMCIProgress() {
+            const entry = document.getElementById('journalEntry').value;
+            if(entry.trim() === "") {
+                alert("Please record your reflection before saving.");
+                return;
+            }
+            // Logic for local storage persistence
+            localStorage.setItem('mci_silver_en_data', entry);
+            alert("Success: Your progress has been integrated into your journal.");
+        }
+
+        window.onload = function() {
+            const randomQuote = mciQuotes[Math.floor(Math.random() * mciQuotes.length)];
+            document.getElementById('mciQuoteDisplay').innerHTML = `<strong>Moment of Light:</strong><br>"${randomQuote}"`;
+        };
+    </script>
+</body>
+</html>
