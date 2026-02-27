@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCI Silver - Orion Series</title>
+    <style>
+        :root { --p: #00b894; --s: #0984e3; --d: #2d3436; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f5f7fa; display: flex; justify-content: center; padding: 20px; margin: 0; }
+        .app { max-width: 450px; width: 100%; background: white; border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); padding: 40px; text-align: center; margin-top: 20px; }
+        .logo { width: 100px; margin-bottom: 20px; }
+        .clara { width: 150px; height: 150px; border-radius: 50%; border: 5px solid var(--p); object-fit: cover; margin-bottom: 20px; }
+        .screen { display: none; }
+        .active { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        h1 { color: var(--p); font-size: 24px; }
+        .card { background: #f9f9f9; padding: 25px; border-radius: 20px; border-left: 10px solid var(--p); margin: 25px 0; text-align: left; }
+        .btn { width: 100%; padding: 18px; border: none; border-radius: 15px; background: var(--p); color: white; font-weight: bold; cursor: pointer; font-size: 16px; }
+        input { width: 100%; padding: 15px; margin: 20px 0; border-radius: 10px; border: 1px solid #ddd; box-sizing: border-box; }
+        .footer { margin-top: 30px; font-size: 10px; color: #bbb; letter-spacing: 1px; }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <img src="logo.png" class="logo" alt="MCI">
+        <img src="clara.jpg" class="clara" alt="Clara">
+        
+        <div id="setup" class="screen active">
+            <h1>Welcome</h1>
+            <p>I am Clara. How should I call you today?</p>
+            <input type="text" id="uName" placeholder="Your name...">
+            <button class="btn" onclick="start()">Begin Evolution</button>
+        </div>
+
+        <div id="main" class="screen">
+            <h1 id="greet"></h1>
+            <div class="card">
+                <p id="q" style="font-style:italic; font-size:1.1rem; color: var(--d);"></p>
+                <p id="a" style="color:var(--s); font-weight:bold; margin-top:10px; font-size:0.9rem;"></p>
+            </div>
+            <p id="day" style="font-weight:bold; color:var(--p);"></p>
+            <div class="footer">MCI METODOLOGÍA DE CONCIENCIA INTEGRAL</div>
+        </div>
+    </div>
+
+    <script src="data-en.js"></script>
+
+    <script>
+        function start() {
+            const n = document.getElementById('uName').value.trim();
+            if(!n) { alert("Please enter your name"); return; }
+            localStorage.setItem('mci_en_data', JSON.stringify({n: n, d: new Date().getTime()}));
+            load();
+        }
+        function load() {
+            const user = JSON.parse(localStorage.getItem('mci_en_data'));
+            if(!user) return;
+            document.getElementById('setup').classList.remove('active');
+            document.getElementById('main').classList.add('active');
+            document.getElementById('greet').innerText = "Hello, " + user.n;
+            
+            const diff = Math.floor((new Date().getTime() - user.d) / 86400000);
+            
+            // Verificamos si las frases cargaron desde el otro archivo
+            if (typeof mciContent !== 'undefined' && mciContent.length > 0) {
+                const today = mciContent[diff % mciContent.length];
+                document.getElementById('q').innerText = today.q;
+                document.getElementById('a').innerText = today.a;
+                document.getElementById('day').innerText = "Evolution Day: " + (diff + 1);
+            } else {
+                document.getElementById('q').innerText = "Loading consciousness data...";
+            }
+        }
+        window.onload = load;
+    </script>
+</body>
+</html>
