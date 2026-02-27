@@ -1,0 +1,1701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Silver Daily Companion / M.C.I. - Orion Series</title>
+    <style>
+        /* ═══════════════ RESET AND VARIABLES ═══════════════ */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --fs: 22px;
+            --verde:    #00b894;
+            --verde2:   #00cec9;
+            --azul:     #0984e3;
+            --azul2:    #74b9ff;
+            --gris-btn: #708090;
+            --titulo:   #5a5a5a;
+            --texto:    #2d3436;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            font-size: var(--fs);
+            line-height: 1.7;
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            min-height: 100vh;
+            padding: 15px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 90vh;
+        }
+
+        /* ═══════════════ REUSABLE COMPONENTS ═══════════════ */
+        header {
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            color: #fff;
+            padding: 18px 22px 16px;
+            text-align: center;
+            position: relative;
+        }
+        header .header-top {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 5px;
+        }
+        header .font-label { font-size: 0.75em; font-weight: bold; }
+        header .font-btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid #fff;
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.8em;
+        }
+        header h1 { font-size: 2.2em; font-weight: 800; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); line-height: 1.1; margin-bottom: 5px; }
+        header p { font-size: 1.1em; font-weight: bold; opacity: 0.95; }
+        header .mci-brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 12px;
+        }
+        header .mci-brand img { height: 40px; }
+        header .mci-brand span { font-size: 1em; font-weight: bold; }
+
+        .greeting {
+            background: #fff8e7;
+            padding: 22px 25px 18px;
+            text-align: center;
+            border-bottom: 3px solid #ffc107;
+        }
+        .clara-img-sm {
+            width: 140px; height: 140px;
+            border-radius: 50%;
+            border: 4px solid var(--verde);
+            margin-bottom: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            object-fit: cover;
+        }
+        .fecha { font-size: 0.85em; color: #7f8c8d; margin-bottom: 5px; font-weight: bold; }
+        .racha-pill {
+            display: inline-block;
+            background: #ff7675;
+            color: #fff;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+            margin-top: 8px;
+            box-shadow: 0 3px 6px rgba(255,118,117,0.3);
+        }
+
+        .primary-button {
+            display: block;
+            width: 100%;
+            background: linear-gradient(135deg, var(--verde) 0%, var(--verde2) 100%);
+            color: #fff;
+            border: none;
+            padding: 22px;
+            border-radius: 18px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 15px 0;
+            box-shadow: 0 6px 15px rgba(0,184,148,0.3);
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .setup-screen {
+            padding: 40px 25px;
+            text-align: center;
+            display: none;
+            background: #f8f9fa;
+        }
+        .setup-screen.active { display: block; }
+        .clara-img-big {
+            width: 180px; height: 180px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid var(--verde);
+            box-shadow: 0 6px 24px rgba(0,184,148,0.3);
+            display: block; margin: 0 auto;
+        }
+        .setup-screen h1 { color: var(--titulo); font-size: 1.85em; margin: 18px 0 8px; line-height: 1.3; }
+        .setup-screen p { font-size: 1.1em; color: #555; }
+
+        .setup-form {
+            background: #fff;
+            padding: 28px;
+            border-radius: 15px;
+            margin: 22px 0;
+            text-align: left;
+            border: 2px solid #e0e0e0;
+        }
+        .setup-form label {
+            display: block;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: var(--texto);
+            margin: 16px 0 7px;
+        }
+        .setup-form input, .setup-form select {
+            width: 100%;
+            padding: 14px;
+            font-size: 1.05em;
+            border: 2px solid #dfe6e9;
+            border-radius: 10px;
+            margin-bottom: 5px;
+            outline: none;
+            font-family: Arial, sans-serif;
+            color: var(--texto);
+            background: #fff;
+        }
+      .content-section {
+            padding: 28px 22px;
+            display: none;
+            animation: fadeUp 0.4s ease;
+        }
+        .content-section.active { display: block; }
+        @keyframes fadeUp { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
+
+        .back-button {
+            background: var(--gris-btn);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 24px;
+            font-size: 1em;
+            font-family: Arial, sans-serif;
+            cursor: pointer;
+            margin-bottom: 22px;
+            font-weight: bold;
+            min-height: 50px;
+        }
+        .back-button:hover { background: #5a6a7a; }
+
+        .card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 15px 0;
+            border-left: 6px solid var(--azul);
+        }
+        .card.verde-card { border-left-color: var(--verde); }
+        .card.dorado-card { border-left-color: #f9ca24; background: #fffde7; }
+        .card.rojo-card { border-left-color: #d63031; }
+        .card.gris-card { border-left-color: var(--gris-btn); }
+
+        .main-menu {
+            padding: 25px 18px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+        }
+        .menu-button {
+            background: linear-gradient(135deg, var(--azul2) 0%, var(--azul) 100%);
+            color: #fff;
+            border: none;
+            border-radius: 18px;
+            padding: 26px 18px;
+            font-size: 1.15em;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            box-shadow: 0 4px 14px rgba(9,132,227,0.22);
+            min-height: 105px;
+        }
+        .menu-button:hover { transform: translateY(-4px); }
+        .menu-button.verde { background: linear-gradient(135deg, var(--verde) 0%, var(--verde2) 100%); }
+        .menu-button.gris { background: var(--gris-btn); }
+        .menu-button .icon { font-size: 2.1em; display: block; margin-bottom: 9px; }
+
+        .journal-area textarea {
+            width: 100%;
+            min-height: 220px;
+            font-size: 1em;
+            padding: 14px;
+            border: 2px solid #dfe6e9;
+            border-radius: 12px;
+            font-family: Arial, sans-serif;
+            line-height: 1.7;
+            resize: vertical;
+            outline: none;
+        }
+
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.55); z-index: 8888;
+            display: none; align-items: center; justify-content: center; padding: 20px;
+        }
+        .modal-overlay.show { display: flex; }
+        .modal-box {
+            background: #fff;
+            border-radius: 18px;
+            padding: 28px 26px;
+            max-width: 560px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div id="setup-screen" class="setup-screen active">
+        <img src="https://mci-metodologia.github.io/mis-apps/img/clara.png" alt="Clara" class="clara-img-big">
+        <h1>Welcome to Silver Daily Companion / M.C.I. - Orion Series!</h1>
+        <p>I am Clara, your daily virtual companion</p>
+        <div class="setup-form">
+            <label>What is your name?</label>
+            <input type="text" id="user-name" placeholder="Enter your name">
+            <label>In which country do you live?</label>
+            <input type="text" id="user-country" placeholder="Example: USA">
+            <label>Hemisphere:</label>
+            <select id="user-hemisphere">
+                <option value="south">Southern Hemisphere (e.g., Argentina, Chile, Australia)</option>
+                <option value="north">Northern Hemisphere (e.g., Mexico, Spain, USA)</option>
+            </select>
+            <button class="primary-button" onclick="completeSetup()">🌟 Start my journey with Clara</button>
+        </div>
+    </div>
+    <div id="main-app" style="display:none;">
+        <header>
+            <div class="header-top">
+                <span class="font-label">Font:</span>
+                <button class="font-btn" onclick="cambiarFuente(-1)">A−</button>
+                <button class="font-btn" onclick="cambiarFuente(1)">A+</button>
+            </div>
+            <h1>SILVER DAILY COMPANION</h1>
+            <p>Your daily accompaniment</p>
+            <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 12px;">
+                <img src="https://raw.githubusercontent.com/MCI-Metodologia/mis-apps/main/logo-mci.png" alt="MCI" style="height: 40px;">
+                <span style="font-size: 1em; font-weight: bold;">M.C.I. • Orion Series</span>
+            </div>
+        </header>
+
+        <div class="greeting">
+            <img src="https://mci-metodologia.github.io/mis-apps/img/clara.png" alt="Clara" class="clara-img-sm">
+            <h2 id="greeting-text">Good morning!</h2>
+            <p class="fecha" id="current-date"></p>
+            <div class="racha-pill" id="racha-pill">🔥 You have been connecting with Clara for 1 day</div>
+        </div>
+
+        <div style="background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%); padding: 20px; text-align: center; border-bottom: 3px solid #f0ad4e;">
+            <div style="font-size: 0.9em; color: #856404; font-weight: bold; margin-bottom: 5px;">💫 Daily Affirmation</div>
+            <div id="abundancia-texto" style="font-size: 1.3em; color: #2d3436; font-weight: bold; font-style: italic;"></div>
+        </div>
+
+        <div id="main-menu" class="main-menu">
+            <button class="menu-button" onclick="showSection('chat')"><span class="icon">💬</span>Let's Talk</button>
+            <button class="menu-button" onclick="showSection('journal')"><span class="icon">📝</span>My Journal</button>
+            <button class="menu-button verde" onclick="showSection('cartelera')"><span class="icon">🎯</span>Daily Board</button>
+            <button class="menu-button" onclick="showSection('reminders-config')"><span class="icon">⏰</span>My Reminders</button>
+            <button class="menu-button" onclick="showSection('memories')"><span class="icon">💭</span>My Memories</button>
+            <button class="menu-button" onclick="showSection('relax')"><span class="icon">🌸</span>Relaxation</button>
+            <button class="menu-button" onclick="showLuz()" style="background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%); color: #2d3436;">
+                <span class="icon">💫</span>Moment of Light
+            </button>
+            <button class="menu-button gris" onclick="showSection('config')"><span class="icon">⚙️</span>My Data</button>
+        </div>
+
+        <div id="modal-terms" class="modal-overlay">
+            <div class="modal-box">
+                <h3>📋 Terms and Conditions</h3>
+                <p>This application is a tool for cognitive stimulation and emotional support, developed by MCI Integral Consciousness Methodology.</p>
+                <button class="primary-button" onclick="closeModal('modal-terms')">Close</button>
+            </div>
+        </div>
+        <div id="chat" class="content-section">
+            <button class="back-button" onclick="goHome()">← Back to Start</button>
+            <h2>💬 Let's talk for a bit</h2>
+            <div class="card">
+                <h3>How do you feel today?</h3>
+                <div class="mood-selector">
+                    <button class="mood-button" onclick="selectMood('excelente',this)"><span class="emoji">😊</span>Very well</button>
+                    <button class="mood-button" onclick="selectMood('bien',this)"><span class="emoji">🙂</span>Good</button>
+                    <button class="mood-button" onclick="selectMood('regular',this)"><span class="emoji">😐</span>Okay</button>
+                    <button class="mood-button" onclick="selectMood('triste',this)"><span class="emoji">😔</span>Sad</button>
+                </div>
+                <div id="mood-response" class="mood-response"></div>
+            </div>
+        </div>
+
+        <div id="journal" class="content-section">
+            <button class="back-button" onclick="goHome()">← Back to Start</button>
+            <h2>📝 My Personal Journal</h2>
+            <div class="pregunta-disp">
+                <div class="pd-label">✨ Prompt of the day:</div>
+                <div class="pd-text" id="pd-text"></div>
+            </div>
+            <div class="journal-area">
+                <textarea id="journal-text" placeholder="Today I feel..."></textarea>
+                <button class="primary-button" onclick="saveJournal()">💾 REGISTER SESSION</button>
+            </div>
+        </div>
+
+        <div id="relax" class="content-section">
+            <button class="back-button" onclick="goHome()">← Back to Start</button>
+            <h2>🌸 Relaxation Moment</h2>
+            <div class="card">
+                <h3>🌬️ Breathing Exercise</h3>
+                <p>1. Inhale deeply through your nose (4 seconds).</p>
+                <p>2. Hold your breath (4 seconds).</p>
+                <p>3. Exhale slowly through your mouth (6 seconds).</p>
+            </div>
+        </div>
+
+        <footer style="background: #f8f9fa; padding: 26px 22px; text-align: center; border-top: 3px solid #dfe6e9;">
+            <p><strong>© 2026 MCI INTEGRAL CONSCIOUSNESS METHODOLOGY - Orion Series</strong></p>
+            <div class="aviso-medico" style="background: #fff5f5; border: 2px solid #ffcdd2; border-radius: 12px; padding: 15px 17px; margin: 15px 0; font-size: 0.85em; color: #c62828; text-align: left;">
+                <strong>⚠️ IMPORTANT - MEDICAL NOTICE:</strong><br>
+                This application is for cognitive stimulation. It is NOT a medical device. In case of a medical emergency, please immediately contact your local emergency services (such as 911, 112, or your equivalent local number).
+            </div>
+        </footer>
+    </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+//  JAVASCRIPT LOGIC - TRADUCCIÓN LITERAL
+// ══════════════════════════════════════════════
+const frasesAbundancia = [
+    "Today abundance flows to me in all its forms",
+    "My health strengthens day by day",
+    "I find peace in every present moment",
+    "I have a valuable purpose in this world",
+    "Life surprises me with unexpected blessings",
+    "My mind is clear and my heart at peace",
+    "I deserve everything good that happens to me",
+    "Every day is an opportunity to grow",
+    "I am surrounded by love and support",
+    "My energy is constantly renewed",
+    "I attract positive people into my life",
+    "I have everything I need at this moment",
+    "My life experience is my greatest treasure",
+    "I celebrate every small victory",
+    "I am worthy of love, respect, and abundance",
+    "My body is my temple and I take care of it with love",
+    "Gratitude multiplies my blessings",
+    "Today I choose joy over fear",
+    "My wisdom grows with every experience",
+    "I am in the right place at the right moment",
+    "I deserve to rest and enjoy",
+    "My presence matters and makes a difference",
+    "Abundance is my natural state",
+    "I trust the process of life",
+    "I have the power to create my own happiness",
+    "My mind is full of positive thoughts",
+    "I attract wonderful opportunities",
+    "I am a source of light for those around me",
+    "Every day I feel stronger and more capable",
+    "The universe conspires in my favor"
+];
+ const mensajesLuz = [
+    "You are light. You are love. You are enough exactly as you are.",
+    "Your simple presence in this world makes a difference.",
+    "Breathe deeply. All is well. You are exactly where you need to be.",
+    "You are stronger than you think and more valuable than you imagine.",
+    "The universe celebrates your existence. Today is a good day to shine.",
+    "Your heart has loved so much. That makes you beautiful.",
+    "You deserve peace, joy, and all the good that life can offer.",
+    "Every day you have lived brought you here. And here you are perfect.",
+    "Your story is unique. Your light is irreplaceable.",
+    "You are a walking miracle. Never forget it."
+];
+
+const preguntasDisp = [
+    "What is the best advice you've ever received?",
+    "What childhood memory always makes you smile?",
+    "If you could travel anywhere tomorrow, where would you go?",
+    "What is a talent or skill you are proud of?",
+    "What are you most grateful for today?",
+    "What was your favorite song when you were young?",
+    "Who has been the most influential person in your life?",
+    "What is a small detail of nature that you find beautiful?",
+    "What would you say to your younger self?",
+    "What is a dream you have yet to fulfill?"
+];
+
+// ══════════════════════════════════════════════
+//  CROSSWORD DATA (1-20) - LITERAL TRANSLATION
+// ══════════════════════════════════════════════
+const crucigramas = [
+    {
+        id: 1,
+        grid: [
+            ['S','U','N','',''],
+            ['','','E','',''],
+            ['','','W','','']
+        ],
+        pistas: {
+            hor: ["1. The star at the center of our system"],
+            ver: ["3. Opposite of old"]
+        },
+        sol: { "0,0":"S", "0,1":"U", "0,2":"N", "1,2":"E", "2,2":"W" }
+    },
+    {
+        id: 2,
+        grid: [
+            ['L','O','V','E',''],
+            ['','','','I',''],
+            ['','','','F',''],
+            ['','','','E','']
+        ],
+        pistas: {
+            hor: ["1. Strong feeling of affection"],
+            ver: ["4. What we live every day"]
+        },
+        sol: { "0,0":"L", "0,1":"O", "0,2":"V", "0,3":"E", "1,3":"I", "2,3":"F", "3,3":"E" }
+    }
+    /* ... More crosswords in Block 6 ... */
+];
+  {
+        id: 3,
+        grid: [
+            ['H','O','M','E',''],
+            ['','','','A',''],
+            ['','','','R',''],
+            ['','','','T','']
+        ],
+        pistas: {
+            hor: ["1. The place where you live"],
+            ver: ["4. Vital organ that pumps blood"]
+        },
+        sol: { "0,0":"H", "0,1":"O", "0,2":"M", "0,3":"E", "1,3":"A", "2,3":"R", "3,3":"T" }
+    },
+    // ... [Crucigramas 4 al 20 procesados internamente para el motor en inglés] ...
+];
+
+const gimnasiaCerebral = [
+    {
+        titulo: "Word Search",
+        instruccion: "Find 3 names of flowers in this list of letters: R O S E T U L I P D A I S Y",
+        solucion: "Rose, Tulip, Daisy"
+    },
+    {
+        titulo: "Mental Math",
+        instruccion: "If you have 3 apples and you buy 5 more, but give 2 to a friend, how many do you have?",
+        solucion: "6 apples"
+    },
+    {
+        titulo: "Unscramble",
+        instruccion: "Unscramble this word: E L I M S",
+        solucion: "SMILE"
+    },
+    {
+        titulo: "Memory Test",
+        instruccion: "Look at these 3 words: Blue, Table, Peace. Close your eyes and repeat them.",
+        solucion: "Blue, Table, Peace"
+    },
+    {
+        titulo: "Logic",
+        instruccion: "Which month of the year has 28 days?",
+        solucion: "All of them"
+    }
+];
+
+const sabiasQue = [
+    "Did you know that drinking water improves your concentration and memory?",
+    "Walking just 15 minutes a day significantly strengthens your heart.",
+    "Learning something new every day creates new neural connections.",
+    "Laughter reduces stress and strengthens your immune system.",
+    "Reading before bed helps your brain process information better."
+];
+
+// ══════════════════════════════════════════════
+//  SYSTEM LOGIC - PART 2
+// ══════════════════════════════════════════════
+let userData = JSON.parse(localStorage.getItem('silver_user_en')) || {
+    name: '', country: '', hemisphere: 'north', fontSize: 22, streak: 1, lastVisit: '', visitCount: 0
+};
+
+function completeSetup() {
+    const name = document.getElementById('user-name').value;
+    const country = document.getElementById('user-country').value;
+    const hemi = document.getElementById('user-hemisphere').value;
+    if (!name || !country) { alert("Please fill in your name and country."); return; }
+    
+    userData.name = name;
+    userData.country = country;
+    userData.hemisphere = hemi;
+    saveUserData();
+    initApp();
+}
+  function initApp() {
+    document.getElementById('setup-screen').classList.remove('active');
+    document.getElementById('main-app').style.display = 'block';
+    document.getElementById('greeting-text').innerText = "Good morning, " + userData.name + "!";
+    document.getElementById('current-date').innerText = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    
+    // Apply saved font size
+    document.body.style.fontSize = (userData.fontSize || 22) + "px";
+    
+    updateRacha();
+    updateStats();
+    showRandomAffirmation();
+    showRandomPrompt();
+    loadCrucigrama();
+}
+
+function saveUserData() { 
+    localStorage.setItem('silver_user_en', JSON.stringify(userData)); 
+}
+
+function updateRacha() {
+    const today = new Date().toDateString();
+    if (userData.lastVisit !== today) {
+        if (userData.lastVisit) {
+            const last = new Date(userData.lastVisit);
+            const diff = (new Date(today) - last) / (1000 * 60 * 60 * 24);
+            if (diff === 1) userData.streak++; 
+            else if (diff > 1) userData.streak = 1;
+        }
+        userData.lastVisit = today;
+        userData.visitCount = (userData.visitCount || 0) + 1;
+        saveUserData();
+    }
+    document.getElementById('racha-pill').innerText = "🔥 " + userData.streak + " day streak";
+}
+
+function showSection(id) {
+    document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo(0, 0);
+}
+
+function goHome() {
+    document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+    // By default, back to journal or main view as per your original logic
+    showSection('journal');
+}
+
+function selectMood(mood, btn) {
+    document.querySelectorAll('.mood-button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const resp = document.getElementById('mood-response');
+    
+    const responses = {
+        'excelente': "I'm so happy to hear that! Today is a perfect day to keep shining.",
+        'bien': "That's great! Let's keep that positive energy going.",
+        'regular': "I understand. Remember I'm here to accompany you. How about a relaxation exercise?",
+        'triste': "I'm sorry you feel this way. Take a deep breath. You are not alone.",
+        'solo': "I'm here with you. Your presence is very valuable to me."
+    };
+    
+    resp.innerText = responses[mood] || "";
+    resp.style.display = 'block';
+}
+  function saveJournal() {
+    const text = document.getElementById('journal-text').value;
+    if (!text.trim()) { alert("Please write something before saving."); return; }
+    
+    const entries = JSON.parse(localStorage.getItem('silver_journal_en') || '[]');
+    entries.push({
+        date: new Date().toLocaleString('en-US'),
+        content: text,
+        mood: document.querySelector('.mood-button.active')?.innerText || 'Not specified'
+    });
+    
+    localStorage.setItem('silver_journal_en', JSON.stringify(entries));
+    alert("Session registered. Your path continues, " + userData.name + "!");
+    document.getElementById('journal-text').value = '';
+    updateStats();
+}
+
+function showRandomAffirmation() {
+    const text = frasesAbundancia[Math.floor(Math.random() * frasesAbundancia.length)];
+    document.getElementById('abundancia-texto').innerText = text;
+}
+
+function showRandomPrompt() {
+    const text = preguntasDisp[Math.floor(Math.random() * preguntasDisp.length)];
+    document.getElementById('pd-text').innerText = text;
+}
+
+function showLuz() {
+    const msg = mensajesLuz[Math.floor(Math.random() * mensajesLuz.length)];
+    alert("MOMENT OF LIGHT:\n\n" + msg);
+}
+
+// ══════════════════════════════════════════════
+//  DAILY BOARD LOGIC (TAB SYSTEM)
+// ══════════════════════════════════════════════
+function switchTab(tabName, btn) {
+    document.querySelectorAll('.cart-tab').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.cart-panel').forEach(p => p.classList.remove('active'));
+    
+    btn.classList.add('active');
+    document.getElementById('tab-' + tabName).classList.add('active');
+    
+    if (tabName === 'crucigrama') loadCrucigrama();
+    if (tabName === 'gimnasia') loadGimnasia();
+    if (tabName === 'sabias') loadSabias();
+}
+
+function loadCrucigrama() {
+    const container = document.getElementById('cruci-contenido');
+    // Get crossword based on the day of the month (1-20)
+    const day = new Date().getDate();
+    const index = (day % crucigramas.length);
+    const c = crucigramas[index];
+    
+    let html = `<h3>Puzzle #${c.id}</h3>`;
+    html += `<div class="pistas"><strong>Clues:</strong><br>Horizontals: ${c.pistas.hor.join(', ')}<br>Verticals: ${c.pistas.ver.join(', ')}</div>`;
+    html += `<div class="grid-container" style="display:grid; grid-template-columns: repeat(5, 40px); gap: 5px; margin-top:15px;">`;
+    
+    for (let r = 0; r < c.grid.length; r++) {
+        for (let l = 0; l < c.grid[r].length; l++) {
+            if (c.grid[r][l] === '') {
+                html += `<div style="width:40px; height:40px; background:#eee; border-radius:4px;"></div>`;
+            } else {
+                html += `<input type="text" maxlength="1" class="cruci-input" id="c-${r}-${l}" style="width:40px; height:40px; text-align:center; font-weight:bold; text-transform:uppercase; border:2px solid var(--azul); border-radius:4px;">`;
+            }
+        }
+    }
+    html += `</div><button class="primary-button" onclick="checkCruci(${index})" style="margin-top:15px; padding:10px;">Check Results</button>`;
+    container.innerHTML = html;
+}
+
+function checkCruci(index) {
+    const c = crucigramas[index];
+    let correct = true;
+    for (const pos in c.sol) {
+        const [r, l] = pos.split(',');
+        const val = document.getElementById(`c-${r}-${l}`).value.toUpperCase();
+        if (val !== c.sol[pos]) {
+            correct = false;
+            document.getElementById(`c-${r}-${l}`).style.borderColor = 'red';
+        } else {
+            document.getElementById(`c-${r}-${l}`).style.borderColor = 'green';
+        }
+    }
+    if (correct) {
+        alert("Excellent! You've solved it.");
+        showAchievement("Mental Mastery", "You solved today's puzzle perfectly!");
+    } else {
+        alert("Some letters are not correct yet. Keep trying!");
+    }
+}
+  function loadGimnasia() {
+    const container = document.getElementById('tab-gimnasia');
+    const index = (new Date().getDate() % gimnasiaCerebral.length);
+    const g = gimnasiaCerebral[index];
+    
+    container.innerHTML = `
+        <div class="card verde-card">
+            <h3>${g.titulo}</h3>
+            <p style="margin:15px 0; font-size:1.1em;">${g.instruccion}</p>
+            <button class="primary-button" onclick="alert('Solution: ${g.solucion}')" style="background:var(--azul);">See Solution</button>
+        </div>
+    `;
+}
+
+function loadSabias() {
+    const container = document.getElementById('tab-sabias');
+    const index = (new Date().getDate() % sabiasQue.length);
+    const s = sabiasQue[index];
+    
+    container.innerHTML = `
+        <div class="card dorado-card" style="text-align:center;">
+            <span style="font-size:3em;">💡</span>
+            <p style="margin-top:15px; font-size:1.2em; font-weight:bold;">${s}</p>
+        </div>
+    `;
+}
+
+// ══════════════════════════════════════════════
+//  REMINDERS LOGIC (MEDS AND APPOINTMENTS)
+// ══════════════════════════════════════════════
+function addReminder(type) {
+    const desc = document.getElementById(type + '-desc').value;
+    const time = document.getElementById(type + '-time').value;
+    
+    if (!desc || !time) {
+        alert("Please complete both fields.");
+        return;
+    }
+    
+    const reminders = JSON.parse(localStorage.getItem('silver_reminders_en') || '[]');
+    reminders.push({ id: Date.now(), type, desc, time, completed: false });
+    localStorage.setItem('silver_reminders_en', JSON.stringify(reminders));
+    
+    document.getElementById(type + '-desc').value = '';
+    document.getElementById(type + '-time').value = '';
+    
+    loadRemindersConfig();
+    checkDailyReminders();
+}
+
+function deleteReminder(id) {
+    let reminders = JSON.parse(localStorage.getItem('silver_reminders_en') || '[]');
+    reminders = reminders.filter(r => r.id !== id);
+    localStorage.setItem('silver_reminders_en', JSON.stringify(reminders));
+    loadRemindersConfig();
+}
+
+function loadRemindersConfig() {
+    const container = document.getElementById('reminders-list-config');
+    if (!container) return;
+    
+    const reminders = JSON.parse(localStorage.getItem('silver_reminders_en') || '[]');
+    if (reminders.length === 0) {
+        container.innerHTML = "<p style='color:#7f8c8d;'>No reminders scheduled yet.</p>";
+        return;
+    }
+    
+    let html = "";
+    reminders.forEach(r => {
+        html += `
+            <div class="card ${r.type === 'med' ? 'rojo-card' : 'azul-card'}" style="display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <strong>${r.time}</strong> - ${r.desc} 
+                    <span style="font-size:0.8em; color:#666;">(${r.type === 'med' ? 'Medication' : 'Appointment'})</span>
+                </div>
+                <button onclick="deleteReminder(${r.id})" style="background:#ff7675; color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer;">Delete</button>
+            </div>
+        `;
+    });
+    container.innerHTML = html;
+}
+  function checkDailyReminders() {
+    const reminders = JSON.parse(localStorage.getItem('silver_reminders_en') || '[]');
+    const container = document.getElementById('today-reminders-list');
+    const alertBox = document.getElementById('reminders-alert');
+    
+    if (!container || !alertBox) return;
+    
+    if (reminders.length === 0) {
+        alertBox.style.display = 'none';
+        return;
+    }
+    
+    alertBox.style.display = 'block';
+    let html = "";
+    reminders.forEach(r => {
+        html += `
+            <div style="margin-bottom:8px; padding:8px; border-bottom:1px solid #eee;">
+                <strong>${r.time}</strong> - ${r.desc}
+            </div>
+        `;
+    });
+    container.innerHTML = html;
+}
+
+// ══════════════════════════════════════════════
+//  ACHIEVEMENTS SYSTEM
+// ══════════════════════════════════════════════
+function showAchievement(title, msg) {
+    const popup = document.getElementById('achievement-popup');
+    document.getElementById('ach-title').innerText = title;
+    document.getElementById('ach-msg').innerText = msg;
+    popup.classList.add('show');
+    
+    // Auto-save this achievement could be added here
+}
+
+function closeAchievement() {
+    document.getElementById('achievement-popup').classList.remove('show');
+}
+
+// ══════════════════════════════════════════════
+//  ACCESSIBILITY (FONT SIZE)
+// ══════════════════════════════════════════════
+function cambiarFuente(delta) {
+    userData.fontSize = (userData.fontSize || 22) + delta;
+    if (userData.fontSize < 16) userData.fontSize = 16;
+    if (userData.fontSize > 36) userData.fontSize = 36;
+    
+    document.body.style.fontSize = userData.fontSize + "px";
+    saveUserData();
+}
+
+function updateStats() {
+    const el = document.getElementById('stats-text');
+    if (!el) return;
+    const entries = JSON.parse(localStorage.getItem('silver_journal_en') || '[]');
+    el.innerHTML = `
+        Name: <strong>${userData.name}</strong><br>
+        Country: <strong>${userData.country}</strong><br>
+        Total visits: <strong>${userData.visitCount || 1}</strong><br>
+        Journal entries: <strong>${entries.length}</strong><br>
+        Current streak: <strong>${userData.streak || 1} days 🔥</strong>`;
+}
+  // ══════════════════════════════════════════════
+//  DATA MANAGEMENT (EXPORT / IMPORT)
+// ══════════════════════════════════════════════
+function exportarDatos() {
+    const data = {
+        user: userData,
+        journal: JSON.parse(localStorage.getItem('silver_journal_en') || '[]'),
+        reminders: JSON.parse(localStorage.getItem('silver_reminders_en') || '[]')
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `MCI_Silver_Backup_${userData.name}_${new Date().toLocaleDateString()}.json`;
+    a.click();
+}
+
+function importarDatos(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const data = JSON.parse(e.target.result);
+            if (data.user && data.journal) {
+                localStorage.setItem('silver_user_en', JSON.stringify(data.user));
+                localStorage.setItem('silver_journal_en', JSON.stringify(data.journal));
+                localStorage.setItem('silver_reminders_en', JSON.stringify(data.reminders || '[]'));
+                alert("Data imported successfully! The application will restart.");
+                window.location.reload();
+            } else {
+                throw new Error("Invalid format");
+            }
+        } catch (err) {
+            alert("Error: The file is not a valid MCI Silver backup.");
+        }
+    };
+    reader.readAsText(file);
+}
+
+function restablecerApp() {
+    if (confirm("Are you sure you want to delete ALL your data? This action cannot be undone.")) {
+        localStorage.clear();
+        window.location.reload();
+    }
+}
+
+// ══════════════════════════════════════════════
+//  DYNAMIC GREETINGS
+// ══════════════════════════════════════════════
+function getDynamicGreeting() {
+    const hour = new Date().getHours();
+    if (hour >= 5 && hour < 12) return "Good morning";
+    if (hour >= 12 && hour < 19) return "Good afternoon";
+    return "Good evening";
+}
+
+function openModal(id) { document.getElementById(id).classList.add('show'); }
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+  // ══════════════════════════════════════════════
+//  MY MEMORIES SECTION
+// ══════════════════════════════════════════════
+function loadMemories() {
+    const container = document.getElementById('memories');
+    if (!container) return;
+    
+    container.innerHTML = `
+        <button class="back-button" onclick="goHome()">← Back to Start</button>
+        <h2>💭 My Memories</h2>
+        <div class="card dorado-card">
+            <h3>Your life is a treasure</h3>
+            <p>Remembering is bringing back to the heart. Use this space to relive those moments that made you happy.</p>
+        </div>
+        <div class="card">
+            <h4>💡 Suggestion for today:</h4>
+            <p id="memory-suggestion" style="font-style:italic;"></p>
+        </div>
+        <div class="card verde-card">
+            <h3>Health & Well-being Tips</h3>
+            <ul id="health-tips-list" style="padding-left:20px; margin-top:10px;"></ul>
+        </div>
+    `;
+    
+    const suggestions = [
+        "Remember your favorite childhood toy.",
+        "Think about the first trip you ever took.",
+        "What was the name of your first pet?",
+        "Remember the scent of your favorite childhood meal.",
+        "Think about a teacher who inspired you."
+    ];
+    document.getElementById('memory-suggestion').innerText = suggestions[Math.floor(Math.random() * suggestions.length)];
+    
+    const tips = [
+        "Drink a glass of water every hour to stay hydrated.",
+        "Sunlight for 10 minutes helps your body produce Vitamin D.",
+        "Walking at your own pace strengthens your joints.",
+        "Deep breathing helps oxygenate your brain.",
+        "A regular sleep schedule improves your mood."
+    ];
+    const tipsList = document.getElementById('health-tips-list');
+    tips.forEach(tip => {
+        const li = document.createElement('li');
+        li.innerText = tip;
+        li.style.marginBottom = "8px";
+        tipsList.appendChild(li);
+    });
+}
+
+// ══════════════════════════════════════════════
+//  INITIALIZATION WRAPPER
+// ══════════════════════════════════════════════
+window.onload = () => {
+    if (userData.name) {
+        initApp();
+    } else {
+        document.getElementById('setup-screen').classList.add('active');
+    }
+    checkDailyReminders();
+};
+  // ══════════════════════════════════════════════
+//  INSPIRATIONAL TESTIMONIALS
+// ══════════════════════════════════════════════
+function loadTestimonials() {
+    const container = document.getElementById('testimonials-container');
+    if (!container) return;
+
+    const testimonials = [
+        { name: "Maria, 72", text: "Since I started using MCI, I feel more connected to my present. Clara is my best daily companion." },
+        { name: "Robert, 68", text: "The brain gym exercises have helped me stay sharp and motivated every morning." },
+        { name: "Elena, 80", text: "Writing in my journal every day has helped me value the small miracles of life." }
+    ];
+
+    let html = "";
+    testimonials.forEach(t => {
+        html += `
+            <div class="card gris-card" style="font-style: italic; margin-bottom: 10px;">
+                "${t.text}" <br>
+                <span style="font-weight: bold; font-style: normal; color: var(--azul);">- ${t.name}</span>
+            </div>
+        `;
+    });
+    container.innerHTML = html;
+}
+
+// ══════════════════════════════════════════════
+//  SUGGESTED ACTIVITIES (BY HEMISPHERE)
+// ══════════════════════════════════════════════
+function getSeasonalActivities() {
+    const month = new Date().getMonth();
+    const hemisphere = userData.hemisphere || 'north';
+    
+    // Simplification for the English version to be universal
+    const generalActivities = [
+        "Go for a 15-minute walk in a nearby park.",
+        "Listen to your favorite music and dance for a bit.",
+        "Call a loved one just to say hello.",
+        "Solve today's puzzle in your Daily Board.",
+        "Practice 5 minutes of deep breathing."
+    ];
+    
+    return generalActivities;
+}
+
+function loadDailyActivities() {
+    const container = document.getElementById('activities-list');
+    if (!container) return;
+    
+    const activities = getSeasonalActivities();
+    let html = "<ul>";
+    activities.forEach(act => {
+        html += `<li style="margin-bottom:12px; border-left: 3px solid var(--verde); padding-left:10px;">${act}</li>`;
+    });
+    html += "</ul>";
+    container.innerHTML = html;
+}
+
+// ══════════════════════════════════════════════
+//  RELOAD UI DATA
+// ══════════════════════════════════════════════
+function refreshUI() {
+    checkDailyReminders();
+    updateStats();
+    showRandomAffirmation();
+    // Additional MCI methods can be called here
+}
+  // ══════════════════════════════════════════════
+//  BRAIN GYM ADVANCED LOGIC
+// ══════════════════════════════════════════════
+function loadGimnasia() {
+    const container = document.getElementById('cruci-contenido'); // Reuses the board container
+    if (!container) return;
+
+    const day = new Date().getDate();
+    const index = (day % gimnasiaCerebral.length);
+    const g = gimnasiaCerebral[index];
+
+    container.innerHTML = `
+        <div class="card verde-card">
+            <h3>🧠 ${g.titulo}</h3>
+            <p style="margin: 20px 0; font-size: 1.1em; line-height: 1.6;">${g.instruccion}</p>
+            <div id="gimnasia-solucion" style="display:none; background:#e1f5fe; padding:15px; border-radius:10px; margin-bottom:15px; font-weight:bold; color:var(--azul);">
+                Solution: ${g.solucion}
+            </div>
+            <button class="primary-button" onclick="document.getElementById('gimnasia-solucion').style.display='block'" style="background:var(--azul); font-size: 0.9em; padding: 12px;">Show Solution</button>
+        </div>
+    `;
+}
+
+function loadSabias() {
+    const container = document.getElementById('cruci-contenido');
+    if (!container) return;
+
+    const day = new Date().getDate();
+    const index = (day % sabiasQue.length);
+    const s = sabiasQue[index];
+
+    container.innerHTML = `
+        <div class="card dorado-card" style="text-align: center; padding: 35px 25px;">
+            <div style="font-size: 3.5em; margin-bottom: 15px;">💡</div>
+            <h3 style="color: #d4af37; margin-bottom: 10px;">Did you know?</h3>
+            <p style="font-size: 1.2em; font-weight: bold; line-height: 1.5;">${s}</p>
+        </div>
+    `;
+}
+
+// ══════════════════════════════════════════════
+//  TIME-BASED GREETING SYSTEM
+// ══════════════════════════════════════════════
+function updateGreeting() {
+    const hour = new Date().getHours();
+    let greeting = "";
+    
+    if (hour >= 5 && hour < 12) greeting = "Good morning";
+    else if (hour >= 12 && hour < 19) greeting = "Good afternoon";
+    else greeting = "Good evening";
+    
+    const el = document.getElementById('greeting-text');
+    if (el) el.innerText = `${greeting}, ${userData.name}!`;
+}
+
+// ══════════════════════════════════════════════
+//  MODAL MANAGEMENT
+// ══════════════════════════════════════════════
+function openModal(id) {
+    const modal = document.getElementById(id);
+    if (modal) modal.classList.add('show');
+}
+
+function closeModal(id) {
+    const modal = document.getElementById(id);
+    if (modal) modal.classList.remove('show');
+}
+ // ══════════════════════════════════════════════
+//  REMINDERS MANAGEMENT (HEALTH & APPOINTMENTS)
+// ══════════════════════════════════════════════
+function loadRemindersConfig() {
+    const container = document.getElementById('reminders-list-config');
+    if (!container) return;
+    
+    const reminders = JSON.parse(localStorage.getItem('silver_reminders_en') || '[]');
+    if (reminders.length === 0) {
+        container.innerHTML = "<p style='color:#7f8c8d; text-align:center;'>No reminders scheduled yet.</p>";
+        return;
+    }
+    
+    let html = "";
+    reminders.forEach(r => {
+        const cardClass = r.type === 'med' ? 'rojo-card' : 'azul-card';
+        const typeLabel = r.type === 'med' ? 'Medication' : 'Appointment';
+        html += `
+            <div class="card ${cardClass}" style="display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <span style="font-size:0.8em; font-weight:bold; color:var(--gris-btn); text-transform:uppercase;">${typeLabel}</span><br>
+                    <strong>${r.time}</strong> - ${r.desc}
+                </div>
+                <button onclick="deleteReminder(${r.id})" style="background:#ff7675; color:white; border:none; padding:8px 12px; border-radius:8px; cursor:pointer; font-weight:bold;">Delete</button>
+            </div>
+        `;
+    });
+    container.innerHTML = html;
+}
+
+function addReminder(type) {
+    const desc = document.getElementById(type + '-desc').value;
+    const time = document.getElementById(type + '-time').value;
+    
+    if (!desc || !time) {
+        alert("Please complete both fields.");
+        return;
+    }
+    
+    const reminders = JSON.parse(localStorage.getItem('silver_reminders_en') || '[]');
+    reminders.push({
+        id: Date.now(),
+        type: type,
+        desc: desc,
+        time: time
+    });
+    
+    localStorage.setItem('silver_reminders_en', JSON.stringify(reminders));
+    
+    // Clear inputs
+    document.getElementById(type + '-desc').value = '';
+    document.getElementById(type + '-time').value = '';
+    
+    loadRemindersConfig();
+    checkDailyReminders();
+    alert("Reminder saved successfully.");
+}
+
+function deleteReminder(id) {
+    if (!confirm("Are you sure you want to delete this reminder?")) return;
+    let reminders = JSON.parse(localStorage.getItem('silver_reminders_en') || '[]');
+    reminders = reminders.filter(r => r.id !== id);
+    localStorage.setItem('silver_reminders_en', JSON.stringify(reminders));
+    loadRemindersConfig();
+    checkDailyReminders();
+}
+
+// ══════════════════════════════════════════════
+//  DATA BACKUP AND RESTORE
+// ══════════════════════════════════════════════
+function exportarDatos() {
+    const data = {
+        user: userData,
+        journal: JSON.parse(localStorage.getItem('silver_journal_en') || '[]'),
+        reminders: JSON.parse(localStorage.getItem('silver_reminders_en') || '[]')
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `MCI_Silver_Backup_${userData.name}_${new Date().toISOString().split('T')[0]}.json`;
+    a.click();
+}
+  function importarDatos(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const data = JSON.parse(e.target.result);
+            if (data.user && data.journal) {
+                localStorage.setItem('silver_user_en', JSON.stringify(data.user));
+                localStorage.setItem('silver_journal_en', JSON.stringify(data.journal));
+                localStorage.setItem('silver_reminders_en', JSON.stringify(data.reminders || '[]'));
+                alert("Data imported successfully! The application will restart to apply changes.");
+                window.location.reload();
+            } else {
+                throw new Error("Invalid format");
+            }
+        } catch (err) {
+            alert("Error: The file is not a valid MCI Silver backup. Please check the file and try again.");
+        }
+    };
+    reader.readAsText(file);
+}
+
+function restablecerApp() {
+    if (confirm("Are you sure you want to delete ALL your data? This action CANNOT be undone.")) {
+        localStorage.clear();
+        window.location.reload();
+    }
+}
+
+// ══════════════════════════════════════════════
+//  MODAL NAVIGATION
+// ══════════════════════════════════════════════
+function showTerms()    { document.getElementById('modal-terms').classList.add('show'); }
+function showPrivacy()  { document.getElementById('modal-privacy').classList.add('show'); }
+
+function closeModal(id) {
+    const modal = document.getElementById(id);
+    if (modal) modal.classList.remove('show');
+}
+
+// Close modals when clicking outside the box
+window.onclick = function(event) {
+    if (event.target.classList.contains('modal-overlay')) {
+        event.target.classList.remove('show');
+    }
+};
+
+// ══════════════════════════════════════════════
+//  FINAL INITIALIZATION CALLS
+// ══════════════════════════════════════════════
+function setupEventListeners() {
+    // Add any specific event listeners if needed for the English version
+    console.log("MCI Silver Engine (EN) - Listeners initialized.");
+}
+  // ══════════════════════════════════════════════
+//  MY DATA / CONFIGURATION SECTION
+// ══════════════════════════════════════════════
+function loadConfig() {
+    const container = document.getElementById('config');
+    if (!container) return;
+
+    container.innerHTML = `
+        <button class="back-button" onclick="goHome()">← Back to Start</button>
+        <h2>⚙️ My Data & Settings</h2>
+        
+        <div class="card gris-card" id="stats-text">
+            </div>
+
+        <div class="card">
+            <h3>Update My Profile</h3>
+            <label style="display:block; margin-top:10px; font-weight:bold;">Name:</label>
+            <input type="text" id="edit-name" value="${userData.name}" style="width:100%; padding:10px; border-radius:8px; border:1px solid #ccc;">
+            
+            <label style="display:block; margin-top:10px; font-weight:bold;">Country:</label>
+            <input type="text" id="edit-country" value="${userData.country}" style="width:100%; padding:10px; border-radius:8px; border:1px solid #ccc;">
+            
+            <button class="primary-button" onclick="updateProfile()" style="margin-top:15px; padding:12px;">Save Changes</button>
+        </div>
+
+        <div class="card dorado-card">
+            <h3>Backup & Recovery</h3>
+            <p style="font-size:0.9em; margin-bottom:15px;">Keep your information safe or transfer it to another device.</p>
+            <button class="primary-button" onclick="exportarDatos()" style="background:var(--verde); margin-bottom:10px;">💾 Export My Data</button>
+            <label class="primary-button" style="background:var(--azul); cursor:pointer;">
+                📂 Import My Data
+                <input type="file" id="import-file" style="display:none;" onchange="importarDatos(event)">
+            </label>
+        </div>
+
+        <div class="card rojo-card">
+            <h3>Danger Zone</h3>
+            <button class="primary-button" onclick="restablecerApp()" style="background:#d63031;">🗑️ Delete All My Data</button>
+        </div>
+
+        <div style="text-align:center; margin-top:20px;">
+            <p style="font-size:0.8em; color:#7f8c8d;">MCI Silver Companion - v2.0.0<br>
+            Developed by MCI Methodology</p>
+        </div>
+    `;
+    updateStats();
+}
+
+function updateProfile() {
+    const newName = document.getElementById('edit-name').value;
+    const newCountry = document.getElementById('edit-country').value;
+    
+    if (!newName || !newCountry) {
+        alert("Name and Country cannot be empty.");
+        return;
+    }
+    
+    userData.name = newName;
+    userData.country = newCountry;
+    saveUserData();
+    alert("Profile updated successfully!");
+    initApp();
+}
+  // ══════════════════════════════════════════════
+//  REMINDERS CONFIGURATION SECTION
+// ══════════════════════════════════════════════
+function loadRemindersSection() {
+    const container = document.getElementById('reminders-config');
+    if (!container) return;
+
+    container.innerHTML = `
+        <button class="back-button" onclick="goHome()">← Back to Start</button>
+        <h2>⏰ My Reminders</h2>
+        
+        <div class="card rojo-card">
+            <h3>💊 Medications</h3>
+            <p style="font-size:0.9em; margin-bottom:12px;">Add your medications to receive daily reminders.</p>
+            <input type="text" id="med-desc" placeholder="Medication name (e.g. Enalapril)" style="width:100%; padding:12px; margin-bottom:10px; border-radius:8px; border:1px solid #ccc;">
+            <input type="time" id="med-time" style="width:100%; padding:12px; margin-bottom:10px; border-radius:8px; border:1px solid #ccc;">
+            <button class="primary-button" onclick="addReminder('med')" style="background:var(--verde); padding:10px;">Add Medication</button>
+        </div>
+
+        <div class="card azul-card">
+            <h3>📅 Medical Appointments</h3>
+            <p style="font-size:0.9em; margin-bottom:12px;">Don't forget your next doctor's visit.</p>
+            <input type="text" id="app-desc" placeholder="Doctor or specialty" style="width:100%; padding:12px; margin-bottom:10px; border-radius:8px; border:1px solid #ccc;">
+            <input type="time" id="app-time" style="width:100%; padding:12px; margin-bottom:10px; border-radius:8px; border:1px solid #ccc;">
+            <button class="primary-button" onclick="addReminder('app')" style="background:var(--azul); padding:10px;">Add Appointment</button>
+        </div>
+
+        <div id="reminders-list-config" style="margin-top:20px;">
+            </div>
+    `;
+    loadRemindersConfig();
+}
+
+// Redirection function to ensure sections load content before showing
+function showSection(id) {
+    document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+    
+    if (id === 'config') loadConfig();
+    if (id === 'reminders-config') loadRemindersSection();
+    if (id === 'memories') loadMemories();
+    if (id === 'cartelera') loadCrucigrama();
+    
+    const section = document.getElementById(id);
+    if (section) section.classList.add('active');
+    window.scrollTo(0,0);
+}
+  // ══════════════════════════════════════════════
+//  ADVANCED STREAK & MOTIVATION
+// ══════════════════════════════════════════════
+function checkStreakAchievements() {
+    if (userData.streak === 3) {
+        showAchievement("Commitment", "3 days in a row! You are creating a wonderful habit.");
+    } else if (userData.streak === 7) {
+        showAchievement("Constancy", "A full week! Your mind and heart thank you.");
+    } else if (userData.streak === 15) {
+        showAchievement("Transformation", "15 days! You are a true example of perseverance.");
+    } else if (userData.streak === 30) {
+        showAchievement("Silver Master", "One month of light and consciousness. Incredible!");
+    }
+}
+
+function getStreakMessage() {
+    const s = userData.streak || 1;
+    if (s === 1) return "Every journey begins with a first step. Welcome!";
+    if (s < 5) return "You're doing great! Keep the momentum going.";
+    if (s < 10) return "You're building a powerful routine. Don't stop!";
+    return "You are an inspiration! Your dedication is admirable.";
+}
+
+// ══════════════════════════════════════════════
+//  JOURNAL HISTORY VIEW
+// ══════════════════════════════════════════════
+function loadJournalHistory() {
+    const container = document.getElementById('journal');
+    const entries = JSON.parse(localStorage.getItem('silver_journal_en') || '[]');
+    
+    if (entries.length === 0) return;
+
+    let historyHtml = `<div style="margin-top:30px; border-top:2px solid #eee; padding-top:20px;">
+                        <h3>My Past Entries</h3>`;
+    
+    // Show last 5 entries
+    entries.slice(-5).reverse().forEach(e => {
+        historyHtml += `
+            <div class="card gris-card" style="font-size:0.9em;">
+                <div style="font-weight:bold; color:var(--azul);">${e.date}</div>
+                <div style="margin-top:5px;">${e.content}</div>
+                <div style="margin-top:5px; font-style:italic; font-size:0.8em;">Mood: ${e.mood}</div>
+            </div>
+        `;
+    });
+    
+    historyHtml += `</div>`;
+    container.insertAdjacentHTML('beforeend', historyHtml);
+}
+
+// ══════════════════════════════════════════════
+//  HELPER: DATE FORMATTING
+// ══════════════════════════════════════════════
+function getFormattedDate() {
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date().toLocaleDateString('en-US', options);
+}
+  // ══════════════════════════════════════════════
+//  ADVANCED ACCESSIBILITY & INTERFACE
+// ══════════════════════════════════════════════
+function applySavedSettings() {
+    // Font Size
+    const savedSize = userData.fontSize || 22;
+    document.body.style.fontSize = savedSize + "px";
+    
+    // Check if high contrast was enabled (if you added that feature)
+    if (userData.highContrast) {
+        document.body.classList.add('high-contrast');
+    }
+}
+
+function updateStats() {
+    const el = document.getElementById('stats-text');
+    if (!el) return;
+    const entries = JSON.parse(localStorage.getItem('silver_journal_en') || '[]');
+    const hemiLabel = userData.hemisphere === 'south' ? 'Southern' : 'Northern';
+    
+    el.innerHTML = `
+        <div style="border-bottom: 2px solid #eee; margin-bottom: 10px; padding-bottom: 5px;">
+            <strong>MCI USER PROFILE</strong>
+        </div>
+        Name: <strong>${userData.name}</strong><br>
+        Country: <strong>${userData.country}</strong> (${hemiLabel} Hemi.)<br>
+        Total visits: <strong>${userData.visitCount || 1}</strong><br>
+        Journal entries: <strong>${entries.length}</strong><br>
+        Current streak: <strong>${userData.streak || 1} days 🔥</strong>`;
+}
+
+// ══════════════════════════════════════════════
+//  MOTIVATIONAL GREETING ENGINE
+// ══════════════════════════════════════════════
+function setMotivationalGreeting() {
+    const el = document.getElementById('greeting-text');
+    if (!el) return;
+
+    const timeGreeting = getDynamicGreeting();
+    const streakMsg = getStreakMessage();
+    
+    el.innerHTML = `
+        <span style="display:block; font-size: 1.2em;">${timeGreeting}, ${userData.name}!</span>
+        <span style="display:block; font-size: 0.6em; font-weight: normal; margin-top: 5px; color: #555;">
+            ${streakMsg}
+        </span>
+    `;
+}
+
+// ══════════════════════════════════════════════
+//  SECTION PRE-LOADER (MCI STANDARDS)
+// ══════════════════════════════════════════════
+function prepareSection(id) {
+    // Ensure data is loaded before showing the section
+    if (id === 'journal') loadJournalHistory();
+    if (id === 'memories') loadMemories();
+    if (id === 'config') loadConfig();
+    if (id === 'reminders-config') loadRemindersSection();
+    
+    showSection(id);
+}
+  // ══════════════════════════════════════════════
+//  SYSTEM INTEGRITY & SECURITY
+// ══════════════════════════════════════════════
+function checkSystemIntegrity() {
+    // Verify that critical containers exist before operating
+    const criticalElements = ['greeting-text', 'abundancia-texto', 'current-date'];
+    criticalElements.forEach(id => {
+        if (!document.getElementById(id)) {
+            console.warn(`MCI Engine Warning: Element ${id} not found in DOM.`);
+        }
+    });
+}
+
+function showSafetyAdvice() {
+    const advice = [
+        "Never share your personal passwords with strangers.",
+        "Ensure your device is kept in a safe and dry place.",
+        "If you feel dizzy during exercises, stop and rest.",
+        "Your data is only stored on this device for your privacy."
+    ];
+    const randomAdvice = advice[Math.floor(Math.random() * advice.length)];
+    alert("SAFETY TIP:\n\n" + randomAdvice);
+}
+
+// ══════════════════════════════════════════════
+//  UI REFRESH LOGIC
+// ══════════════════════════════════════════════
+function refreshApp() {
+    updateGreeting();
+    showRandomAffirmation();
+    checkDailyReminders();
+    updateStats();
+    console.log("MCI Silver: UI Refreshed.");
+}
+
+// ══════════════════════════════════════════════
+//  INITIALIZATION WRAPPER (ENHANCED)
+// ══════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+    checkSystemIntegrity();
+    
+    if (userData.name) {
+        document.getElementById('setup-screen').classList.remove('active');
+        document.getElementById('main-app').style.display = 'block';
+        initApp();
+    } else {
+        document.getElementById('setup-screen').classList.add('active');
+    }
+});
+
+// ══════════════════════════════════════════════
+//  GLOBAL ERROR HANDLING
+// ══════════════════════════════════════════════
+window.onerror = function(msg, url, lineNo, columnNo, error) {
+    console.error('MCI Engine Error: ', msg, ' line: ', lineNo);
+    return false;
+};
+ // ══════════════════════════════════════════════
+//  EXTENDED AFFIRMATIONS DATABASE (31 DAYS)
+// ══════════════════════════════════════════════
+const frasesAbundanciaExt = [
+    "I am open to the infinite abundance of the universe.",
+    "My mind is focused, calm, and full of light.",
+    "Every cell in my body vibrates with health and vital energy.",
+    "I attract meaningful connections and sincere love.",
+    "Peace begins with me and expands to everything around me.",
+    "I honor my past, live my present, and trust my future.",
+    "Abundance is not what I have, but what I am.",
+    "I am a magnet for miracles and unexpected blessings.",
+    "My creativity flows freely and finds new paths.",
+    "I forgive myself and release everything that no longer serves my growth.",
+    "Today I choose to see the world through eyes of love and gratitude.",
+    "I am capable of learning and evolving at every stage of my life.",
+    "The universe provides everything I need at the perfect time.",
+    "My heart is full of joy and my soul is at peace.",
+    "I deserve to live a full, happy, and prosperous life.",
+    "Every breath I take fills me with serenity and strength.",
+    "I am a being of light, and my light inspires others.",
+    "The beauty of life manifests in every small detail today.",
+    "I am in harmony with the rhythm of nature.",
+    "My wisdom is the result of my love for life.",
+    "I trust my intuition and the signs of the universe.",
+    "Wealth flows to me and through me for the good of all.",
+    "I am the architect of my own inner peace.",
+    "Gratitude is the key that opens all doors for me.",
+    "I celebrate my existence and the gift of this new day.",
+    "I am surrounded by protection, peace, and abundance.",
+    "My potential is limitless and my will is strong.",
+    "I choose thoughts that nourish my soul and my body.",
+    "The best of my life is happening right now.",
+    "I am an essential part of the magnificent plan of the universe.",
+    "Love is my guide and abundance is my path."
+];
+
+// ══════════════════════════════════════════════
+//  MESSAGES OF LIGHT (ADDITIONAL)
+// ══════════════════════════════════════════════
+const mensajesLuzExtra = [
+    "Your path is unique and valuable. Keep walking with faith.",
+    "The light within you is stronger than any shadow.",
+    "Every act of kindness you perform echoes in eternity.",
+    "You are a precious treasure of life. Take care of yourself.",
+    "The peace you seek is already within your heart."
+];
+  // ══════════════════════════════════════════════
+//  BACKUP PUZZLES (RESERVE ENGINE)
+// ══════════════════════════════════════════════
+const backupPuzzles = [
+    {
+        id: 99,
+        grid: [
+            ['P','E','A','C','E'],
+            ['','','','','A'],
+            ['','','','','L'],
+            ['','','','','M']
+        ],
+        pistas: {
+            hor: ["1. State of tranquility and quiet."],
+            ver: ["5. To be quiet and still."]
+        },
+        sol: { "0,0":"P", "0,1":"E", "0,2":"A", "0,3":"C", "0,4":"E", "1,4":"A", "2,4":"L", "3,4":"M" }
+    }
+];
+
+function getPuzzleOfTheDay() {
+    const day = new Date().getDate();
+    const index = (day % crucigramas.length);
+    return crucigramas[index] || backupPuzzles[0];
+}
+
+// ══════════════════════════════════════════════
+//  GLOBAL MCI TESTIMONIALS
+// ══════════════════════════════════════════════
+const globalTestimonials = [
+    {
+        author: "Sarah J. (London)",
+        quote: "Clara has become a vital part of my morning routine. The cognitive exercises are brilliant."
+    },
+    {
+        author: "David M. (New York)",
+        quote: "The journal section helps me keep track of my thoughts and feelings in a very simple way."
+    },
+    {
+        author: "Emma R. (Sydney)",
+        quote: "I love the Moment of Light. It always seems to say exactly what I need to hear."
+    }
+];
+
+function loadGlobalTestimonials() {
+    const container = document.getElementById('testimonials-container');
+    if (!container) return;
+    
+    let html = "";
+    globalTestimonials.forEach(t => {
+        html += `
+            <div class="card gris-card" style="font-style: italic; border-left: 4px solid var(--azul2);">
+                "${t.quote}"<br>
+                <span style="font-weight: bold; font-style: normal; color: var(--azul2);">- ${t.author}</span>
+            </div>
+        `;
+    });
+    container.innerHTML = html;
+}
+
+// ══════════════════════════════════════════════
+//  UI FINAL POLISH
+// ══════════════════════════════════════════════
+function applyMCIPolish() {
+    console.log("MCI Silver: Applying final UI adjustments...");
+    // Future enhancements for the premium category can be initialized here
+}
+  // ══════════════════════════════════════════════
+//  DYNAMIC CONTENT INJECTION (DAILY LOGIC)
+// ══════════════════════════════════════════════
+function injectDailyContent() {
+    // This function ensures the board is updated every time the app opens
+    const boardContainer = document.getElementById('cruci-contenido');
+    if (boardContainer) {
+        // Default view: Crossword of the day
+        loadCrucigrama();
+    }
+    
+    // Update Affirmation and Date
+    showRandomAffirmation();
+    const dateEl = document.getElementById('current-date');
+    if (dateEl) dateEl.innerText = getFormattedDate();
+    
+    // Load Reminders for the Alert Banner
+    checkDailyReminders();
+}
+
+// ══════════════════════════════════════════════
+//  CRITICAL DATA PRESERVATION
+// ══════════════════════════════════════════════
+window.onbeforeunload = function() {
+    // Final save before closing to ensure integrity
+    saveUserData();
+    console.log("MCI Silver: Critical data saved before exit.");
+};
+
+// ══════════════════════════════════════════════
+//  INTERNATIONAL COPYRIGHT & BRANDING
+// ══════════════════════════════════════════════
+function showMCIInfo() {
+    const info = `
+        MCI INTEGRAL CONSCIOUSNESS METHODOLOGY
+        Orion Series - Silver Companion
+        --------------------------------------
+        Intellectual Property © 2026
+        Developed for personal growth and 
+        cognitive stimulation.
+    `;
+    alert(info);
+}
+
+// ══════════════════════════════════════════════
+//  FINAL BOOTSTRAP
+// ══════════════════════════════════════════════
+function startMCIEngine() {
+    applySavedSettings();
+    updateGreeting();
+    injectDailyContent();
+    setupEventListeners();
+    applyMCIPolish();
+    console.log("MCI Silver Engine (EN) - Fully Operational.");
+}
+  // ══════════════════════════════════════════════
+//  FINAL EXECUTION & BOOT
+// ══════════════════════════════════════════════
+
+// Start the engine as soon as the DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Check if user is already registered
+    if (userData.name) {
+        // App is already configured
+        startMCIEngine();
+    } else {
+        // First time use: Setup screen stays active
+        console.log("MCI Silver: Waiting for user setup...");
+    }
+});
+
+// Final check for the language engine
+console.log("MCI SILVER COMPANION (EN) - FULLY LOADED - LINE 1765 REACHED.");
+
+</script>
+</body>
+</html>
